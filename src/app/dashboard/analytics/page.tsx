@@ -1,7 +1,12 @@
-export default function AnalyticsPage() {
+import { analyticsData } from "@/lib/data";
+import { columns } from "./columns";
+import { DataTable } from "./data-table";
+
+export default async function AnalyticsPage() {
   return (
-    <div>
-      <h1>Analytics</h1>
+    <div className="container mx-auto py-auto">
+      <h1 className="text-2xl ml-2 font-semibold pb-3">Analytics</h1>
+      <DataTable columns={columns} data={analyticsData} />
     </div>
   );
 }
