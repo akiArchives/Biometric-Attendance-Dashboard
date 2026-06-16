@@ -16,7 +16,7 @@ import {
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <SidebarProvider>
+    <SidebarProvider className="h-svh overflow-hidden">
       <AppSidebar />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2">
@@ -39,7 +39,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             </Breadcrumb>*/}
           </div>
         </header>
-        <div className="flex flex-1 flex-col gap-4 p-4 pt-0">{children}</div>
+        <div className="flex flex-1 flex-col gap-4 p-4 pt-0 overflow-y-auto">
+          {children}
+        </div>
       </SidebarInset>
     </SidebarProvider>
   );

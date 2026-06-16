@@ -39,7 +39,11 @@ export function NavMain({
         {items.map((item) => (
           <Collapsible key={item.title} asChild defaultOpen={item.isActive}>
             <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip={item.title}>
+              <SidebarMenuButton
+                asChild
+                tooltip={item.title}
+                className="text-sm"
+              >
                 <a href={item.url}>
                   {item.icon}
                   <span>{item.title}</span>
