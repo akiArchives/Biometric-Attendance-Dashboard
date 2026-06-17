@@ -18,11 +18,17 @@ export default async function AttendancePage({ searchParams }: PageProps) {
   const selectedDate = resolvedParams.date || today;
   const isToday = selectedDate === today;
 
-  const { data: rawLogs, error } = await supabase
-    .from("hik_biometric_logs")
-    .select("*")
-    .eq("log_date", selectedDate)
-    .order("log_date_time", { ascending: true });
+  const [{ data: rawLogs, error }, { data: allEmployees }] = await Promise.all([
+    supabase
+      .from("hik_biometric_logs")
+      .select("*")
+      .eq("log_date", selectedDate)
+      .order("log_date_time", { ascending: true }),
+    supabase
+      .from("hik_biometric_logs")
+      .select("employee_id, employee_name")
+      .order("employee_name", { ascending: true }),
+  ]);
 
   if (error) {
     console.error(error);
@@ -31,7 +37,11 @@ export default async function AttendancePage({ searchParams }: PageProps) {
     );
   }
 
-  const processedData = processDailyLogs(rawLogs || [], isToday);
+  const processedData = processDailyLogs(
+    rawLogs || [],
+    allEmployees || [],
+    isToday,
+  );
 
   return (
     <div className="container mx-auto px-4">

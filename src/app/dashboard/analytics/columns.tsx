@@ -47,7 +47,11 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
   },
   {
     accessorKey: "is_currently_in",
-    header: "Presence Status",
+    header: () => (
+      <div className="items-center justify-center align-middle">
+        Presence Status
+      </div>
+    ),
     cell: ({ row }) => {
       const isIn = row.getValue("is_currently_in") as boolean;
 
@@ -66,7 +70,7 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
   },
   {
     accessorKey: "first_punch",
-    header: "First Punch",
+    header: () => <span className="ml-1">Time in</span>,
     cell: ({ row }) => {
       const rawTime = row.getValue("first_punch") as string;
       if (!rawTime) return <span className="text-slate-400 text-xs">—</span>;
@@ -81,7 +85,7 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
   },
   {
     accessorKey: "last_punch",
-    header: "Last Punch",
+    header: "Time out",
     cell: ({ row }) => {
       const rawTime = row.getValue("last_punch") as string;
       if (!rawTime) return <span className="text-slate-400 text-xs">—</span>;

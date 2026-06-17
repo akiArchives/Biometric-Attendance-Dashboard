@@ -9,16 +9,37 @@ interface RawBiometricLog {
   log_date: string | null;
 }
 
+interface EmployeeStub {
+  employee_id: number;
+  employee_name: string | null;
+}
+
 export function processDailyLogs(
   logs: RawBiometricLog[],
+  allEmployees: EmployeeStub[],
   isToday: boolean = true,
 ): PersonnelAnalytics[] {
   const groups: Record<number, RawBiometricLog[]> = {};
 
-  // 1. Group logs by employee
+  // 1. Group today's logs by employee
   logs.forEach((log) => {
     if (!groups[log.employee_id]) groups[log.employee_id] = [];
     groups[log.employee_id].push(log);
+  });
+
+  // 2. Build a deduplicated master employee list
+  const seen = new Set<number>();
+  const uniqueEmployees: EmployeeStub[] = [];
+  allEmployees.forEach((e) => {
+    if (!seen.has(e.employee_id)) {
+      seen.add(e.employee_id);
+      uniqueEmployees.push(e);
+    }
+  });
+
+  // 3. For employees with no logs today, inject an empty group
+  uniqueEmployees.forEach((e) => {
+    if (!groups[e.employee_id]) groups[e.employee_id] = [];
   });
 
   return Object.keys(groups).map((empIdStr) => {
@@ -26,6 +47,7 @@ export function processDailyLogs(
     const rawEmpLogs = groups[empId];
     const employeeName =
       rawEmpLogs.find((l) => l.employee_name)?.employee_name ||
+      uniqueEmployees.find((e) => e.employee_id === empId)?.employee_name ||
       "Unregistered Token";
 
     // 2. Sort chronologically before processing
@@ -85,7 +107,7 @@ export function processDailyLogs(
         new Date(lastPunch).getTime() - new Date(firstPunch).getTime();
       let decimalHours = diffMs / (1000 * 60 * 60);
 
-      // Apply standard 1-hour lunch break deduction if they've been at work over 5 hours
+      // EDIT BREAK HOUR MINUS
       if (decimalHours > 5) {
         decimalHours -= 1;
       }
