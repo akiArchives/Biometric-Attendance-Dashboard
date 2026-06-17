@@ -1,7 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Clock, UserCheck, CalendarDays, Hourglass } from "lucide-react";
+import { Clock, Hourglass } from "lucide-react";
 
 export type PersonnelAnalytics = {
   employee_id: string;

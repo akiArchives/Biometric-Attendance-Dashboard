@@ -18,7 +18,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               orientation="vertical"
               className="mr-2 data-vertical:h-4 data-vertical:self-auto"
             />
-            
           </div>
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0 overflow-y-auto">
