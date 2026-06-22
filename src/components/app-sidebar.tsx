@@ -1,28 +1,15 @@
 "use client";
 
 import * as React from "react";
-
-import Image from "next/image";
 import { FingerprintPattern } from "lucide-react";
-
 import { NavMain } from "@/components/nav-main";
 // import { NavUser } from "@/components/nav-user";
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import {
-  ClipboardClock,
-  Users,
-  ListPlus,
-  UserRound,
-  SquareActivity,
-} from "lucide-react";
+import { ClipboardClock, Users, SquareActivity } from "lucide-react";
 
 const data = {
   user: {
