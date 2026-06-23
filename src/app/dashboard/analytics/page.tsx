@@ -52,7 +52,7 @@ export default async function AttendancePage({ searchParams }: PageProps) {
 
           <Separator
             orientation="vertical"
-            className="mr-2 data-vertical:h-4 data-vertical:self-auto"
+            className="mx-1 data-vertical:h-4 data-vertical:self-auto"
           />
 
           <p className="text-sm text-slate-500">

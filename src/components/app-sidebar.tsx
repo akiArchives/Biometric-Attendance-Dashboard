@@ -13,7 +13,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
-import { ClipboardClock, Users } from "lucide-react";
+import { ClipboardClock, ChartBar, Settings } from "lucide-react";
 
 const data = {
   user: {
@@ -43,10 +43,17 @@ const data = {
       ),
     },
     {
-      title: "Employees",
-      url: "/dashboard/employees",
+      title: "Reports",
+      url: "/dashboard/reports",
       icon: (
-        <Users style={{ width: "1rem", height: "1rem" }} strokeWidth={2.5} />
+        <ChartBar style={{ width: "1rem", height: "1rem" }} strokeWidth={2.5} />
+      ),
+    },
+    {
+      title: "Settings",
+      url: "/dashboard/settings",
+      icon: (
+        <Settings style={{ width: "1rem", height: "1rem" }} strokeWidth={2.5} />
       ),
     },
   ],

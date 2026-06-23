@@ -1,5 +1,6 @@
 import { DatePicker } from "@/components/ui/date-picker";
 import { Separator } from "@/components/ui/separator";
+import { columns } from "./columns";
 import { DataTable } from "@/components/ui/data-table";
 
 export default function Loading() {
@@ -23,7 +24,7 @@ export default function Loading() {
         <DatePicker selected={selectedDate} />
       </div>
 
-      <DataTable columns={[]} data={[]} />
+      <DataTable columns={columns} data={[]} />
     </div>
   );
 }

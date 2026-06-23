@@ -19,7 +19,7 @@ export function DatePicker({ selected }: DatePickerProps) {
           router.push(`?date=${e.target.value}`);
         }
       }}
-      className="h-9 rounded-md border border-input bg-sidebar-accent px-3 py-1 text-sm text-white font-bold shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring [&::-webkit-calendar-picker-indicator]:invert"
+      className="h- rounded-md border border-input bg-sidebar-accent px-3 py-1 text-sm text-white font-bold shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring [&::-webkit-calendar-picker-indicator]:invert"
     />
   );
 }

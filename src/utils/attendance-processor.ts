@@ -3,6 +3,13 @@ import {
   AttendanceStatus,
 } from "@/app/dashboard/analytics/columns";
 
+export type EmployeeSummary = {
+  employee_id: string;
+  employee_name: string;
+  last_log_date: string | null;
+  total_hours_logged: number;
+};
+
 // EDIT LATE_CUTOFF
 const LATE_CUTOFF = "08:00";
 
@@ -18,6 +25,80 @@ interface RawBiometricLog {
 interface EmployeeStub {
   employee_id: number;
   employee_name: string | null;
+}
+
+export function processEmployeeSummaries(
+  logs: RawBiometricLog[],
+): EmployeeSummary[] {
+  const byEmployee: Record<number, RawBiometricLog[]> = {};
+
+  logs.forEach((log) => {
+    if (!byEmployee[log.employee_id]) byEmployee[log.employee_id] = [];
+    byEmployee[log.employee_id].push(log);
+  });
+
+  return Object.keys(byEmployee).map((empIdStr) => {
+    const empId = Number(empIdStr);
+    const empLogs = byEmployee[empId];
+
+    const employeeName =
+      empLogs.find((l) => l.employee_name)?.employee_name ??
+      "Unregistered Token";
+
+    const lastLogDate = empLogs.reduce<string | null>((max, log) => {
+      if (!log.log_date) return max;
+      return !max || log.log_date > max ? log.log_date : max;
+    }, null);
+
+    // Group by date to compute per-day hours
+    const byDate: Record<string, RawBiometricLog[]> = {};
+    empLogs.forEach((log) => {
+      if (!log.log_date) return;
+      if (!byDate[log.log_date]) byDate[log.log_date] = [];
+      byDate[log.log_date].push(log);
+    });
+
+    let totalHours = 0;
+    Object.values(byDate).forEach((dayLogs) => {
+      const sorted = [...dayLogs].sort((a, b) => {
+        if (!a.log_date_time) return 1;
+        if (!b.log_date_time) return -1;
+        return (
+          new Date(a.log_date_time).getTime() -
+          new Date(b.log_date_time).getTime()
+        );
+      });
+
+      const cleaned: RawBiometricLog[] = [];
+      sorted.forEach((log) => {
+        if (!log.log_date_time) return;
+        const currentTime = new Date(log.log_date_time).getTime();
+        const last = cleaned[cleaned.length - 1];
+        if (last?.log_date_time) {
+          const diffMin =
+            (currentTime - new Date(last.log_date_time).getTime()) / 60_000;
+          if (diffMin < 2) return;
+        }
+        cleaned.push(log);
+      });
+
+      if (cleaned.length < 2) return;
+
+      const first = cleaned[0].log_date_time!;
+      const last = cleaned[cleaned.length - 1].log_date_time!;
+      let hours =
+        (new Date(last).getTime() - new Date(first).getTime()) / 3_600_000;
+      if (hours > 5) hours -= 1;
+      totalHours += Math.max(0, hours);
+    });
+
+    return {
+      employee_id: empIdStr,
+      employee_name: employeeName,
+      last_log_date: lastLogDate,
+      total_hours_logged: parseFloat(totalHours.toFixed(2)),
+    };
+  });
 }
 
 export function processDailyLogs(
