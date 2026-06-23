@@ -36,11 +36,15 @@ export function NavMain({
 
   return (
     <SidebarGroup>
-      <SidebarMenu className="mx-0.5 w-auto group-data-[collapsible=icon]:">
+      <SidebarMenu className="gap-1.25 mx-0.5 w-auto group-data-[collapsible=icon]:">
         {items.map((item) => {
           const isActive = pathname === item.url;
           return (
-            <Collapsible key={item.title} asChild defaultOpen={item.isActive || isActive}>
+            <Collapsible
+              key={item.title}
+              asChild
+              defaultOpen={item.isActive || isActive}
+            >
               <SidebarMenuItem>
                 <SidebarMenuButton
                   asChild
@@ -69,7 +73,10 @@ export function NavMain({
                       <SidebarMenuSub>
                         {item.items?.map((subItem) => (
                           <SidebarMenuSubItem key={subItem.title}>
-                            <SidebarMenuSubButton asChild isActive={pathname === subItem.url}>
+                            <SidebarMenuSubButton
+                              asChild
+                              isActive={pathname === subItem.url}
+                            >
                               <a href={subItem.url}>
                                 <span>{subItem.title}</span>
                               </a>

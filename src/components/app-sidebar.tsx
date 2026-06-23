@@ -25,17 +25,29 @@ const data = {
     {
       title: "Live Feed",
       url: "/dashboard/live-feed",
-      icon: <SquareActivity style={{ width: "1rem", height: "1rem" }} />,
+      icon: (
+        <SquareActivity
+          style={{ width: "1rem", height: "1rem" }}
+          strokeWidth={2.5}
+        />
+      ),
     },
     {
       title: "Daily Logs",
       url: "/dashboard/analytics",
-      icon: <ClipboardClock style={{ width: "1rem", height: "1rem" }} />,
+      icon: (
+        <ClipboardClock
+          style={{ width: "1rem", height: "1rem" }}
+          strokeWidth={2.5}
+        />
+      ),
     },
     {
       title: "Employees",
       url: "/dashboard/employees",
-      icon: <Users style={{ width: "1rem", height: "1rem" }} />,
+      icon: (
+        <Users style={{ width: "1rem", height: "1rem" }} strokeWidth={2.5} />
+      ),
     },
   ],
   navSecondary: [{}, {}],
@@ -47,10 +59,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     <Sidebar variant="floating" {...props}>
       <SidebarHeader>
         <div className="my-2 mx-2 flex items-center gap-2">
-          <FingerprintPattern className="size-8 group-data-[collapsible=icon]:size-6" />
+          <FingerprintPattern className="size-8 text-sidebar-primary group-data-[collapsible=icon]:size-6" />
           <div className="grid text-left text-md leading-tight group-data-[collapsible=icon]:hidden">
-            <span className="truncate font-black">C L I F S A</span>
-            <span className="truncate text-xs text-sidebar-foreground/60">
+            <span className="truncate font-black text-sidebar-primary">
+              C L I F S A
+            </span>
+            <span className="truncate text-xs text-sidebar-primary">
               Biometric Logs
             </span>
           </div>
@@ -65,7 +79,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavMain items={data.navMain} />
       </SidebarContent>
       <SidebarFooter className="p-3 group-data-[collapsible=icon]:p-2">
-        <div className="flex items-center justify-start group-data-[collapsible=icon]:justify-center">
+        <div className="flex justify-end group-data-[collapsible=icon]:justify-center">
           <SidebarTrigger />
         </div>
       </SidebarFooter>
