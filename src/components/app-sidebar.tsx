@@ -78,8 +78,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </div>
         <Separator
           orientation="horizontal"
-          className="mx-2 data-horizontal:w-auto group-data-[collapsible=icon]:"
+          className="mx-1 data-horizontal:w-auto group-data-[collapsible=icon]:self-stretch group-data-[collapsible=icon]:mx-1"
         />
+
       </SidebarHeader>
 
       <SidebarContent className="">

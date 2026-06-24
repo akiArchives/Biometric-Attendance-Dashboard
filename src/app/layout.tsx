@@ -19,7 +19,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} font-sans`}>
-      <body className="min-h-full flex flex-col">
+      <body className="h-full">
         <TooltipProvider>{children}</TooltipProvider>
       </body>
     </html>
