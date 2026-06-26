@@ -39,7 +39,7 @@ export default async function DashboardPage() {
   const [year, month, day] = today.split("-").map(Number);
   const todayDate = new Date(year, month - 1, day, 12, 0, 0);
   const dayOfWeek = todayDate.getDay(); // 0 = Sunday, 1 = Monday, ...
-  
+
   const monday = new Date(todayDate);
   const diffToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
   monday.setDate(todayDate.getDate() + diffToMonday);
@@ -48,7 +48,7 @@ export default async function DashboardPage() {
   const weekDates = weekDays.map((_, index) => {
     const d = new Date(monday);
     d.setDate(monday.getDate() + index);
-    
+
     // Format as YYYY-MM-DD
     const y = d.getFullYear();
     const m = String(d.getMonth() + 1).padStart(2, "0");
@@ -66,7 +66,7 @@ export default async function DashboardPage() {
 
   const startLabel = formatLabelDate(weekDates[0]);
   const endLabel = formatLabelDate(weekDates[4]);
-  
+
   let weekRangeLabel = "";
   if (startLabel.month === endLabel.month) {
     weekRangeLabel = `${startLabel.month} ${startLabel.day} - ${endLabel.day}`;
@@ -125,10 +125,10 @@ export default async function DashboardPage() {
     const dateStr = weekDates[index];
     const dailyLogs = weeklyLogs.filter((log) => log.log_date === dateStr);
     const processed = processDailyLogs(dailyLogs, allEmployees);
-    
+
     const present = processed.filter((emp) => emp.status === "present").length;
     const late = processed.filter((emp) => emp.status === "late").length;
-    
+
     return {
       day: dayName,
       present,
@@ -152,7 +152,6 @@ export default async function DashboardPage() {
         <Card className="@container/card">
           <CardHeader>
             <CardDescription className="flex items-center text-gray-700 gap-2">
-              <span className="size-2 rounded-full bg-emerald-500"></span>
               Present
             </CardDescription>
             <CardTitle className="text-2xl font-semibold text-gray-700 tabular-nums @[250px]/card:text-3xl">
@@ -180,7 +179,6 @@ export default async function DashboardPage() {
         <Card className="@container/card">
           <CardHeader>
             <CardDescription className="flex items-center text-gray-700 gap-2">
-              <span className="size-2 rounded-full bg-yellow-500"></span>
               Late
             </CardDescription>
             <CardTitle className="text-2xl font-semibold text-gray-700 tabular-nums @[250px]/card:text-3xl">
@@ -208,7 +206,6 @@ export default async function DashboardPage() {
         <Card className="@container/card">
           <CardHeader>
             <CardDescription className="flex items-center text-gray-700 gap-2">
-              <span className="size-2 rounded-full bg-red-500"></span>
               Absent
             </CardDescription>
             <CardTitle className="text-2xl font-semibold text-gray-700 tabular-nums @[250px]/card:text-3xl">
@@ -236,7 +233,6 @@ export default async function DashboardPage() {
         <Card className="@container/card">
           <CardHeader>
             <CardDescription className="flex items-center text-gray-700 gap-2">
-              <span className="size-2 rounded-full bg-indigo-500"></span>
               Total Employees
             </CardDescription>
             <CardTitle className="text-2xl font-semibold text-gray-700 tabular-nums @[250px]/card:text-3xl">

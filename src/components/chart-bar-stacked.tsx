@@ -9,6 +9,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
+  CardAction,
 } from "@/components/ui/card";
 import {
   ChartContainer,
@@ -18,6 +19,7 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart";
+import { Eye } from "lucide-react";
 
 export const description = "A stacked bar chart with a legend";
 
@@ -46,9 +48,16 @@ interface ChartBarStackedProps {
 export function ChartBarStacked({ data, weekRange }: ChartBarStackedProps) {
   return (
     <Card className="shadow-md w-full">
-      <CardHeader>
-        <CardTitle>Weekly Attendance Metrics</CardTitle>
-        <CardDescription>{weekRange}</CardDescription>
+      <CardHeader className="text-gray-600">
+        <CardTitle className="text-sm font-medium flex items-center gap-2 whitespace-nowrap">Weekly Attendance Metrics</CardTitle>
+        <CardDescription className="text-xs text-gray-400">{weekRange}</CardDescription>
+        <CardAction>
+          <div className="flex items-center justify-center gap-2">
+            <button className="p-1.5 rounded-full hover:bg-secondary/50">
+              <Eye className="size-5 text-gray-400" />
+            </button>
+          </div>
+        </CardAction>
       </CardHeader>
       <CardContent className="">
         <ChartContainer config={chartConfig} className="aspect-auto h-[300px] w-full">
