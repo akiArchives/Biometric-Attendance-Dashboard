@@ -49,8 +49,12 @@ export function ChartBarStacked({ data, weekRange }: ChartBarStackedProps) {
   return (
     <Card className="shadow-md w-full">
       <CardHeader className="text-gray-600">
-        <CardTitle className="text-sm font-medium flex items-center gap-2 whitespace-nowrap">Weekly Attendance Metrics</CardTitle>
-        <CardDescription className="text-xs text-gray-400">{weekRange}</CardDescription>
+        <CardTitle className="text-sm font-medium flex items-center gap-2 whitespace-nowrap">
+          Weekly Attendance Metrics
+        </CardTitle>
+        <CardDescription className="text-xs text-gray-400">
+          {weekRange}
+        </CardDescription>
         <CardAction>
           <div className="flex items-center justify-center gap-2">
             <button className="p-1.5 rounded-full hover:bg-secondary/50">
@@ -60,7 +64,10 @@ export function ChartBarStacked({ data, weekRange }: ChartBarStackedProps) {
         </CardAction>
       </CardHeader>
       <CardContent className="">
-        <ChartContainer config={chartConfig} className="aspect-auto h-[300px] w-full">
+        <ChartContainer
+          config={chartConfig}
+          className="aspect-auto h-[300px] w-full"
+        >
           <BarChart accessibilityLayer data={data}>
             <CartesianGrid vertical={false} />
             <XAxis
@@ -77,14 +84,14 @@ export function ChartBarStacked({ data, weekRange }: ChartBarStackedProps) {
               stackId="a"
               fill="var(--color-present)"
               radius={[0, 0, 10, 10]}
-              isAnimationActive={false}
+              isAnimationActive={true}
             />
             <Bar
               dataKey="late"
               stackId="a"
               fill="var(--color-late)"
               radius={[10, 10, 0, 0]}
-              isAnimationActive={false}
+              isAnimationActive={true}
             />
           </BarChart>
         </ChartContainer>

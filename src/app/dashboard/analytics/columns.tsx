@@ -56,7 +56,9 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
   },
   {
     accessorKey: "status",
-    header: "Status",
+    header: () => (
+      <span className="justify-center flex w-fit mx-auto">Status</span>
+    ),
     cell: ({ row }) => {
       const status = row.getValue("status") as AttendanceStatus;
 
@@ -90,7 +92,7 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
 
       return (
         <span
-          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold border ${bg}`}
+          className={`flex w-fit mx-auto justify-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${bg}`}
         >
           {icon}
           {label}
@@ -100,13 +102,18 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
   },
   {
     accessorKey: "first_punch",
-    header: () => <span className="ml-1">Time in</span>,
+    header: () => (
+      <span className="justify-center flex w-fit mx-auto">Time in</span>
+    ),
     cell: ({ row }) => {
       const rawTime = row.getValue("first_punch") as string;
-      if (!rawTime) return <span className="text-slate-400 text-xs">—</span>;
+      if (!rawTime)
+        return (
+          <span className="text-slate-400 text-xs flex w-fit mx-auto">—</span>
+        );
 
       return (
-        <div className="flex items-center gap-1.5 text-slate-700 font-medium font-mono text-xs">
+        <div className="flex w-fit mx-auto items-center gap-1.5 text-slate-700 font-medium font-mono text-xs">
           <Clock size={13} className="text-slate-400" />
           {formatRawTime(rawTime)}
         </div>
@@ -115,13 +122,18 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
   },
   {
     accessorKey: "last_punch",
-    header: "Time out",
+    header: () => (
+      <span className="justify-center flex w-fit mx-auto">Time out</span>
+    ),
     cell: ({ row }) => {
       const rawTime = row.getValue("last_punch") as string;
-      if (!rawTime) return <span className="text-slate-400 text-xs">—</span>;
+      if (!rawTime)
+        return (
+          <span className="text-slate-400 text-xs flex w-fit mx-auto">—</span>
+        );
 
       return (
-        <div className="flex items-center gap-1.5 text-slate-700 font-medium font-mono text-xs">
+        <div className="flex w-fit mx-auto items-center gap-1.5 text-slate-700 font-medium font-mono text-xs">
           <Clock size={13} className="text-slate-400" />
           {formatRawTime(rawTime)}
         </div>
@@ -130,7 +142,9 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
   },
   {
     accessorKey: "total_hours_worked",
-    header: "Hours Logged",
+    header: () => (
+      <span className="justify-center flex w-fit mx-auto">Hours Logged</span>
+    ),
     cell: ({ row }) => {
       const decimalHours = row.getValue("total_hours_worked") as number;
 
@@ -139,11 +153,15 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
       const minutes = Math.round((decimalHours - hours) * 60);
 
       if (decimalHours === 0 || isNaN(decimalHours)) {
-        return <span className="text-slate-400 text-xs">0h 0m</span>;
+        return (
+          <span className="text-slate-400 text-xs flex w-fit mx-auto">
+            0h 0m
+          </span>
+        );
       }
 
       return (
-        <div className="flex items-center gap-1.5 text-slate-900 font-semibold">
+        <div className="flex w-fit mx-auto items-center gap-1.5 text-slate-900 font-semibold">
           <Hourglass size={14} className="" />
           <span>
             {hours}h {minutes}m

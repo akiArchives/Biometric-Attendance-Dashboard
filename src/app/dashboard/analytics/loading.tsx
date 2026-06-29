@@ -20,39 +20,39 @@ export default function Loading() {
                   <Skeleton className="bg-blue-50 h-4 w-28 ml-2" />
                 </TableHead>
                 <TableHead>
-                  <Skeleton className="bg-blue-50 h-4 w-16" />
+                  <Skeleton className="bg-blue-50 h-4 w-16 flex mx-auto" />
                 </TableHead>
                 <TableHead>
-                  <Skeleton className="bg-blue-50 h-4 w-16" />
+                  <Skeleton className="bg-blue-50 h-4 w-16 flex mx-auto" />
                 </TableHead>
                 <TableHead>
-                  <Skeleton className="bg-blue-50 h-4 w-16" />
+                  <Skeleton className="bg-blue-50 h-4 w-16 flex mx-auto" />
                 </TableHead>
                 <TableHead>
-                  <Skeleton className="bg-blue-50 h-4 w-24" />
+                  <Skeleton className="bg-blue-50 h-4 w-24 flex mx-auto" />
                 </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {Array.from({ length: 8 }).map((_, i) => (
-                <TableRow key={i}>
-                  <TableCell>
+              {Array.from({ length: 13 }).map((_, i) => (
+                <TableRow key={i} className="">
+                  <TableCell className="h-13.25">
                     <div className="flex flex-col gap-1 ml-2">
                       <Skeleton className="h-4 w-32" />
                       <Skeleton className="h-3 w-20" />
                     </div>
                   </TableCell>
                   <TableCell>
-                    <Skeleton className="h-6 w-20 rounded-full" />
+                    <Skeleton className="h-6 w-20 rounded-full flex mx-auto" />
                   </TableCell>
                   <TableCell>
-                    <Skeleton className="h-4 w-16" />
+                    <Skeleton className="h-4 w-16 flex mx-auto" />
                   </TableCell>
                   <TableCell>
-                    <Skeleton className="h-4 w-16" />
+                    <Skeleton className="h-4 w-16 flex mx-auto" />
                   </TableCell>
                   <TableCell>
-                    <Skeleton className="h-4 w-14" />
+                    <Skeleton className="h-4 w-14 flex mx-auto" />
                   </TableCell>
                 </TableRow>
               ))}

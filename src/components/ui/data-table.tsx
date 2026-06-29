@@ -33,7 +33,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="overflow-hidden rounded-md border bg-card text-card-foreground">
+      <div className="overflow-hidden rounded-md border bg-card text-card-foreground shadow-md">
         <Table className="table-fixed">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
