@@ -56,17 +56,17 @@ export function ChartBarStacked({ data, weekRange }: ChartBarStackedProps) {
           {weekRange}
         </CardDescription>
         <CardAction>
-          <div className="flex items-center justify-center gap-2">
+          {/* <div className="flex items-center justify-center gap-2">
             <button className="p-1.5 rounded-full hover:bg-secondary/50">
               <Eye className="size-5 text-gray-400" />
             </button>
-          </div>
+          </div> */}
         </CardAction>
       </CardHeader>
       <CardContent className="">
         <ChartContainer
           config={chartConfig}
-          className="aspect-auto h-[300px] w-full"
+          className="aspect-auto h-[296px] w-full"
         >
           <BarChart accessibilityLayer data={data}>
             <CartesianGrid vertical={false} />

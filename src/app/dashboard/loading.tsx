@@ -69,7 +69,7 @@ export default function DashboardLoading() {
         <Card className="flex flex-col w-[380px] h-fit shadow-md overflow-visible">
           <CardHeader className="text-gray-600">
             <CardTitle className="text-sm font-medium flex items-center gap-2 whitespace-nowrap">
-              Recent Logs
+              <Skeleton className="h-4 w-44" />
             </CardTitle>
           </CardHeader>
           <CardContent className="rounded-none flex-1 px-3 whitespace-nowrap pb-4">
@@ -87,7 +87,7 @@ export default function DashboardLoading() {
                   </div>
                   <div className="text-right space-y-1">
                     <Skeleton className="h-4 w-16 ml-auto" />
-                    <Skeleton className="h-3 w-12 ml-auto" />
+                    <Skeleton className="h-6 w-12 ml-auto" />
                   </div>
                 </div>
               ))}
