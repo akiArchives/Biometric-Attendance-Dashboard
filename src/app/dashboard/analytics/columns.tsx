@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/button"
 import { ColumnDef } from "@tanstack/react-table";
 import {
   Clock,
@@ -8,10 +9,10 @@ import {
   CircleX,
   Timer,
   CalendarDays,
+  ArrowUpDown,
 } from "lucide-react";
 
-// HikCentral stores local time but labels it +00:00. Slice the time directly
-// from the ISO string to avoid any timezone conversion.
+// HikCentral stores local time but labels it +00:00
 function formatRawTime(iso: string): string {
   const [h, m] = iso.substring(11, 16).split(":").map(Number);
   const ampm = h >= 12 ? "PM" : "AM";
@@ -34,7 +35,18 @@ export type PersonnelAnalytics = {
 export const columns: ColumnDef<PersonnelAnalytics>[] = [
   {
     accessorKey: "employee_name",
-    header: () => <span className="ml-2">Employee</span>,
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="hover:bg-transparent"
+        >
+          Employee
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
     cell: ({ row }) => {
       const name = row.getValue("employee_name") as string;
       const empId = row.original.employee_id;
@@ -56,8 +68,15 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
   },
   {
     accessorKey: "status",
-    header: () => (
-      <span className="justify-center flex w-fit mx-auto">Status</span>
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        className="justify-center flex w-fit mx-auto hover:bg-transparent"
+      >
+        Status
+        <ArrowUpDown className="ml-2 h-4 w-4 data-[state=sorted]:border-blue-500 data-[state=sorted]:border data-[state=sorted]:text-blue-500" />
+      </Button>
     ),
     cell: ({ row }) => {
       const status = row.getValue("status") as AttendanceStatus;
@@ -102,8 +121,15 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
   },
   {
     accessorKey: "first_punch",
-    header: () => (
-      <span className="justify-center flex w-fit mx-auto">Time in</span>
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        className="justify-center flex w-fit mx-auto hover:bg-transparent"
+      >
+        Time in
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
     ),
     cell: ({ row }) => {
       const rawTime = row.getValue("first_punch") as string;
@@ -122,8 +148,15 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
   },
   {
     accessorKey: "last_punch",
-    header: () => (
-      <span className="justify-center flex w-fit mx-auto">Time out</span>
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        className="justify-center flex w-fit mx-auto hover:bg-transparent"
+      >
+        Time out
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
     ),
     cell: ({ row }) => {
       const rawTime = row.getValue("last_punch") as string;
@@ -142,8 +175,15 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
   },
   {
     accessorKey: "total_hours_worked",
-    header: () => (
-      <span className="justify-center flex w-fit mx-auto">Hours Logged</span>
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        className="justify-center flex w-fit mx-auto hover:bg-transparent"
+      >
+        Hours Logged
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
     ),
     cell: ({ row }) => {
       const decimalHours = row.getValue("total_hours_worked") as number;
