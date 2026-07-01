@@ -43,7 +43,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="relative w-full h-[calc(100vh-100px)] overflow-auto rounded-md border bg-card text-card-foreground shadow-md">
+      <div className="relative w-full h-[calc(100vh-105px)] overflow-auto rounded-md border bg-card text-card-foreground shadow-md">
         <Table noWrapper className="table-fixed">
           <TableHeader className="sticky top-0 z-10 bg-blue-100 shadow-sm">
             {table.getHeaderGroups().map((headerGroup) => (
@@ -63,10 +63,11 @@ export function DataTable<TData, TValue>({
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
+              table.getRowModel().rows.map((row, index) => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+                  className="odd:bg-gray-100"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>

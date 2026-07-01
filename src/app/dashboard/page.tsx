@@ -84,7 +84,8 @@ export default async function DashboardPage() {
         .from("employees")
         .select("employee_id, employee_name")
         .eq("is_active", true)
-        .order("employee_name", { ascending: true }),
+        .order("employee_name", { ascending: true })
+        .neq("employee_id", 1111),
       supabase
         .from("hik_biometric_logs")
         .select("*")

@@ -25,7 +25,8 @@ export default async function AttendancePage({ searchParams }: PageProps) {
       .from("employees")
       .select("employee_id, employee_name")
       .eq("is_active", true)
-      .order("employee_name", { ascending: true }),
+      .order("employee_name", { ascending: true })
+      .neq("employee_id", 1111),
   ]);
 
   if (error) {

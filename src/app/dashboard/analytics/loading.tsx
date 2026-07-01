@@ -10,11 +10,11 @@ import {
 
 export default function Loading() {
   return (
-    <div className="w-full my-4 px-4">
+    <div className="w-full h-auto my-4 px-4">
       <div className="flex flex-col gap-4">
-        <div className="overflow-hidden rounded-md border bg-card text-card-foreground">
-          <Table className="table-fixed">
-            <TableHeader>
+        <div className="relative w-full h-[calc(100vh-105px)] overflow-auto rounded-md border bg-card text-card-foreground shadow-md">
+          <Table noWrapper className="table-fixed">
+            <TableHeader className="sticky top-0 z-10 bg-blue-100 shadow-sm">
               <TableRow>
                 <TableHead>
                   <Skeleton className="bg-blue-50 h-4 w-28 ml-2" />
@@ -35,7 +35,7 @@ export default function Loading() {
             </TableHeader>
             <TableBody>
               {Array.from({ length: 13 }).map((_, i) => (
-                <TableRow key={i} className="">
+                <TableRow key={i} className="odd:bg-gray-100">
                   <TableCell className="h-13.25">
                     <div className="flex flex-col gap-1 ml-2">
                       <Skeleton className="h-4 w-32" />
