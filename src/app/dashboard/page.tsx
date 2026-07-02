@@ -37,7 +37,10 @@ export default async function DashboardPage({
 }) {
   const { date } = await searchParams;
   const supabase = await createClient();
-  const today = date || new Date().toISOString().split("T")[0];
+  const today =
+    date && /^\d{4}-\d{2}-\d{2}$/.test(date) && !isNaN(Date.parse(date))
+      ? date
+      : new Date().toISOString().split("T")[0];
 
   // Calculate Monday of the current week based on today's date
   const [year, month, day] = today.split("-").map(Number);
@@ -116,6 +119,14 @@ export default async function DashboardPage({
     errorMsg = "An unexpected error occurred while fetching data.";
   }
 
+  if (errorMsg) {
+    return (
+      <div className="p-6 text-red-500 font-medium">
+        {errorMsg}
+      </div>
+    );
+  }
+
   // Filter today's raw logs from the weekly logs in-memory
   const rawLogs = weeklyLogs.filter((log) => log.log_date === today);
 
@@ -149,13 +160,6 @@ export default async function DashboardPage({
     (emp) => emp.status === "absent",
   ).length;
   const totalCount = allEmployees.length;
-  if (errorMsg) {
-    return (
-      <div className="p-6 text-red-500 font-medium">
-        {errorMsg}
-      </div>
-    );
-  }
 
   return (
     <div className="w-full h-full p-4 flex flex-col gap-5">
