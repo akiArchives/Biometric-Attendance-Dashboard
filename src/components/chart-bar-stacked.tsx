@@ -20,6 +20,7 @@ import {
   type ChartConfig,
 } from "@/components/ui/chart";
 import { Eye } from "lucide-react";
+import { DatePicker } from "@/components/ui/date-picker";
 
 export const description = "A stacked bar chart with a legend";
 
@@ -43,24 +44,18 @@ interface ChartDataPoint {
 interface ChartBarStackedProps {
   data: ChartDataPoint[];
   weekRange: string;
+  selectedDate: string;
 }
 
-export function ChartBarStacked({ data, weekRange }: ChartBarStackedProps) {
+export function ChartBarStacked({ data, weekRange, selectedDate }: ChartBarStackedProps) {
   return (
     <Card className="shadow-md w-full">
       <CardHeader className="text-gray-600">
         <CardTitle className="text-sm font-medium flex items-center gap-2 whitespace-nowrap">
           Weekly Attendance Metrics
         </CardTitle>
-        <CardDescription className="text-xs text-gray-400">
-          {weekRange}
-        </CardDescription>
         <CardAction>
-          {/* <div className="flex items-center justify-center gap-2">
-            <button className="p-1.5 rounded-full hover:bg-secondary/50">
-              <Eye className="size-5 text-gray-400" />
-            </button>
-          </div> */}
+          <DatePicker selected={selectedDate} label={weekRange} />
         </CardAction>
       </CardHeader>
       <CardContent className="">
