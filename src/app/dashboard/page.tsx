@@ -16,9 +16,8 @@ import {
   ClockAlert,
   Users,
   ArrowRight,
-  Fingerprint,
 } from "lucide-react";
-import { processDailyLogs } from "@/utils/attendance-processor";
+import { processDailyLogs, RawBiometricLog, EmployeeStub } from "@/utils/attendance-processor";
 import Link from "next/link";
 
 function formatTime12h(timeStr: string): string {
@@ -31,9 +30,14 @@ function formatTime12h(timeStr: string): string {
   return `${displayH}:${m} ${ampm}`;
 }
 
-export default async function DashboardPage() {
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ date?: string }>;
+}) {
+  const { date } = await searchParams;
   const supabase = await createClient();
-  const today = new Date().toISOString().split("T")[0];
+  const today = date || new Date().toISOString().split("T")[0];
 
   // Calculate Monday of the current week based on today's date
   const [year, month, day] = today.split("-").map(Number);
@@ -74,8 +78,8 @@ export default async function DashboardPage() {
     weekRangeLabel = `${startLabel.month} ${startLabel.day} - ${endLabel.month} ${endLabel.day}`;
   }
 
-  let allEmployees: any[] = [];
-  let weeklyLogs: any[] = [];
+  let allEmployees: EmployeeStub[] = [];
+  let weeklyLogs: RawBiometricLog[] = [];
   let errorMsg = "";
 
   try {
@@ -145,6 +149,13 @@ export default async function DashboardPage() {
     (emp) => emp.status === "absent",
   ).length;
   const totalCount = allEmployees.length;
+  if (errorMsg) {
+    return (
+      <div className="p-6 text-red-500 font-medium">
+        {errorMsg}
+      </div>
+    );
+  }
 
   return (
     <div className="w-full h-full p-4 flex flex-col gap-5">
@@ -263,7 +274,11 @@ export default async function DashboardPage() {
 
       <div className="flex flex-row w-full h-fit rounded-xl gap-6">
         {/* CHART BAR */}
-        <ChartBarStacked data={chartData} weekRange={weekRangeLabel} />
+        <ChartBarStacked
+          data={chartData}
+          weekRange={weekRangeLabel}
+          selectedDate={today}
+        />
 
         {/* RECENT LOGS */}
         <Card className="flex flex-col w-[380px] h-fit shadow-md overflow-visible">

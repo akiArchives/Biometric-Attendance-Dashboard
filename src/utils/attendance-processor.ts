@@ -6,7 +6,7 @@ import {
 // EDIT LATE_CUTOFF
 const LATE_CUTOFF = "08:00";
 
-interface RawBiometricLog {
+export interface RawBiometricLog {
   id: number;
   employee_id: number;
   employee_name: string | null;
@@ -15,7 +15,7 @@ interface RawBiometricLog {
   log_date: string | null;
 }
 
-interface EmployeeStub {
+export interface EmployeeStub {
   employee_id: number;
   employee_name: string | null;
 }
