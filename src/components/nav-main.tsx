@@ -37,7 +37,7 @@ export function NavMain({
 
   return (
     <SidebarGroup>
-      <SidebarMenu className="gap-1.25 mx-1 w-auto group-data-[collapsible=icon]:mx-1">
+      <SidebarMenu className="gap-1.25 mx-1 w-auto">
         {items.map((item) => {
           const isActive = pathname === item.url;
           return (

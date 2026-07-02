@@ -66,7 +66,7 @@ export function ChartBarStacked({ data, weekRange }: ChartBarStackedProps) {
       <CardContent className="">
         <ChartContainer
           config={chartConfig}
-          className="aspect-auto h-[296px] w-full"
+          className="aspect-auto h-[calc(100vh-350px)] w-full"
         >
           <BarChart accessibilityLayer data={data}>
             <CartesianGrid vertical={false} />

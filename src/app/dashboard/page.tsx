@@ -116,7 +116,7 @@ export default async function DashboardPage() {
   const rawLogs = weeklyLogs.filter((log) => log.log_date === today);
 
   // Recent logs (today's logs, sorted descending, limit 5)
-  const recentLogs = [...rawLogs].reverse().slice(0, 6);
+  const recentLogs = [...rawLogs].reverse().slice(0, 5);
 
   // Process today's attendance logs
   const processedData = processDailyLogs(rawLogs, allEmployees, true);
