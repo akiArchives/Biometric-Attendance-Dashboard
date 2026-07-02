@@ -1,4 +1,4 @@
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from "@/lib/supabase/server";
 import { columns } from "./columns";
 import { DataTable } from "@/components/ui/data-table";
 import { processDailyLogs } from "@/utils/attendance-processor";

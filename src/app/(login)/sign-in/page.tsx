@@ -1,9 +1,13 @@
-"use client"
-
 import { LoginForm } from "@/components/login-form"
-import { GalleryVerticalEndIcon, FingerprintIcon } from "lucide-react"
+import { FingerprintIcon } from "lucide-react"
+import { createClient } from "@/lib/supabase/server"
 
-export default function LoginPage() {
+export default async function LoginPage() {
+  const supabase = await createClient();
+  const { data: user } = await supabase.auth.getUser();
+
+  console.log({ user });
+
   return (
     <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10">
       <div className="flex w-full max-w-sm flex-col gap-6">

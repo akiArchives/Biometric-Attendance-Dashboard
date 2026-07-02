@@ -3,7 +3,7 @@
 import * as React from "react";
 import { FingerprintPattern, LayoutDashboard } from "lucide-react";
 import { NavMain } from "@/components/nav-main";
-// import { NavUser } from "@/components/nav-user";
+import { NavUser } from "@/components/nav-user";
 import {
   Sidebar,
   SidebarContent,
@@ -60,7 +60,17 @@ const data = {
   projects: [{}, {}, {}],
 };
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
+  user?: {
+    name: string;
+    email: string;
+    avatar: string;
+  };
+}
+
+export function AppSidebar({ user, ...props }: AppSidebarProps) {
+  const sidebarUser = user || data.user;
+
   return (
     <Sidebar variant="sidebar" {...props}>
       <SidebarHeader>
@@ -84,11 +94,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent className="">
         <NavMain items={data.navMain} />
       </SidebarContent>
-      {/*<SidebarFooter className="p-3 group-data-[collapsible=icon]:p-2">
+      <SidebarFooter className="p-3 group-data-[collapsible=icon]:p-2">
+        <NavUser user={sidebarUser} />
         <div className="flex justify-end group-data-[collapsible=icon]:justify-center">
           <SidebarTrigger />
         </div>
-      </SidebarFooter>*/}
+      </SidebarFooter>
     </Sidebar>
   );
 }
