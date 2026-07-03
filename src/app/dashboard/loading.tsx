@@ -13,7 +13,7 @@ export default function DashboardLoading() {
   return (
     <div className="w-full h-full p-4 flex flex-col gap-5">
       {/* Cards Grid */}
-      <div className="grid grid-cols-4 gap-6 *:data-[slot=card]:bg-linear-to-t *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card *:data-[slot=card]:shadow-xs @xl/main:grid-cols-2 @5xl/main:grid-cols-4 dark:*:data-[slot=card]:bg-card">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-6 *:data-[slot=card]:bg-linear-to-t *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card *:data-[slot=card]:shadow-xs lg:grid-cols-4 dark:*:data-[slot=card]:bg-card">
         {/* Present Card */}
         <Card className="@container/card">
           <CardHeader>
@@ -88,9 +88,9 @@ export default function DashboardLoading() {
       </div>
 
       {/* Bottom Section: Chart & Recent Logs */}
-      <div className="flex flex-row w-full h-fit rounded-xl gap-6">
+      <div className="flex flex-col lg:flex-row w-full h-fit rounded-xl gap-4 lg:gap-6">
         {/* Chart Skeleton */}
-        <Card className="shadow-md w-full">
+        <Card className="shadow-md w-full lg:flex-1">
           <CardHeader className="text-gray-600">
             <CardTitle className="text-sm font-medium flex items-center gap-2 whitespace-nowrap">
               Weekly Attendance Metrics
@@ -118,7 +118,7 @@ export default function DashboardLoading() {
         </Card>
 
         {/* Recent Logs Skeleton */}
-        <Card className="flex flex-col w-[380px] h-fit shadow-md overflow-visible">
+        <Card className="flex flex-col w-full lg:w-[380px] h-fit shadow-md overflow-visible">
           <CardHeader className="text-gray-600">
             <CardTitle className="text-sm font-medium flex items-center gap-2 whitespace-nowrap">
               Recent Logs

@@ -171,7 +171,7 @@ export default async function DashboardPage({
   return (
     <div className="w-full h-full p-4 flex flex-col gap-5">
       {/*Cards*/}
-      <div className="grid grid-cols-4 gap-6 *:data-[slot=card]:bg-linear-to-t *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card *:data-[slot=card]:shadow-xs @xl/main:grid-cols-2 @5xl/main:grid-cols-4 dark:*:data-[slot=card]:bg-card">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-6 *:data-[slot=card]:bg-linear-to-t *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card *:data-[slot=card]:shadow-xs lg:grid-cols-4 dark:*:data-[slot=card]:bg-card">
         <Card className="@container/card">
           <CardHeader>
             <CardDescription className="flex items-center text-gray-700 gap-2">
@@ -283,7 +283,7 @@ export default async function DashboardPage({
 
       {/* BIG CARD - RECENT LOGS */}
 
-      <div className="flex flex-row w-full h-fit rounded-xl gap-6">
+      <div className="flex flex-col lg:flex-row w-full h-fit rounded-xl gap-4 lg:gap-6">
         {/* CHART BAR */}
         <ChartBarStacked
           data={chartData}
@@ -292,7 +292,7 @@ export default async function DashboardPage({
         />
 
         {/* RECENT LOGS */}
-        <Card className="flex flex-col w-[380px] h-fit shadow-md overflow-visible">
+        <Card className="flex flex-col w-full lg:w-[380px] h-fit shadow-md overflow-visible">
           <CardHeader className="text-gray-600">
             <CardTitle className="text-sm font-medium flex items-center gap-2 whitespace-nowrap">
               Recent Logs
@@ -308,7 +308,7 @@ export default async function DashboardPage({
                   >
                     <div className="flex items-center gap-3">
                       <div>
-                        <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">
+                        <p className="text-sm font-semibold text-slate-800 dark:text-slate-200 truncate">
                           {log.employee_name || "Unregistered Token"}
                         </p>
                         <p className="text-xs text-slate-400 font-mono">
