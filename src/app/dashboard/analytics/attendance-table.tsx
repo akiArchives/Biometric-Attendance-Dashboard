@@ -9,6 +9,7 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import { flexRender, Row } from "@tanstack/react-table";
+import { Separator } from "@/components/ui/separator";
 
 interface AttendanceTableProps {
   data: PersonnelAnalytics[];
@@ -22,16 +23,16 @@ export function AttendanceTable({ data }: AttendanceTableProps) {
       renderMobileCard={(row: Row<PersonnelAnalytics>) => {
         const cells = row.getVisibleCells();
         return (
-          <Card key={row.id} className="shadow-md border border-border bg-card">
+          <Card key={row.id} className="shadow-sm bg-card mb-2">
             {/* Header: Employee Info & Status Badge */}
-            <CardHeader className="border-b pb-3">
+            <CardHeader className="">
               <div>
                 {flexRender(
                   cells[0].column.columnDef.cell,
                   cells[0].getContext(),
                 )}
               </div>
-              <CardAction className="pt-1">
+              <CardAction className="">
                 {flexRender(
                   cells[1].column.columnDef.cell,
                   cells[1].getContext(),
@@ -39,9 +40,11 @@ export function AttendanceTable({ data }: AttendanceTableProps) {
               </CardAction>
             </CardHeader>
 
+            <Separator className="" />
+
             {/* Grid Details: Time In, Time Out, Logged Hours */}
-            <CardContent className="">
-              <div className="grid grid-cols-3 gap-2 text-xs">
+            <CardContent className="-mx-6 -my-1">
+              <div className="grid grid-cols-3 text-xs">
                 <div className="flex flex-col gap-1 items-center text-center rounded-lg bg-muted/20">
                   <span className="text-muted-foreground font-medium">
                     Time In

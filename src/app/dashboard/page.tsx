@@ -17,7 +17,11 @@ import {
   Users,
   ArrowRight,
 } from "lucide-react";
-import { processDailyLogs, RawBiometricLog, EmployeeStub } from "@/utils/attendance-processor";
+import {
+  processDailyLogs,
+  RawBiometricLog,
+  EmployeeStub,
+} from "@/utils/attendance-processor";
 import Link from "next/link";
 
 function formatTime12h(timeStr: string): string {
@@ -37,7 +41,7 @@ export default async function DashboardPage({
 }) {
   const { date } = await searchParams;
   const supabase = await createClient();
-  
+
   const d = new Date();
   const yyyy = d.getFullYear();
   const mm = String(d.getMonth() + 1).padStart(2, "0");
@@ -127,11 +131,7 @@ export default async function DashboardPage({
   }
 
   if (errorMsg) {
-    return (
-      <div className="p-6 text-red-500 font-medium">
-        {errorMsg}
-      </div>
-    );
+    return <div className="p-6 text-red-500 font-medium">{errorMsg}</div>;
   }
 
   // Filter today's raw logs from the weekly logs in-memory
@@ -292,7 +292,7 @@ export default async function DashboardPage({
         />
 
         {/* RECENT LOGS */}
-        <Card className="flex flex-col w-full lg:w-[380px] h-fit shadow-md overflow-visible">
+        <Card className="flex flex-col w-full lg:w-95 h-fit shadow-md overflow-visible mb-4">
           <CardHeader className="text-gray-600">
             <CardTitle className="text-sm font-medium flex items-center gap-2 whitespace-nowrap">
               Recent Logs
