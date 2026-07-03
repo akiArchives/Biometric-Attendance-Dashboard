@@ -48,31 +48,33 @@ export function SiteHeader() {
 
   return (
     <header className="flex h-17.25 shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-14.25">
-      <div className="flex w-full items-center gap-1 lg:gap-2 lg:px-6">
-        <SidebarTrigger className="-ml-1" />
-        <Separator
-          orientation="vertical"
-          className="mx-2 data-[orientation=vertical]:h-7"
-        />
-        <h1 className="text-xl font-bold text-gray-700">{title}</h1>
+      <div className="flex w-full items-center justify-between gap-1 px-4 lg:gap-2 lg:px-6">
+        <div className="flex items-center gap-1">
+          <SidebarTrigger className="-ml-1" />
+          <Separator
+            orientation="vertical"
+            className="hidden md:block mx-2 data-[orientation=vertical]:h-7"
+          />
+          <h1 className="text-lg md:text-xl font-bold text-gray-700 whitespace-nowrap">{title}</h1>
 
-        <Separator
-          orientation="vertical"
-          className="mx-2 data-[orientation=vertical]:h-7"
-        />
+          <Separator
+            orientation="vertical"
+            className="hidden md:block mx-2 data-[orientation=vertical]:h-7"
+          />
 
-        <p className="text-sm text-gray-400">{subtitle}</p>
+          <p className="hidden md:block text-sm text-gray-400">{subtitle}</p>
+        </div>
 
-        <div className="ml-auto flex items-center gap-2">
+        <div className="flex items-center gap-1.5 md:gap-2">
           {rightControls}
-          <Button variant="ghost" className="ml-auto" asChild>
+          <Button variant="ghost" size="icon" className="shrink-0" asChild>
             <a
               href="https://github.com/akiArchives/Biometric-Attendance-Dashboard"
               rel="noopener noreferrer"
               target="_blank"
               className="size-fit m-0 dark:text-foreground"
             >
-              <IconBrandGithub className="size-6 text-gray-700" />
+              <IconBrandGithub className="size-5 md:size-6 text-gray-700" />
             </a>
           </Button>
         </div>
