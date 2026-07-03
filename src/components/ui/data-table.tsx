@@ -3,6 +3,7 @@
 import * as React from "react"
 import {
   ColumnDef,
+  Row,
   SortingState,
   flexRender,
   getCoreRowModel,
@@ -17,16 +18,18 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Spinner } from "@/components/ui/spinner";
+import { Card } from "@/components/ui/card";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  renderMobileCard?: (row: Row<TData>) => React.ReactNode;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  renderMobileCard,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
 
@@ -43,7 +46,8 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="relative w-full h-[calc(100vh-105px)] overflow-auto rounded-md border bg-card text-card-foreground shadow-md">
+      {/* Desktop Table View */}
+      <div className="hidden md:block relative w-full overflow-x-auto rounded-md border bg-card text-card-foreground shadow-md">
         <Table noWrapper className="table-fixed">
           <TableHeader className="sticky top-0 z-10 bg-blue-100 shadow-sm">
             {table.getHeaderGroups().map((headerGroup) => (
@@ -63,7 +67,7 @@ export function DataTable<TData, TValue>({
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row, index) => (
+              table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
@@ -83,17 +87,44 @@ export function DataTable<TData, TValue>({
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className="h-24 text-center"
+                  className="h-24 text-center text-slate-500 font-medium bg-card"
                 >
-                  <div className="flex items-center justify-center gap-4 text-md text-gray-600 font-semibold">
-                    <Spinner strokeWidth={2.5} />
-                    <p>Loading results.</p>
-                  </div>
+                  No results found.
                 </TableCell>
               </TableRow>
             )}
           </TableBody>
         </Table>
+      </div>
+
+      {/* Mobile Cards View */}
+      <div className="md:hidden flex flex-col gap-3 pb-4">
+        {table.getRowModel().rows?.length ? (
+          table.getRowModel().rows.map((row) => {
+            if (renderMobileCard) {
+              return renderMobileCard(row);
+            }
+
+            // Fallback for other tables
+            const cells = row.getVisibleCells();
+            return (
+              <Card key={row.id} className="p-4 shadow-sm border border-border bg-card flex flex-col gap-2">
+                {cells.map((cell) => (
+                  <div key={cell.id} className="flex justify-between items-center text-xs">
+                    <span className="text-muted-foreground font-medium capitalize">
+                      {cell.column.id.replace("_", " ")}
+                    </span>
+                    <div>{flexRender(cell.column.columnDef.cell, cell.getContext())}</div>
+                  </div>
+                ))}
+              </Card>
+            );
+          })
+        ) : (
+          <Card className="p-8 text-center text-slate-500 font-medium border border-border bg-card">
+            No results found.
+          </Card>
+        )}
       </div>
     </div>
   );

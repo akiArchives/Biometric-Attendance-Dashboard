@@ -1,6 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import { columns } from "./columns";
-import { DataTable } from "@/components/ui/data-table";
+import { AttendanceTable } from "./attendance-table";
 import { processDailyLogs } from "@/utils/attendance-processor";
 
 interface PageProps {
@@ -46,7 +45,7 @@ export default async function AttendancePage({ searchParams }: PageProps) {
 
   return (
     <div className="w-full h-auto my-4 px-4">
-      <DataTable columns={columns} data={processedData} />
+      <AttendanceTable data={processedData} />
     </div>
   );
 }
