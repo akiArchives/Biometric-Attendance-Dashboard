@@ -283,7 +283,7 @@ export default async function DashboardPage({
 
       {/* BIG CARD - RECENT LOGS */}
 
-      <div className="flex flex-col lg:flex-row w-full h-fit rounded-xl gap-4 lg:gap-6">
+      <div className="flex flex-col lg:flex-row items-start w-full h-fit rounded-xl gap-4 lg:gap-6">
         {/* CHART BAR */}
         <ChartBarStacked
           data={chartData}

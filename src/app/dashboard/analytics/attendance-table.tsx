@@ -45,7 +45,7 @@ export function AttendanceTable({ data }: AttendanceTableProps) {
             {/* Grid Details: Time In, Time Out, Logged Hours */}
             <CardContent className="-mx-6 -my-1">
               <div className="grid grid-cols-3 text-xs">
-                <div className="flex flex-col gap-1 items-center text-center rounded-lg bg-muted/20">
+                <div className="flex flex-col gap-1 items-center text-center rounded-lg">
                   <span className="text-muted-foreground font-medium">
                     Time In
                   </span>
@@ -54,7 +54,7 @@ export function AttendanceTable({ data }: AttendanceTableProps) {
                     cells[2].getContext(),
                   )}
                 </div>
-                <div className="flex flex-col gap-1 items-center text-center rounded-lg bg-muted/20">
+                <div className="flex flex-col gap-1 items-center text-center rounded-lg">
                   <span className="text-muted-foreground font-medium">
                     Time Out
                   </span>
@@ -63,7 +63,7 @@ export function AttendanceTable({ data }: AttendanceTableProps) {
                     cells[3].getContext(),
                   )}
                 </div>
-                <div className="flex flex-col gap-1 items-center text-center rounded-lg bg-muted/20">
+                <div className="flex flex-col gap-1 items-center text-center rounded-lg">
                   <span className="text-muted-foreground font-medium">
                     Logged
                   </span>

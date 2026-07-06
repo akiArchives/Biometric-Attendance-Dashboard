@@ -88,7 +88,7 @@ export default function DashboardLoading() {
       </div>
 
       {/* Bottom Section: Chart & Recent Logs */}
-      <div className="flex flex-col lg:flex-row w-full h-fit rounded-xl gap-4 lg:gap-6">
+      <div className="flex flex-col lg:flex-row items-start w-full h-fit rounded-xl gap-4 lg:gap-6">
         {/* Chart Skeleton */}
         <Card className="shadow-md w-full lg:flex-1">
           <CardHeader className="text-gray-600">
@@ -100,7 +100,7 @@ export default function DashboardLoading() {
             </CardAction>
           </CardHeader>
           <CardContent className="">
-            <div className="aspect-auto h-[calc(100vh-350px)] w-full flex items-end justify-between gap-6 pt-12 pb-4">
+            <div className="w-full aspect-4/3 md:aspect-2/1 max-h-100 flex items-end justify-between gap-6 pt-12 pb-4">
               {Array.from({ length: 5 }).map((_, i) => (
                 <div
                   key={i}
@@ -118,7 +118,7 @@ export default function DashboardLoading() {
         </Card>
 
         {/* Recent Logs Skeleton */}
-        <Card className="flex flex-col w-full lg:w-[380px] h-fit shadow-md overflow-visible">
+        <Card className="flex flex-col w-full lg:w-95 h-fit shadow-md overflow-visible">
           <CardHeader className="text-gray-600">
             <CardTitle className="text-sm font-medium flex items-center gap-2 whitespace-nowrap">
               Recent Logs

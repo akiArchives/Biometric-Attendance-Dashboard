@@ -5,8 +5,6 @@ import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
   CardAction,
@@ -46,7 +44,11 @@ interface ChartBarStackedProps {
   selectedDate: string;
 }
 
-export function ChartBarStacked({ data, weekRange, selectedDate }: ChartBarStackedProps) {
+export function ChartBarStacked({
+  data,
+  weekRange,
+  selectedDate,
+}: ChartBarStackedProps) {
   return (
     <Card className="shadow-md w-full lg:flex-1">
       <CardHeader className="text-gray-600 dark:text-gray-300">
@@ -60,7 +62,7 @@ export function ChartBarStacked({ data, weekRange, selectedDate }: ChartBarStack
       <CardContent className="">
         <ChartContainer
           config={chartConfig}
-          className="aspect-auto h-[calc(100vh-350px)] w-full"
+          className="w-full aspect-4/3 md:aspect-2/1 max-h-100"
         >
           <BarChart accessibilityLayer data={data}>
             <CartesianGrid vertical={false} />
