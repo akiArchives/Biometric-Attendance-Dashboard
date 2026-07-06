@@ -1,16 +1,17 @@
 "use client";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
 import {
   Clock,
   Hourglass,
-  CircleCheck,
   CircleX,
   Timer,
   CalendarDays,
   ArrowUpDown,
 } from "lucide-react";
+
+import { IconCircleCheckFilled } from "@tabler/icons-react";
 
 // HikCentral stores local time but labels it +00:00
 function formatRawTime(iso: string): string {
@@ -40,12 +41,12 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="hover:bg-transparent"
+          className="hover:bg-transparent dark:text-slate-100"
         >
           Employee
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
-      )
+      );
     },
     cell: ({ row }) => {
       const name = row.getValue("employee_name") as string;
@@ -55,10 +56,10 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
       return (
         <div className="flex items-center gap-3">
           <div>
-            <div className="ml-2 font-semibold text-slate-900 capitalize">
+            <div className="ml-2 font-semibold text-slate-900 dark:text-slate-100 capitalize">
               {name || "Unregistered Token"}
             </div>
-            <div className="ml-2 text-xs text-slate-400 font-mono">
+            <div className="ml-2 text-xs text-slate-400 dark:text-slate-500 font-mono">
               ID: {empId} {dept && `• ${dept}`}
             </div>
           </div>
@@ -72,7 +73,7 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
       <Button
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        className="justify-center flex w-fit mx-auto hover:bg-transparent"
+        className="justify-center flex w-fit mx-auto hover:bg-transparent dark:text-slate-100"
       >
         Status
         <ArrowUpDown className="ml-2 h-4 w-4 data-[state=sorted]:border-blue-500 data-[state=sorted]:border data-[state=sorted]:text-blue-500" />
@@ -83,36 +84,35 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
 
       const styles: Record<
         AttendanceStatus,
-        { bg: string; icon: React.ReactNode; label: string }
+        { icon: React.ReactNode; label: string }
       > = {
         present: {
-          bg: "bg-emerald-50 text-emerald-700 border-emerald-700",
-          icon: <CircleCheck size={13} />,
+          icon: (
+            <IconCircleCheckFilled
+              size={14}
+              className="text-emerald-500 shrink-0"
+            />
+          ),
           label: "Present",
         },
         late: {
-          bg: "bg-amber-50 text-amber-700 border-amber-700",
-          icon: <Timer size={13} />,
+          icon: <Timer size={14} className="text-amber-500 shrink-0" />,
           label: "Late",
         },
         absent: {
-          bg: "bg-red-50 text-red-600 border-red-700",
-          icon: <CircleX size={13} />,
+          icon: <CircleX size={14} className="text-red-500 shrink-0" />,
           label: "Absent",
         },
         on_leave: {
-          bg: "bg-blue-50 text-blue-700 border-blue-700",
-          icon: <CalendarDays size={13} />,
+          icon: <CalendarDays size={14} className="text-blue-500 shrink-0" />,
           label: "On Leave",
         },
       };
 
-      const { bg, icon, label } = styles[status];
+      const { icon, label } = styles[status];
 
       return (
-        <span
-          className={`flex w-fit mx-auto justify-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${bg}`}
-        >
+        <span className="flex w-fit mx-auto justify-center items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium border border-slate-200 bg-white text-slate-700 dark:border-slate-800 dark:bg-transparent dark:text-slate-300">
           {icon}
           {label}
         </span>
@@ -125,7 +125,7 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
       <Button
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        className="justify-center flex w-fit mx-auto hover:bg-transparent"
+        className="justify-center flex w-fit mx-auto hover:bg-transparent dark:text-slate-100"
       >
         Time in
         <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -139,7 +139,7 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
         );
 
       return (
-        <div className="flex w-fit mx-auto items-center gap-1.5 text-slate-700 font-medium font-mono text-xs">
+        <div className="flex w-fit mx-auto items-center gap-1.5 text-slate-700 dark:text-slate-300 font-medium font-mono text-xs">
           <Clock size={13} className="text-slate-400" />
           {formatRawTime(rawTime)}
         </div>
@@ -152,7 +152,7 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
       <Button
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        className="justify-center flex w-fit mx-auto hover:bg-transparent"
+        className="justify-center flex w-fit mx-auto hover:bg-transparent dark:text-slate-100"
       >
         Time out
         <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -166,7 +166,7 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
         );
 
       return (
-        <div className="flex w-fit mx-auto items-center gap-1.5 text-slate-700 font-medium font-mono text-xs">
+        <div className="flex w-fit mx-auto items-center gap-1.5 text-slate-700 dark:text-slate-300 font-medium font-mono text-xs">
           <Clock size={13} className="text-slate-400" />
           {formatRawTime(rawTime)}
         </div>
@@ -179,7 +179,7 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
       <Button
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        className="justify-center flex w-fit mx-auto hover:bg-transparent"
+        className="justify-center flex w-fit mx-auto hover:bg-transparent dark:text-slate-100"
       >
         Hours Logged
         <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -201,7 +201,7 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
       }
 
       return (
-        <div className="flex w-fit mx-auto items-center gap-1.5 text-slate-900 font-semibold">
+        <div className="flex w-fit mx-auto items-center gap-1.5 text-slate-900 dark:text-slate-100 font-semibold">
           <Hourglass size={14} className="" />
           <span>
             {hours}h {minutes}m

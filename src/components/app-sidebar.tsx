@@ -80,12 +80,12 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
     <Sidebar variant="sidebar" {...props}>
       <SidebarHeader>
         <div className="my-2 mx-2 flex items-center gap-2">
-          <FingerprintPattern className="size-8 text-sidebar-primary group-data-[collapsible=icon]:size-6" />
+          <FingerprintPattern className="size-8 text-sidebar-primary dark:text-blue-400 group-data-[collapsible=icon]:size-6" />
           <div className="grid text-left text-md leading-tight group-data-[collapsible=icon]:hidden">
-            <span className="truncate font-black text-sidebar-primary">
+            <span className="truncate font-black text-sidebar-primary dark:text-blue-100">
               C L I F S A
             </span>
-            <span className="truncate text-xs text-sidebar-primary">
+            <span className="truncate text-xs text-sidebar-primary dark:text-blue-300">
               Biometric Logs
             </span>
           </div>

@@ -47,7 +47,7 @@ export function DatePicker({ selected, label }: DatePickerProps) {
     <Popover>
       <PopoverTrigger asChild>
         <Button
-          variant={"outline"}
+          variant={"default"}
           className={cn(
             "w-auto justify-start text-left font-medium bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground",
             !selected && "text-muted-foreground"

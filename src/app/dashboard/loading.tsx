@@ -11,9 +11,9 @@ import {
 
 export default function DashboardLoading() {
   return (
-    <div className="w-full h-full p-4 flex flex-col gap-5">
+    <div className="w-full h-full p-6 flex flex-col gap-5">
       {/* Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-6 *:data-[slot=card]:bg-linear-to-t *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card *:data-[slot=card]:shadow-xs lg:grid-cols-4 dark:*:data-[slot=card]:bg-card">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-6 *:data-[slot=card]:shadow-xs lg:grid-cols-4">
         {/* Present Card */}
         <Card className="@container/card">
           <CardHeader>

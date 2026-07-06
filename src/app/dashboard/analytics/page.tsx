@@ -38,13 +38,10 @@ export default async function AttendancePage({ searchParams }: PageProps) {
     );
   }
 
-  const processedData = processDailyLogs(
-    rawLogs || [],
-    allEmployees || [],
-  );
+  const processedData = processDailyLogs(rawLogs || [], allEmployees || []);
 
   return (
-    <div className="w-full h-auto my-4 px-4">
+    <div className="w-full h-auto mt-6 px-6">
       <AttendanceTable data={processedData} />
     </div>
   );

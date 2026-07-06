@@ -17,7 +17,7 @@ import { Separator } from "@/components/ui/separator";
 
 export default function Loading() {
   return (
-    <div className="w-full h-auto my-4 px-4">
+    <div className="w-full h-auto mt-6 px-6">
       <div className="flex flex-col gap-4">
         {/* Desktop View Table Skeleton */}
         <div className="hidden md:block relative w-full md:h-[calc(100vh-100px)] overflow-auto rounded-md border bg-card text-card-foreground shadow-md">
