@@ -49,7 +49,7 @@ interface ChartBarStackedProps {
 export function ChartBarStacked({ data, weekRange, selectedDate }: ChartBarStackedProps) {
   return (
     <Card className="shadow-md w-full lg:flex-1">
-      <CardHeader className="text-gray-600">
+      <CardHeader className="text-gray-600 dark:text-gray-300">
         <CardTitle className="text-sm font-medium flex items-center gap-2">
           Weekly Attendance Metrics
         </CardTitle>

@@ -56,14 +56,14 @@ export function SiteHeader() {
             orientation="vertical"
             className="hidden md:block mx-2 data-[orientation=vertical]:h-7"
           />
-          <h1 className="text-lg md:text-xl font-bold text-gray-700 whitespace-nowrap">{title}</h1>
+          <h1 className="text-lg md:text-xl font-bold text-gray-700 dark:text-gray-200 whitespace-nowrap">{title}</h1>
 
           <Separator
             orientation="vertical"
             className="hidden md:block mx-2 data-[orientation=vertical]:h-7"
           />
 
-          <p className="hidden md:block text-sm text-gray-400">{subtitle}</p>
+          <p className="hidden md:block text-sm text-gray-400 dark:text-gray-300">{subtitle}</p>
         </div>
 
         <div className="flex items-center gap-1.5 md:gap-2">

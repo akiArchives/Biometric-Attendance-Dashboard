@@ -174,10 +174,10 @@ export default async function DashboardPage({
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-6 *:data-[slot=card]:bg-linear-to-t *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card *:data-[slot=card]:shadow-xs lg:grid-cols-4 dark:*:data-[slot=card]:bg-card">
         <Card className="@container/card">
           <CardHeader>
-            <CardDescription className="flex items-center text-gray-700 gap-2">
+            <CardDescription className="flex items-center text-gray-500 dark:text-gray-400 gap-2">
               Present
             </CardDescription>
-            <CardTitle className="text-2xl font-semibold text-gray-700 tabular-nums @[250px]/card:text-3xl">
+            <CardTitle className="text-2xl font-semibold text-gray-700 dark:text-gray-100 tabular-nums @[250px]/card:text-3xl">
               {presentCount}
             </CardTitle>
             <CardAction>
@@ -201,10 +201,10 @@ export default async function DashboardPage({
 
         <Card className="@container/card">
           <CardHeader>
-            <CardDescription className="flex items-center text-gray-700 gap-2">
+            <CardDescription className="flex items-center text-gray-500 dark:text-gray-400 gap-2">
               Late
             </CardDescription>
-            <CardTitle className="text-2xl font-semibold text-gray-700 tabular-nums @[250px]/card:text-3xl">
+            <CardTitle className="text-2xl font-semibold text-gray-700 dark:text-gray-100 tabular-nums @[250px]/card:text-3xl">
               {lateCount}
             </CardTitle>
             <CardAction>
@@ -228,10 +228,10 @@ export default async function DashboardPage({
 
         <Card className="@container/card">
           <CardHeader>
-            <CardDescription className="flex items-center text-gray-700 gap-2">
+            <CardDescription className="flex items-center text-gray-500 dark:text-gray-400 gap-2">
               Absent
             </CardDescription>
-            <CardTitle className="text-2xl font-semibold text-gray-700 tabular-nums @[250px]/card:text-3xl">
+            <CardTitle className="text-2xl font-semibold text-gray-700 dark:text-gray-100 tabular-nums @[250px]/card:text-3xl">
               {absentCount}
             </CardTitle>
             <CardAction>
@@ -255,10 +255,10 @@ export default async function DashboardPage({
 
         <Card className="@container/card">
           <CardHeader>
-            <CardDescription className="flex items-center text-gray-700 gap-2">
+            <CardDescription className="flex items-center text-gray-500 dark:text-gray-400 gap-2">
               Total Employees
             </CardDescription>
-            <CardTitle className="text-2xl font-semibold text-gray-700 tabular-nums @[250px]/card:text-3xl">
+            <CardTitle className="text-2xl font-semibold text-gray-700 dark:text-gray-100 tabular-nums @[250px]/card:text-3xl">
               {totalCount}
             </CardTitle>
             <CardAction>
@@ -293,7 +293,7 @@ export default async function DashboardPage({
 
         {/* RECENT LOGS */}
         <Card className="flex flex-col w-full lg:w-95 h-fit shadow-md overflow-visible mb-4">
-          <CardHeader className="text-gray-600">
+          <CardHeader className="text-gray-600 dark:text-gray-300">
             <CardTitle className="text-sm font-medium flex items-center gap-2 whitespace-nowrap">
               Recent Logs
             </CardTitle>
