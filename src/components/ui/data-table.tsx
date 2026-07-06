@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react"
+import * as React from "react";
 import {
   ColumnDef,
   Row,
@@ -31,7 +31,7 @@ export function DataTable<TData, TValue>({
   data,
   renderMobileCard,
 }: DataTableProps<TData, TValue>) {
-  const [sorting, setSorting] = React.useState<SortingState>([])
+  const [sorting, setSorting] = React.useState<SortingState>([]);
 
   const table = useReactTable({
     data,
@@ -42,12 +42,12 @@ export function DataTable<TData, TValue>({
     state: {
       sorting,
     },
-  })
+  });
 
   return (
     <div className="flex flex-col gap-4">
       {/* Desktop Table View */}
-      <div className="hidden md:block relative w-full overflow-x-auto rounded-md border bg-card text-card-foreground shadow-md">
+      <div className="hidden md:block relative w-full md:h-[calc(100vh-100px)] overflow-auto rounded-md border bg-card text-card-foreground shadow-md">
         <Table noWrapper className="table-fixed">
           <TableHeader className="sticky top-0 z-10 bg-blue-100 shadow-sm">
             {table.getHeaderGroups().map((headerGroup) => (
@@ -57,9 +57,9 @@ export function DataTable<TData, TValue>({
                     {header.isPlaceholder
                       ? null
                       : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext(),
-                      )}
+                          header.column.columnDef.header,
+                          header.getContext(),
+                        )}
                   </TableHead>
                 ))}
               </TableRow>
@@ -108,13 +108,24 @@ export function DataTable<TData, TValue>({
             // Fallback for other tables
             const cells = row.getVisibleCells();
             return (
-              <Card key={row.id} className="p-4 shadow-sm border border-border bg-card flex flex-col gap-2">
+              <Card
+                key={row.id}
+                className="p-4 shadow-sm border border-border bg-card flex flex-col gap-2"
+              >
                 {cells.map((cell) => (
-                  <div key={cell.id} className="flex justify-between items-center text-xs">
+                  <div
+                    key={cell.id}
+                    className="flex justify-between items-center text-xs"
+                  >
                     <span className="text-muted-foreground font-medium capitalize">
                       {cell.column.id.replace("_", " ")}
                     </span>
-                    <div>{flexRender(cell.column.columnDef.cell, cell.getContext())}</div>
+                    <div>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
+                    </div>
                   </div>
                 ))}
               </Card>
