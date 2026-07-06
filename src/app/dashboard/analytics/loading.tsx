@@ -25,25 +25,25 @@ export default function Loading() {
             <TableHeader className="sticky top-0 z-10 bg-blue-100 shadow-sm">
               <TableRow>
                 <TableHead>
-                  <Skeleton className="bg-blue-50 h-4 w-28 ml-2" />
+                  <Skeleton className="h-4 w-28 ml-2" />
                 </TableHead>
                 <TableHead>
-                  <Skeleton className="bg-blue-50 h-4 w-16 flex mx-auto" />
+                  <Skeleton className="h-4 w-16 flex mx-auto" />
                 </TableHead>
                 <TableHead>
-                  <Skeleton className="bg-blue-50 h-4 w-16 flex mx-auto" />
+                  <Skeleton className="h-4 w-16 flex mx-auto" />
                 </TableHead>
                 <TableHead>
-                  <Skeleton className="bg-blue-50 h-4 w-16 flex mx-auto" />
+                  <Skeleton className="h-4 w-16 flex mx-auto" />
                 </TableHead>
                 <TableHead>
-                  <Skeleton className="bg-blue-50 h-4 w-24 flex mx-auto" />
+                  <Skeleton className="h-4 w-24 flex mx-auto" />
                 </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {Array.from({ length: 13 }).map((_, i) => (
-                <TableRow key={i} className="odd:bg-gray-100">
+                <TableRow key={i} className="">
                   <TableCell className="h-13.25">
                     <div className="flex flex-col gap-1 ml-2">
                       <Skeleton className="h-4 w-32" />
