@@ -76,7 +76,7 @@ export function SiteHeader() {
               target="_blank"
               className="size-fit m-0 dark:text-foreground"
             >
-              <IconBrandGithub className="size-5 md:size-6 text-gray-700" />
+              <IconBrandGithub className="size-5 md:size-6 text-gray-700 dark:text-foreground" />
             </a>
           </Button>
         </div>

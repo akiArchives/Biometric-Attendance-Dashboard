@@ -5,13 +5,15 @@ import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 import { IconSun, IconMoon } from "@tabler/icons-react";
 
+const emptySubscribe = () => () => {};
+
 export function ModeToggle() {
   const { setTheme, resolvedTheme } = useTheme();
-  const [mounted, setMounted] = React.useState(false);
-
-  React.useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = React.useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false
+  );
 
   if (!mounted) {
     return (
