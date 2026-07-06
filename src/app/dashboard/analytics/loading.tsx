@@ -20,7 +20,7 @@ export default function Loading() {
     <div className="w-full h-auto mt-6 px-6">
       <div className="flex flex-col gap-4">
         {/* Desktop View Table Skeleton */}
-        <div className="hidden md:block relative w-full md:h-[calc(100vh-100px)] overflow-auto rounded-md border bg-card text-card-foreground shadow-md">
+        <div className="hidden md:block relative w-full md:h-[calc(100vh-120px)] overflow-auto rounded-md border bg-card text-card-foreground shadow-md">
           <Table noWrapper className="table-fixed">
             <TableHeader className="sticky top-0 z-10 bg-blue-100 shadow-sm">
               <TableRow>
