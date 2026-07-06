@@ -39,3 +39,5 @@ export function ModeToggle() {
     </Button>
   );
 }
+
+export default ModeToggle;
