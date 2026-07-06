@@ -181,7 +181,7 @@ export default async function DashboardPage({
               {presentCount}
             </CardTitle>
             <CardAction>
-              <div className="flex h-13 w-13 items-center justify-center rounded-md bg-emerald-100/80 text-emerald-600">
+              <div className="flex h-13 w-13 items-center justify-center rounded-md bg-emerald-100/80 text-emerald-600 border-3 border-emerald-600/20 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-400/30">
                 <CalendarCheck2 className="size-9" />
               </div>
             </CardAction>
@@ -208,7 +208,7 @@ export default async function DashboardPage({
               {lateCount}
             </CardTitle>
             <CardAction>
-              <div className="flex h-13 w-13 items-center justify-center rounded-md bg-yellow-100/80 text-yellow-600">
+              <div className="flex h-13 w-13 items-center justify-center rounded-md bg-yellow-100/80 text-yellow-600 border-3 border-yellow-600/20 dark:bg-yellow-950/40 dark:text-yellow-400 dark:border-yellow-400/30">
                 <ClockAlert className="size-9" />
               </div>
             </CardAction>
@@ -235,7 +235,7 @@ export default async function DashboardPage({
               {absentCount}
             </CardTitle>
             <CardAction>
-              <div className="flex h-13 w-13 items-center justify-center rounded-md bg-red-100/80 text-red-600">
+              <div className="flex h-13 w-13 items-center justify-center rounded-md bg-red-100/80 text-red-600 border-3 border-red-600/20 dark:bg-red-950/40 dark:text-red-400 dark:border-red-400/30">
                 <UserRoundX className="size-9" />
               </div>
             </CardAction>
@@ -262,7 +262,7 @@ export default async function DashboardPage({
               {totalCount}
             </CardTitle>
             <CardAction>
-              <div className="flex h-13 w-13 items-center justify-center rounded-md bg-indigo-100/80 text-indigo-600">
+              <div className="flex h-13 w-13 items-center justify-center rounded-md bg-indigo-100/80 text-indigo-600 border-3 border-indigo-600/20 dark:bg-indigo-950/40 dark:text-indigo-400 dark:border-indigo-400/30">
                 <Users className="size-9" />
               </div>
             </CardAction>
