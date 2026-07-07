@@ -1,12 +1,14 @@
 import { LoginForm } from "@/components/login-form"
 import { FingerprintIcon } from "lucide-react"
-import { createClient } from "@/lib/supabase/server"
+import { auth0 } from "@/lib/auth0"
+import { redirect } from "next/navigation"
 
 export default async function LoginPage() {
-  const supabase = await createClient();
-  const { data: user } = await supabase.auth.getUser();
+  const session = await auth0.getSession();
 
-  console.log({ user });
+  if (session) {
+    redirect("/dashboard");
+  }
 
   return (
     <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10">
@@ -22,3 +24,4 @@ export default async function LoginPage() {
     </div>
   )
 }
+

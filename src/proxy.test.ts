@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { proxy } from './proxy';
 import { NextRequest } from 'next/server';
+import { auth0 } from '@/lib/auth0';
 
 vi.mock('@/lib/auth0', () => ({
   auth0: {
@@ -28,4 +29,15 @@ describe('Next.js 16 Proxy Routing', () => {
     const text = await res.text();
     expect(text).toBe('Auth Flow Intercepted');
   });
+
+  it('should allow authenticated users to access /dashboard without redirect', async () => {
+    vi.mocked(auth0.getSession).mockResolvedValueOnce({
+      user: { name: 'Test User' },
+    });
+    const req = new NextRequest(new URL('http://localhost:3000/dashboard'));
+    const res = await proxy(req);
+    expect(res.status).not.toBe(307);
+    expect(res.headers.get('location')).toBeNull();
+  });
 });
+
