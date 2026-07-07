@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { format } from "date-fns";
-import { Calendar as CalendarIcon } from "lucide-react";
+import { IconCalendarFilled } from "@tabler/icons-react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import { cn } from "@/lib/utils";
@@ -36,7 +36,7 @@ export function DatePicker({ selected, label }: DatePickerProps) {
       const month = String(selectedDate.getMonth() + 1).padStart(2, "0");
       const day = String(selectedDate.getDate()).padStart(2, "0");
       const dateString = `${year}-${month}-${day}`;
-      
+
       const params = new URLSearchParams(searchParams.toString());
       params.set("date", dateString);
       router.push("?" + params.toString());
@@ -50,11 +50,17 @@ export function DatePicker({ selected, label }: DatePickerProps) {
           variant={"default"}
           className={cn(
             "w-auto justify-start text-left font-medium bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground",
-            !selected && "text-muted-foreground"
+            !selected && "text-muted-foreground",
           )}
         >
-          <CalendarIcon className="h-4 w-4 text-primary-foreground" />
-          {label ? <span>{label}</span> : (date ? format(date, "PPP") : <span>Pick a date</span>)}
+          <IconCalendarFilled className="h-4 w-4 text-primary-foreground" />
+          {label ? (
+            <span>{label}</span>
+          ) : date ? (
+            format(date, "PPP")
+          ) : (
+            <span>Pick a date</span>
+          )}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="end">

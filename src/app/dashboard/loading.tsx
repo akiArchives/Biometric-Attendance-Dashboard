@@ -104,10 +104,10 @@ export default function DashboardLoading() {
               {Array.from({ length: 5 }).map((_, i) => (
                 <div
                   key={i}
-                  className="flex-1 flex flex-col items-center gap-2 h-full justify-end"
+                  className="flex-1 flex flex-col items-center gap-3 h-full justify-end"
                 >
                   <Skeleton
-                    className="w-full rounded-t-md max-w-16"
+                    className="w-full rounded-t-md max-w-45"
                     style={{ height: `${30 + (i % 3) * 20}%` }}
                   />
                   <Skeleton className="mb-5 h-3 w-12" />

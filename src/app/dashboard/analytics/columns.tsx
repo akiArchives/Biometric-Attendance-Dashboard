@@ -2,18 +2,14 @@
 
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
+import { ArrowUpDown } from "lucide-react";
 import {
-  Clock,
-  Hourglass,
-  CircleX,
-  Timer,
-  CalendarDays,
-  ArrowUpDown,
-} from "lucide-react";
+  IconCircleCheckFilled,
+  IconCircleXFilled,
+  IconCalendar,
+  IconAlarmFilled,
+} from "@tabler/icons-react";
 
-import { IconCircleCheckFilled } from "@tabler/icons-react";
-
-// HikCentral stores local time but labels it +00:00
 function formatRawTime(iso: string): string {
   const [h, m] = iso.substring(11, 16).split(":").map(Number);
   const ampm = h >= 12 ? "PM" : "AM";
@@ -96,15 +92,19 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
           label: "Present",
         },
         late: {
-          icon: <Timer size={14} className="text-amber-500 shrink-0" />,
+          icon: (
+            <IconAlarmFilled size={14} className="text-amber-500 shrink-0" />
+          ),
           label: "Late",
         },
         absent: {
-          icon: <CircleX size={14} className="text-red-500 shrink-0" />,
+          icon: (
+            <IconCircleXFilled size={14} className="text-red-500 shrink-0" />
+          ),
           label: "Absent",
         },
         on_leave: {
-          icon: <CalendarDays size={14} className="text-blue-500 shrink-0" />,
+          icon: <IconCalendar size={14} className="text-blue-500 shrink-0" />,
           label: "On Leave",
         },
       };
@@ -112,7 +112,7 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
       const { icon, label } = styles[status];
 
       return (
-        <span className="flex w-fit mx-auto justify-center items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium border border-slate-200 bg-white text-slate-700 dark:border-slate-800 dark:bg-transparent dark:text-slate-300">
+        <span className="flex w-fit mx-auto justify-center items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium border border-slate-50 bg-white text-slate-700 dark:border-slate-600 dark:bg-transparent dark:text-slate-300">
           {icon}
           {label}
         </span>
@@ -140,7 +140,6 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
 
       return (
         <div className="flex w-fit mx-auto items-center gap-1.5 text-slate-700 dark:text-slate-300 font-medium font-mono text-xs">
-          <Clock size={13} className="text-slate-400" />
           {formatRawTime(rawTime)}
         </div>
       );
@@ -167,7 +166,6 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
 
       return (
         <div className="flex w-fit mx-auto items-center gap-1.5 text-slate-700 dark:text-slate-300 font-medium font-mono text-xs">
-          <Clock size={13} className="text-slate-400" />
           {formatRawTime(rawTime)}
         </div>
       );
@@ -202,7 +200,6 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
 
       return (
         <div className="flex w-fit mx-auto items-center gap-1.5 text-slate-900 dark:text-slate-100 font-semibold">
-          <Hourglass size={14} className="" />
           <span>
             {hours}h {minutes}m
           </span>

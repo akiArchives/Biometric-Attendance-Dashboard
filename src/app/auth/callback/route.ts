@@ -22,5 +22,7 @@ export async function GET(request: Request) {
     }
   }
 
-  return NextResponse.redirect(`${origin}/sign-in?error=Could not exchange code for session`);
+  return NextResponse.redirect(
+    `${origin}/sign-in?error=Could not exchange code for session`,
+  );
 }

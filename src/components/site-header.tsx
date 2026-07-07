@@ -49,7 +49,7 @@ export function SiteHeader() {
             orientation="vertical"
             className="hidden md:block mx-2 data-[orientation=vertical]:h-7"
           />
-          <h1 className="text-lg md:text-xl font-bold text-gray-700 dark:text-gray-200 whitespace-nowrap">
+          <h1 className="text-lg md:text-lg font-bold text-gray-700 dark:text-gray-200 whitespace-nowrap">
             {title}
           </h1>
 
