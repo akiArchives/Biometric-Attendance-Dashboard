@@ -112,7 +112,7 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
       const { icon, label } = styles[status];
 
       return (
-        <span className="flex w-fit mx-auto justify-center items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium border border-slate-50 bg-white text-slate-700 dark:border-slate-600 dark:bg-transparent dark:text-slate-300">
+        <span className="flex w-fit mx-auto justify-center items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium border border-slate-300 bg-white text-slate-700 dark:border-slate-600 dark:bg-transparent dark:text-slate-300">
           {icon}
           {label}
         </span>
