@@ -2,22 +2,21 @@ import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { SiteHeader } from "@/components/site-header";
 import { Suspense } from "react";
-import { auth0 } from "@/lib/auth0";
+import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 
 export default async function Layout({ children }: { children: React.ReactNode }) {
-  const session = await auth0.getSession();
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
 
-  if (!session) {
-    redirect("/auth/login");
+  if (!user) {
+    redirect("/sign-in");
   }
 
-  const { user } = session;
-
   const sidebarUser = {
-    name: user.name || user.nickname || user.email?.split("@")[0] || "User",
+    name: user.user_metadata?.name || user.email?.split("@")[0] || "User",
     email: user.email || "",
-    avatar: user.picture || "",
+    avatar: user.user_metadata?.avatar_url || "",
   };
 
   return (

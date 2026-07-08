@@ -1,43 +1,51 @@
-import { describe, it, expect, vi } from 'vitest';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { proxy } from './proxy';
 import { NextRequest } from 'next/server';
-import { auth0 } from '@/lib/auth0';
+import { createServerClient } from '@supabase/ssr';
 
-vi.mock('@/lib/auth0', () => ({
-  auth0: {
-    middleware: vi.fn().mockImplementation((req) => {
-      if (req.nextUrl.pathname.startsWith('/auth/')) {
-        return new Response('Auth Flow Intercepted');
-      }
-      return null;
-    }),
-    getSession: vi.fn().mockResolvedValue(null),
-  },
+vi.mock('@supabase/ssr', () => ({
+  createServerClient: vi.fn(),
 }));
 
-describe('Next.js 16 Proxy Routing', () => {
-  it('should redirect unauthenticated users accessing /dashboard to /auth/login', async () => {
+describe('Next.js Middleware Routing', () => {
+  beforeEach(() => {
+    vi.resetAllMocks();
+  });
+
+  it('should redirect unauthenticated users accessing /dashboard to /sign-in', async () => {
+    const mockGetUser = vi.fn().mockResolvedValue({ data: { user: null }, error: null });
+    vi.mocked(createServerClient).mockReturnValue({
+      auth: { getUser: mockGetUser },
+    } as any);
+
     const req = new NextRequest(new URL('http://localhost:3000/dashboard'));
     const res = await proxy(req);
     expect(res.status).toBe(307);
-    expect(res.headers.get('location')).toContain('/auth/login');
+    expect(res.headers.get('location')).toContain('/sign-in');
   });
 
-  it('should let Auth0 middleware handle /auth paths', async () => {
-    const req = new NextRequest(new URL('http://localhost:3000/auth/login'));
+  it('should redirect authenticated users accessing /sign-in to /dashboard', async () => {
+    const mockGetUser = vi.fn().mockResolvedValue({ data: { user: { email: 'user@example.com' } }, error: null });
+    vi.mocked(createServerClient).mockReturnValue({
+      auth: { getUser: mockGetUser },
+    } as any);
+
+    const req = new NextRequest(new URL('http://localhost:3000/sign-in'));
     const res = await proxy(req);
-    const text = await res.text();
-    expect(text).toBe('Auth Flow Intercepted');
+    expect(res.status).toBe(307);
+    expect(res.headers.get('location')).toContain('/dashboard');
   });
 
   it('should allow authenticated users to access /dashboard without redirect', async () => {
-    vi.mocked(auth0.getSession).mockResolvedValueOnce({
-      user: { name: 'Test User' },
-    });
+    const mockGetUser = vi.fn().mockResolvedValue({ data: { user: { email: 'user@example.com' } }, error: null });
+    vi.mocked(createServerClient).mockReturnValue({
+      auth: { getUser: mockGetUser },
+    } as any);
+
     const req = new NextRequest(new URL('http://localhost:3000/dashboard'));
     const res = await proxy(req);
     expect(res.status).not.toBe(307);
     expect(res.headers.get('location')).toBeNull();
   });
 });
-
