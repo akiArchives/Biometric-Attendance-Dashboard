@@ -19,20 +19,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${inter.variable} font-sans`}>
-      <head>
-
-      </head>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${inter.variable} font-sans`}
+    >
+      <head></head>
       <body className="h-full">
         <TooltipProvider>
           <ThemeProvider
             attribute="class"
-            defaultTheme="system"
+            defaultTheme="light"
             enableSystem
             disableTransitionOnChange
           >
             {children}
-          </ThemeProvider></TooltipProvider>
+          </ThemeProvider>
+        </TooltipProvider>
       </body>
     </html>
   );
