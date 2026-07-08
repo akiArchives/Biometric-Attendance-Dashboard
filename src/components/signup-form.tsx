@@ -146,13 +146,15 @@ export function SignupForm({
                 </p>
               )}
               <Field className="gap-3">
-                <Button
-                  type="submit"
-                  disabled={pending}
-                  className="shadow-sm rounded-full h-10 mt-2 border-none"
-                >
-                  {pending ? "Creating Account..." : "Create Account"}
-                </Button>
+                {message ? (
+                  <Button asChild className="shadow-sm rounded-full h-10 mt-2 border-none w-full">
+                    <a href="/sign-in">Back to Sign in</a>
+                  </Button>
+                ) : (
+                  <Button type="submit" disabled={pending} className="shadow-sm rounded-full h-10 mt-2 border-none">
+                    {pending ? "Creating Account..." : "Create Account"}
+                  </Button>
+                )}
               </Field>
             </FieldGroup>
           </form>

@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import { SignupForm } from "@/components/signup-form"
-import { FingerprintIcon } from "lucide-react"
+import { SignupForm } from "@/components/signup-form";
+import { FingerprintIcon } from "lucide-react";
 
 export default function SignupPage() {
   return (
@@ -11,10 +11,10 @@ export default function SignupPage() {
           <div className="flex size-6 items-center justify-center rounded-md bg-primary text-primary-foreground">
             <FingerprintIcon className="size-4" />
           </div>
-          CLIFSA
+          Attendance Dashboard
         </a>
         <SignupForm />
       </div>
     </div>
-  )
+  );
 }
