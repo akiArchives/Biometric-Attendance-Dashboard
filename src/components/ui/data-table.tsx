@@ -47,7 +47,7 @@ export function DataTable<TData, TValue>({
   return (
     <div className="flex flex-col gap-4">
       {/* Desktop Table View */}
-      <div className="hidden md:block relative w-full md:h-[calc(100vh-120px)] overflow-auto rounded-md border bg-background text-foreground shadow-md">
+      <div className="hidden md:block relative w-full md:h-[calc(100vh-120px)] overflow-auto rounded-md border bg-card text-foreground shadow-md">
         <Table noWrapper className="table-fixed">
           <TableHeader className="sticky top-0 z-10 bg-muted shadow-sm">
             {table.getHeaderGroups().map((headerGroup) => (

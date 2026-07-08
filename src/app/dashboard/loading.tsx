@@ -1,4 +1,5 @@
 import { Skeleton } from "@/components/ui/skeleton";
+import { CalendarCheck2, ClockAlert, UserRoundX, Users } from "lucide-react";
 import {
   Card,
   CardDescription,
@@ -17,14 +18,16 @@ export default function DashboardLoading() {
         {/* Present Card */}
         <Card className="@container/card">
           <CardHeader>
-            <CardDescription className="flex items-center text-gray-700 gap-2">
+            <CardDescription className="flex items-center text-gray-500 dark:text-gray-400 gap-2">
               Present
             </CardDescription>
             <CardTitle className="text-2xl font-semibold text-gray-700 tabular-nums @[250px]/card:text-3xl">
               <Skeleton className="h-8 w-12 mt-1" />
             </CardTitle>
             <CardAction>
-              <Skeleton className="h-13 w-13 rounded-md" />
+              <div className="flex h-13 w-13 items-center justify-center rounded-md bg-emerald-100/80 text-emerald-600 border-3 border-emerald-600/20 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-400/30">
+                <CalendarCheck2 className="size-9" />
+              </div>
             </CardAction>
           </CardHeader>
           <CardFooter className="py-1.5 justify-center">
@@ -35,14 +38,16 @@ export default function DashboardLoading() {
         {/* Late Card */}
         <Card className="@container/card">
           <CardHeader>
-            <CardDescription className="flex items-center text-gray-700 gap-2">
+            <CardDescription className="flex items-center text-gray-500 dark:text-gray-400 gap-2">
               Late
             </CardDescription>
             <CardTitle className="text-2xl font-semibold text-gray-700 tabular-nums @[250px]/card:text-3xl">
               <Skeleton className="h-8 w-12 mt-1" />
             </CardTitle>
             <CardAction>
-              <Skeleton className="h-13 w-13 rounded-md" />
+              <div className="flex h-13 w-13 items-center justify-center rounded-md bg-yellow-100/80 text-yellow-600 border-3 border-yellow-600/20 dark:bg-yellow-950/40 dark:text-yellow-400 dark:border-yellow-400/30">
+                <ClockAlert className="size-9" />
+              </div>
             </CardAction>
           </CardHeader>
           <CardFooter className="py-1.5 justify-center">
@@ -53,14 +58,16 @@ export default function DashboardLoading() {
         {/* Absent Card */}
         <Card className="@container/card">
           <CardHeader>
-            <CardDescription className="flex items-center text-gray-700 gap-2">
+            <CardDescription className="flex items-center text-gray-500 dark:text-gray-400 gap-2">
               Absent
             </CardDescription>
             <CardTitle className="text-2xl font-semibold text-gray-700 tabular-nums @[250px]/card:text-3xl">
               <Skeleton className="h-8 w-12 mt-1" />
             </CardTitle>
             <CardAction>
-              <Skeleton className="h-13 w-13 rounded-md" />
+              <div className="flex h-13 w-13 items-center justify-center rounded-md bg-red-100/80 text-red-600 border-3 border-red-600/20 dark:bg-red-950/40 dark:text-red-400 dark:border-red-400/30">
+                <UserRoundX className="size-9" />
+              </div>
             </CardAction>
           </CardHeader>
           <CardFooter className="py-1.5 justify-center">
@@ -71,14 +78,16 @@ export default function DashboardLoading() {
         {/* Total Employees Card */}
         <Card className="@container/card">
           <CardHeader>
-            <CardDescription className="flex items-center text-gray-700 gap-2">
+            <CardDescription className="flex items-center text-gray-500 dark:text-gray-400 gap-2">
               Total Employees
             </CardDescription>
             <CardTitle className="text-2xl font-semibold text-gray-700 tabular-nums @[250px]/card:text-3xl">
               <Skeleton className="h-8 w-12 mt-1" />
             </CardTitle>
             <CardAction>
-              <Skeleton className="h-13 w-13 rounded-md" />
+              <div className="flex h-13 w-13 items-center justify-center rounded-md bg-indigo-100/80 text-indigo-600 border-3 border-indigo-600/20 dark:bg-indigo-950/40 dark:text-indigo-400 dark:border-indigo-400/30">
+                <Users className="size-9" />
+              </div>
             </CardAction>
           </CardHeader>
           <CardFooter className="py-1.5 justify-center">
@@ -91,7 +100,7 @@ export default function DashboardLoading() {
       <div className="flex flex-col lg:flex-row items-start w-full h-fit rounded-xl gap-4 lg:gap-6">
         {/* Chart Skeleton */}
         <Card className="shadow-md w-full lg:flex-1">
-          <CardHeader className="text-gray-600">
+          <CardHeader className="text-gray-600 dark:text-gray-300">
             <CardTitle className="text-sm font-medium flex items-center gap-2 whitespace-nowrap">
               Weekly Attendance Metrics
             </CardTitle>
@@ -100,7 +109,7 @@ export default function DashboardLoading() {
             </CardAction>
           </CardHeader>
           <CardContent className="">
-            <div className="w-full aspect-4/3 md:aspect-2/1 max-h-100 flex items-end justify-between gap-6 pt-12 pb-4">
+            <div className="w-full aspect-video md:aspect-2/1 max-h-99 flex items-end justify-between gap-6 pt-12 pb-4">
               {Array.from({ length: 5 }).map((_, i) => (
                 <div
                   key={i}
@@ -118,22 +127,22 @@ export default function DashboardLoading() {
         </Card>
 
         {/* Recent Logs Skeleton */}
-        <Card className="flex flex-col w-full lg:w-95 h-fit shadow-md overflow-visible">
-          <CardHeader className="text-gray-600">
+        <Card className="flex flex-col w-full lg:w-95 h-fit shadow-md overflow-visible mb-4">
+          <CardHeader className="text-gray-600 dark:text-gray-300">
             <CardTitle className="text-sm font-medium flex items-center gap-2 whitespace-nowrap">
               Recent Logs
             </CardTitle>
           </CardHeader>
           <CardContent className="rounded-none flex-1 px-3 whitespace-nowrap">
-            <div className="divide-y rounded-none divide-gray-100 dark:divide-slate-800">
+            <div className="rounded-none">
               {Array.from({ length: 5 }).map((_, i) => (
                 <div
                   key={i}
-                  className="py-2 flex items-center justify-between px-2"
+                  className="py-2.5 flex items-center justify-between px-2"
                 >
                   <div className="flex items-center gap-3">
                     <div className="space-y-1">
-                      <Skeleton className="h-4 w-28" />
+                      <Skeleton className="h-4 w-20" />
                       <Skeleton className="h-3 w-16" />
                     </div>
                   </div>
