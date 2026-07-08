@@ -45,3 +45,7 @@ next-env.d.ts
 docs/superpowers/
 .superpowers/
 .agents/
+
+# git worktrees
+.worktrees/
+worktrees/
