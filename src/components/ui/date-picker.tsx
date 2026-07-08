@@ -49,18 +49,20 @@ export function DatePicker({ selected, label }: DatePickerProps) {
         <Button
           variant={"default"}
           className={cn(
-            "w-auto justify-start text-left font-medium bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground",
+            "w-8 md:w-auto justify-center md:justify-start text-left font-medium bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground px-0 md:px-2.5",
             !selected && "text-muted-foreground",
           )}
         >
           <IconCalendarFilled className="h-4 w-4 text-primary-foreground" />
-          {label ? (
-            <span>{label}</span>
-          ) : date ? (
-            format(date, "PPP")
-          ) : (
-            <span>Pick a date</span>
-          )}
+          <span className="hidden md:inline">
+            {label ? (
+              label
+            ) : date ? (
+              format(date, "PPP")
+            ) : (
+              "Pick a date"
+            )}
+          </span>
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="end">

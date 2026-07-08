@@ -30,8 +30,8 @@ export default function DashboardLoading() {
               </div>
             </CardAction>
           </CardHeader>
-          <CardFooter className="py-1.5 justify-center">
-            <Skeleton className="h-5 w-24" />
+          <CardFooter className="py-1.5 justify-center items-center">
+            <Skeleton className="h-3 w-24 my-1" />
           </CardFooter>
         </Card>
 
@@ -50,8 +50,8 @@ export default function DashboardLoading() {
               </div>
             </CardAction>
           </CardHeader>
-          <CardFooter className="py-1.5 justify-center">
-            <Skeleton className="h-5 w-24" />
+          <CardFooter className="py-1.5 justify-center items-center">
+            <Skeleton className="h-3 w-24 my-1" />
           </CardFooter>
         </Card>
 
@@ -70,8 +70,8 @@ export default function DashboardLoading() {
               </div>
             </CardAction>
           </CardHeader>
-          <CardFooter className="py-1.5 justify-center">
-            <Skeleton className="h-5 w-24" />
+          <CardFooter className="py-1.5 justify-center items-center">
+            <Skeleton className="h-3 w-24 my-1" />
           </CardFooter>
         </Card>
 
@@ -90,8 +90,8 @@ export default function DashboardLoading() {
               </div>
             </CardAction>
           </CardHeader>
-          <CardFooter className="py-1.5 justify-center">
-            <Skeleton className="h-5 w-24" />
+          <CardFooter className="py-1.5 justify-center items-center">
+            <Skeleton className="h-3 w-24 my-1" />
           </CardFooter>
         </Card>
       </div>
