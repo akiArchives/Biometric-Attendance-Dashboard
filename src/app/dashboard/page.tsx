@@ -300,7 +300,7 @@ export default async function DashboardPage({
           </CardHeader>
           <CardContent className="rounded-none flex-1 px-3 whitespace-nowrap">
             {recentLogs.length > 0 ? (
-              <div className="divide-y rounded-none divide-gray-100 dark:divide-slate-800">
+              <div className="rounded-none">
                 {recentLogs.map((log) => (
                   <div
                     key={log.id}
