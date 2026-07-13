@@ -13,6 +13,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { IconLoader2, IconCheck } from "@tabler/icons-react";
+import { useTheme } from "next-themes";
 
 // Default settings state
 const defaultSettings = {
@@ -34,6 +35,7 @@ interface MemberProfile {
 }
 
 export default function SettingsPage() {
+  const { setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [settings, setSettings] = useState(defaultSettings);
   const [role, setRole] = useState<"admin" | "member" | null>(null);
@@ -108,6 +110,21 @@ export default function SettingsPage() {
           } else {
             setRole("member");
           }
+
+          // After user and profile checks, fetch system settings:
+          const { data: sysSettings } = await supabase
+            .from("system_settings")
+            .select("work_start_time, grace_period")
+            .eq("id", 1)
+            .maybeSingle();
+
+          if (sysSettings) {
+            setSettings((prev) => ({
+              ...prev,
+              workStartTime: sysSettings.work_start_time,
+              gracePeriod: String(sysSettings.grace_period),
+            }));
+          }
         }
       } catch (e) {
         console.error("Failed to load user credentials or profiles", e);
@@ -147,6 +164,9 @@ export default function SettingsPage() {
         JSON.stringify(settings),
       );
 
+      // Apply theme
+      setTheme(settings.theme);
+
       // Opt-in: Update Supabase metadata name if it changed
       const supabase = createClient();
       if (
@@ -158,6 +178,18 @@ export default function SettingsPage() {
         });
       }
 
+      // Save System settings if admin
+      if (role === "admin") {
+        const { error: settingsError } = await supabase
+          .from("system_settings")
+          .upsert({
+            id: 1,
+            work_start_time: settings.workStartTime,
+            grace_period: parseInt(settings.gracePeriod, 10) || 0,
+          });
+        if (settingsError) throw settingsError;
+      }
+
       setBanner({
         show: true,
         type: "success",
@@ -167,11 +199,15 @@ export default function SettingsPage() {
         setBanner((prev) => ({ ...prev, show: false }));
       }, 3000);
     } catch (e) {
+      console.error(e);
       setBanner({
         show: true,
         type: "error",
         message: "Failed to save settings.",
       });
+      setTimeout(() => {
+        setBanner((prev) => ({ ...prev, show: false }));
+      }, 3000);
     } finally {
       setIsSaving(false);
     }
@@ -222,8 +258,16 @@ export default function SettingsPage() {
       {/* HEADER */}
 
       {banner.show && (
-        <div className="flex items-center gap-3 p-4 rounded-xl border border-emerald-500/20 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-sm transition-all duration-300 animate-in fade-in slide-in-from-top-2">
-          <IconCheck className="h-5 w-5 shrink-0" />
+        <div className={`flex items-center gap-3 p-4 rounded-xl border text-sm transition-all duration-300 animate-in fade-in slide-in-from-top-2 ${
+          banner.type === "success" 
+            ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400" 
+            : "border-destructive/20 bg-destructive/10 text-destructive dark:text-destructive-foreground"
+        }`}>
+          {banner.type === "success" ? (
+            <IconCheck className="h-5 w-5 shrink-0" />
+          ) : (
+            <span className="h-5 w-5 shrink-0 font-bold">⚠️</span>
+          )}
           <span className="font-medium">{banner.message}</span>
         </div>
       )}
@@ -260,7 +304,7 @@ export default function SettingsPage() {
                   Account Email
                 </Label>
                 <p className="text-xs text-muted-foreground">
-                  Customize how your name appears on the system.
+                  Your registered login email address.
                 </p>
               </div>
               <Input
