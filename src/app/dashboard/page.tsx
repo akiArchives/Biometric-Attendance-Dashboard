@@ -23,6 +23,7 @@ import {
   EmployeeStub,
 } from "@/utils/attendance-processor";
 import Link from "next/link";
+import { RedirectToDefaultHome } from "@/components/redirect-to-default-home";
 
 function formatTime12h(timeStr: string): string {
   const parts = timeStr.split(":");
@@ -184,6 +185,7 @@ export default async function DashboardPage({
 
   return (
     <div className="w-full h-full p-6 flex flex-col gap-5">
+      <RedirectToDefaultHome />
       {/*Cards*/}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-6 *:data-[slot=card]:shadow-xs lg:grid-cols-4">
         <Card className="@container/card">

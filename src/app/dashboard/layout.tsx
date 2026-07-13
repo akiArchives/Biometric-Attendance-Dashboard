@@ -4,6 +4,7 @@ import { SiteHeader } from "@/components/site-header";
 import { Suspense } from "react";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import { MarkSessionRedirected } from "@/components/mark-session-redirected";
 
 export default async function Layout({ children }: { children: React.ReactNode }) {
   const supabase = await createClient();
@@ -21,6 +22,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
 
   return (
     <SidebarProvider className="h-svh overflow-hidden">
+      <MarkSessionRedirected />
       <AppSidebar user={sidebarUser} />
       <SidebarInset>
         <Suspense fallback={
