@@ -3,18 +3,20 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-export function RedirectToDefaultHome() {
+export function RedirectToDefaultHome({ userId }: { userId: string }) {
   const router = useRouter();
 
   useEffect(() => {
+    if (!userId) return;
     try {
-      const alreadyRedirected = sessionStorage.getItem("clifsa_already_redirected");
+      const key = `clifsa_already_redirected_${userId}`;
+      const alreadyRedirected = sessionStorage.getItem(key);
       if (!alreadyRedirected) {
         const saved = localStorage.getItem("clifsa_attendance_settings");
         if (saved) {
           const settings = JSON.parse(saved);
           if (settings.defaultHomePage && settings.defaultHomePage !== "dashboard") {
-            sessionStorage.setItem("clifsa_already_redirected", "true");
+            sessionStorage.setItem(key, "true");
             if (settings.defaultHomePage === "logs") {
               router.replace("/dashboard/analytics");
             } else if (settings.defaultHomePage === "reports") {
@@ -24,11 +26,11 @@ export function RedirectToDefaultHome() {
           }
         }
       }
-      sessionStorage.setItem("clifsa_already_redirected", "true");
+      sessionStorage.setItem(key, "true");
     } catch (e) {
       console.error(e);
     }
-  }, [router]);
+  }, [router, userId]);
 
   return null;
 }

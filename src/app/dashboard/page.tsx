@@ -42,6 +42,9 @@ export default async function DashboardPage({
 }) {
   const { date } = await searchParams;
   const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   const d = new Date();
   const yyyy = d.getFullYear();
@@ -185,7 +188,7 @@ export default async function DashboardPage({
 
   return (
     <div className="w-full h-full p-6 flex flex-col gap-5">
-      <RedirectToDefaultHome />
+      <RedirectToDefaultHome userId={user?.id || ""} />
       {/*Cards*/}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-6 *:data-[slot=card]:shadow-xs lg:grid-cols-4">
         <Card className="@container/card">

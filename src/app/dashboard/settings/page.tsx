@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { User } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -39,7 +40,7 @@ export default function SettingsPage() {
   const [mounted, setMounted] = useState(false);
   const [settings, setSettings] = useState(defaultSettings);
   const [role, setRole] = useState<"admin" | "member" | null>(null);
-  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [profiles, setProfiles] = useState<MemberProfile[]>([]);
 
   // UI states
@@ -51,7 +52,7 @@ export default function SettingsPage() {
     message: string;
   }>({ show: false, type: "success", message: "" });
 
-  const updateSetting = (key: keyof typeof defaultSettings, value: any) => {
+  const updateSetting = (key: keyof typeof defaultSettings, value: string) => {
     setSettings((prev) => ({
       ...prev,
       [key]: value,
@@ -59,13 +60,16 @@ export default function SettingsPage() {
   };
 
   useEffect(() => {
-    setMounted(true);
+    setTimeout(() => setMounted(true), 0);
 
     // Load local settings
     const saved = localStorage.getItem("clifsa_attendance_settings");
     if (saved) {
       try {
-        setSettings((prev) => ({ ...prev, ...JSON.parse(saved) }));
+        const parsed = JSON.parse(saved);
+        setTimeout(() => {
+          setSettings((prev) => ({ ...prev, ...parsed }));
+        }, 0);
       } catch (e) {
         console.error("Failed to parse settings", e);
       }
@@ -141,7 +145,7 @@ export default function SettingsPage() {
 
   if (!mounted) {
     return (
-      <div className="max-w-2xl mx-auto p-6 md:p-10 space-y-8 animate-pulse">
+      <div className="max-w-4xl mx-auto p-6 md:p-10 space-y-8 animate-pulse">
         <div className="space-y-2">
           <div className="h-8 bg-muted rounded w-48" />
           <div className="h-4 bg-muted rounded w-96" />
