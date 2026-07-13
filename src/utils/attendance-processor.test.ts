@@ -186,4 +186,33 @@ describe("processDailyLogs", () => {
     expect(alice?.last_punch).toBeNull();
     expect(alice?.total_hours_worked).toBe(0);
   });
+
+  it("should calculate correct status based on workStartTime and gracePeriod parameters", () => {
+    const logs = [
+      {
+        id: 1,
+        employee_id: 1,
+        employee_name: "Alice Smith",
+        log_date_time: "2026-06-22T09:10:00.000Z",
+        log_time: "09:10:00",
+        log_date: "2026-06-22",
+      },
+      {
+        id: 2,
+        employee_id: 2,
+        employee_name: "Bob Jones",
+        log_date_time: "2026-06-22T09:20:00.000Z",
+        log_time: "09:20:00",
+        log_date: "2026-06-22",
+      },
+    ];
+
+    // Under workStartTime 09:00 and gracePeriod 15 (cutoff 09:15)
+    const result = processDailyLogs(logs, mockEmployees, "09:00", 15);
+    const alice = result.find((r) => r.employee_id === "1");
+    const bob = result.find((r) => r.employee_id === "2");
+
+    expect(alice?.status).toBe("present"); // 09:10 <= 09:15
+    expect(bob?.status).toBe("late");    // 09:20 > 09:15
+  });
 });
