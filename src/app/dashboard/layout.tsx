@@ -22,7 +22,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
 
   return (
     <SidebarProvider className="h-svh overflow-hidden">
-      <MarkSessionRedirected />
+      <MarkSessionRedirected userId={user.id} />
       <AppSidebar user={sidebarUser} />
       <SidebarInset>
         <Suspense fallback={

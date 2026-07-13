@@ -68,6 +68,7 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   };
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function AppSidebar({ user, ...props }: AppSidebarProps) {
   const [isLoggingOut, setIsLoggingOut] = React.useState(false);
 

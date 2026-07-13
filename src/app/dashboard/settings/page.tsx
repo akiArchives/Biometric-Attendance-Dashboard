@@ -60,16 +60,13 @@ export default function SettingsPage() {
   };
 
   useEffect(() => {
-    setTimeout(() => setMounted(true), 0);
-
     // Load local settings
     const saved = localStorage.getItem("clifsa_attendance_settings");
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        setTimeout(() => {
-          setSettings((prev) => ({ ...prev, ...parsed }));
-        }, 0);
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setSettings((prev) => ({ ...prev, ...parsed }));
       } catch (e) {
         console.error("Failed to parse settings", e);
       }
@@ -137,6 +134,8 @@ export default function SettingsPage() {
       } catch (e) {
         console.error("Failed to load user credentials or profiles", e);
         setRole("member");
+      } finally {
+        setMounted(true);
       }
     };
 

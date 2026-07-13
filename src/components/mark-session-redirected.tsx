@@ -3,12 +3,16 @@
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 
-export function MarkSessionRedirected() {
+export function MarkSessionRedirected({ userId }: { userId: string }) {
   const pathname = usePathname();
   useEffect(() => {
     if (pathname !== "/dashboard") {
-      sessionStorage.setItem("clifsa_already_redirected", "true");
+      try {
+        sessionStorage.setItem(`clifsa_already_redirected_${userId}`, "true");
+      } catch (e) {
+        console.error(e);
+      }
     }
-  }, [pathname]);
+  }, [pathname, userId]);
   return null;
 }
