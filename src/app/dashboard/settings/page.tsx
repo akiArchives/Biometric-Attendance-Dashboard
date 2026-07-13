@@ -121,8 +121,12 @@ export default function SettingsPage() {
           if (sysSettings) {
             setSettings((prev) => ({
               ...prev,
-              workStartTime: sysSettings.work_start_time,
-              gracePeriod: String(sysSettings.grace_period),
+              workStartTime: sysSettings.work_start_time ?? "09:00",
+              gracePeriod:
+                sysSettings.grace_period !== null &&
+                sysSettings.grace_period !== undefined
+                  ? String(sysSettings.grace_period)
+                  : prev.gracePeriod,
             }));
           }
         }
@@ -246,6 +250,9 @@ export default function SettingsPage() {
         type: "error",
         message: "Failed to update user role.",
       });
+      setTimeout(() => {
+        setBanner((prev) => ({ ...prev, show: false }));
+      }, 3000);
     } finally {
       setIsUpdatingRole(null);
     }
