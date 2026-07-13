@@ -17,7 +17,7 @@ export default async function AttendancePage({ searchParams }: PageProps) {
   const today = `${yyyy}-${mm}-${dd}`;
   const selectedDate = resolvedParams.date || today;
 
-  const [{ data: rawLogs, error }, { data: allEmployees }] = await Promise.all([
+  const [{ data: rawLogs, error }, { data: allEmployees }, { data: sysSettings }] = await Promise.all([
     supabase
       .from("hik_biometric_logs")
       .select("*")
@@ -29,6 +29,11 @@ export default async function AttendancePage({ searchParams }: PageProps) {
       .eq("is_active", true)
       .order("employee_name", { ascending: true })
       .neq("employee_id", 1111),
+    supabase
+      .from("system_settings")
+      .select("work_start_time, grace_period")
+      .eq("id", 1)
+      .maybeSingle(),
   ]);
 
   if (error) {
@@ -38,7 +43,19 @@ export default async function AttendancePage({ searchParams }: PageProps) {
     );
   }
 
-  const processedData = processDailyLogs(rawLogs || [], allEmployees || []);
+  let workStartTime = "09:00";
+  let gracePeriod = 15;
+  if (sysSettings) {
+    workStartTime = sysSettings.work_start_time;
+    gracePeriod = sysSettings.grace_period;
+  }
+
+  const processedData = processDailyLogs(
+    rawLogs || [],
+    allEmployees || [],
+    workStartTime,
+    gracePeriod,
+  );
 
   return (
     <div className="w-full h-auto mt-6 px-6">

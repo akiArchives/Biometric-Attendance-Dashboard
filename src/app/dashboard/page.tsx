@@ -94,10 +94,12 @@ export default async function DashboardPage({
 
   let allEmployees: EmployeeStub[] = [];
   let weeklyLogs: RawBiometricLog[] = [];
+  let workStartTime = "09:00";
+  let gracePeriod = 15;
   let errorMsg = "";
 
   try {
-    const [empRes, logsRes] = await Promise.all([
+    const [empRes, logsRes, sysSettingsRes] = await Promise.all([
       supabase
         .from("employees")
         .select("employee_id, employee_name")
@@ -110,6 +112,11 @@ export default async function DashboardPage({
         .gte("log_date", weekDates[0])
         .lte("log_date", weekDates[4])
         .order("log_date_time", { ascending: true }),
+      supabase
+        .from("system_settings")
+        .select("work_start_time, grace_period")
+        .eq("id", 1)
+        .maybeSingle(),
     ]);
 
     if (empRes.error) {
@@ -124,6 +131,13 @@ export default async function DashboardPage({
       errorMsg = "Error loading attendance logs.";
     } else {
       weeklyLogs = logsRes.data || [];
+    }
+
+    if (sysSettingsRes.error) {
+      console.error("System settings fetch error:", sysSettingsRes.error);
+    } else if (sysSettingsRes.data) {
+      workStartTime = sysSettingsRes.data.work_start_time;
+      gracePeriod = sysSettingsRes.data.grace_period;
     }
   } catch (err) {
     console.error("Unexpected fetch exception:", err);
@@ -141,13 +155,13 @@ export default async function DashboardPage({
   const recentLogs = [...rawLogs].reverse().slice(0, 5);
 
   // Process today's attendance logs
-  const processedData = processDailyLogs(rawLogs, allEmployees);
+  const processedData = processDailyLogs(rawLogs, allEmployees, workStartTime, gracePeriod);
 
   // Process weekly chart data dynamically
   const chartData = weekDays.map((dayName, index) => {
     const dateStr = weekDates[index];
     const dailyLogs = weeklyLogs.filter((log) => log.log_date === dateStr);
-    const processed = processDailyLogs(dailyLogs, allEmployees);
+    const processed = processDailyLogs(dailyLogs, allEmployees, workStartTime, gracePeriod);
 
     const present = processed.filter((emp) => emp.status === "present").length;
     const late = processed.filter((emp) => emp.status === "late").length;
