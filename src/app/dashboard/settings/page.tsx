@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/select";
 import { IconLoader2, IconCheck } from "@tabler/icons-react";
 import { useTheme } from "next-themes";
+import SettingsLoading from "./loading";
 
 // Default settings state
 const defaultSettings = {
@@ -82,8 +83,9 @@ export default function SettingsPage() {
         if (user) {
           setCurrentUser(user);
           updateSetting("adminEmail", user.email || "");
-          if (user.user_metadata?.name) {
-            updateSetting("adminName", user.user_metadata.name);
+          const displayName = user.user_metadata?.full_name || user.user_metadata?.name || "";
+          if (displayName) {
+            updateSetting("adminName", displayName);
           }
 
           // Fetch self role
@@ -143,22 +145,7 @@ export default function SettingsPage() {
   }, []);
 
   if (!mounted) {
-    return (
-      <div className="max-w-4xl mx-auto p-6 md:p-10 space-y-8 animate-pulse">
-        <div className="space-y-2">
-          <div className="h-8 bg-muted rounded w-48" />
-          <div className="h-4 bg-muted rounded w-96" />
-        </div>
-        <div className="space-y-6">
-          {[...Array(3)].map((_, i) => (
-            <div key={i} className="space-y-2">
-              <div className="h-4 bg-muted rounded w-32" />
-              <div className="h-10 bg-muted rounded w-full" />
-            </div>
-          ))}
-        </div>
-      </div>
-    );
+    return <SettingsLoading />;
   }
 
   const handleSaveAll = async () => {
@@ -191,10 +178,13 @@ export default function SettingsPage() {
       const supabase = createClient();
       if (
         currentUser &&
-        settings.adminName !== currentUser.user_metadata?.name
+        settings.adminName !== (currentUser.user_metadata?.full_name || currentUser.user_metadata?.name)
       ) {
         await supabase.auth.updateUser({
-          data: { name: settings.adminName },
+          data: { 
+            name: settings.adminName,
+            full_name: settings.adminName
+          },
         });
       }
 
