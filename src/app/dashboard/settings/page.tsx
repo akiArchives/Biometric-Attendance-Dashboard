@@ -159,6 +159,19 @@ export default function SettingsPage() {
   }
 
   const handleSaveAll = async () => {
+    const timeRegex = /^(?:[01]\d|2[0-3]):[0-5]\d$/;
+    if (!timeRegex.test(settings.workStartTime)) {
+      setBanner({
+        show: true,
+        type: "error",
+        message: "Standard Work Start Time must be in 24h format (e.g. 09:00 or 17:30).",
+      });
+      setTimeout(() => {
+        setBanner((prev) => ({ ...prev, show: false }));
+      }, 3000);
+      return;
+    }
+
     setIsSaving(true);
     // Simulate API delay
     await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -186,11 +199,11 @@ export default function SettingsPage() {
       if (role === "admin") {
         const { error: settingsError } = await supabase
           .from("system_settings")
-          .upsert({
-            id: 1,
+          .update({
             work_start_time: settings.workStartTime,
             grace_period: parseInt(settings.gracePeriod, 10) || 0,
-          });
+          })
+          .eq("id", 1);
         if (settingsError) throw settingsError;
       }
 

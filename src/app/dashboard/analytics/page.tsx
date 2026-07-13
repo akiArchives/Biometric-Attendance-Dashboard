@@ -17,7 +17,11 @@ export default async function AttendancePage({ searchParams }: PageProps) {
   const today = `${yyyy}-${mm}-${dd}`;
   const selectedDate = resolvedParams.date || today;
 
-  const [{ data: rawLogs, error }, { data: allEmployees }, { data: sysSettings }] = await Promise.all([
+  const [
+    { data: rawLogs, error },
+    { data: allEmployees, error: employeesError },
+    { data: sysSettings, error: sysSettingsError }
+  ] = await Promise.all([
     supabase
       .from("hik_biometric_logs")
       .select("*")
@@ -41,6 +45,14 @@ export default async function AttendancePage({ searchParams }: PageProps) {
     return (
       <div className="p-6 text-red-500">Error loading biometric data.</div>
     );
+  }
+
+  if (employeesError) {
+    console.error("Employees fetch error:", employeesError);
+  }
+
+  if (sysSettingsError) {
+    console.error("System settings fetch error:", sysSettingsError);
   }
 
   let workStartTime = "09:00";
