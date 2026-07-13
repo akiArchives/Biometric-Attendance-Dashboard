@@ -18,7 +18,7 @@ import { ClipboardClock, ChartBar, Settings, LogOut } from "lucide-react";
 
 const data = {
   user: {
-    name: "Joaquin",
+    name: "John Doe",
     email: "example@gmail.com",
     avatar: "",
   },
@@ -109,7 +109,10 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
               className="h-9 text-xs font-medium hover:text-red-500 hover:bg-red-100 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]: group-data-[collapsible=icon]:size-9! transition-colors cursor-pointer"
             >
               <span className="ml-1.5 group-data-[collapsible=icon]:ml-0">
-                <LogOut style={{ width: "1rem", height: "1rem" }} strokeWidth={2.5} />
+                <LogOut
+                  style={{ width: "1rem", height: "1rem" }}
+                  strokeWidth={2.5}
+                />
               </span>
               <span className="group-data-[collapsible=icon]:hidden">
                 {isLoggingOut ? "Logging out..." : "Log out"}
