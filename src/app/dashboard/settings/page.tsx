@@ -16,6 +16,16 @@ import {
 import { IconLoader2, IconCheck } from "@tabler/icons-react";
 import { useTheme } from "next-themes";
 import SettingsLoading from "./loading";
+import { deleteUserAction } from "./actions";
+import { Trash2 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 // Default settings state
 const defaultSettings = {
@@ -57,10 +67,11 @@ export default function SettingsPage() {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [profiles, setProfiles] = useState<MemberProfile[]>([]);
 
-  // UI states
   const [isSaving, setIsSaving] = useState(false);
   const [isUpdatingRole, setIsUpdatingRole] = useState<string | null>(null);
   const [isUpdatingStatus, setIsUpdatingStatus] = useState<string | null>(null);
+  const [isDeletingUser, setIsDeletingUser] = useState<string | null>(null);
+  const [userToDelete, setUserToDelete] = useState<MemberProfile | null>(null);
   const [banner, setBanner] = useState<{
     show: boolean;
     type: "success" | "error";
@@ -367,6 +378,38 @@ export default function SettingsPage() {
     }
   };
 
+  const handleDeleteConfirm = async () => {
+    if (!userToDelete) return;
+    setIsDeletingUser(userToDelete.id);
+    try {
+      const res = await deleteUserAction(userToDelete.id);
+      if (res.success) {
+        setProfiles((prev) => prev.filter((p) => p.id !== userToDelete.id));
+        setUserToDelete(null);
+        setBanner({
+          show: true,
+          type: "success",
+          message: "User account deleted successfully.",
+        });
+        setTimeout(() => {
+          setBanner((prev) => ({ ...prev, show: false }));
+        }, 3000);
+      }
+    } catch (e: any) {
+      console.error(e);
+      setBanner({
+        show: true,
+        type: "error",
+        message: e.message || "Failed to delete user account.",
+      });
+      setTimeout(() => {
+        setBanner((prev) => ({ ...prev, show: false }));
+      }, 3000);
+    } finally {
+      setIsDeletingUser(null);
+    }
+  };
+
   const getStatusBadge = (status: "pending" | "approved" | "rejected") => {
     const label = status === "rejected" ? "Declined" : status === "approved" ? "Approved" : "Pending Approval";
     return <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getStatusBadgeStyle(status)}`}>{label}</span>;
@@ -638,6 +681,13 @@ export default function SettingsPage() {
                                       Decline
                                     </button>
                                   )}
+                                  <button
+                                    onClick={() => setUserToDelete(profile)}
+                                    className="p-1.5 text-muted-foreground hover:text-destructive border border-border/40 hover:border-destructive/20 rounded-md cursor-pointer transition-colors"
+                                    title="Delete User"
+                                  >
+                                    <Trash2 className="size-4" />
+                                  </button>
                                 </>
                               )}
                             </>
@@ -664,6 +714,34 @@ export default function SettingsPage() {
           </Button>
         </div>
       </div>
+
+      <Dialog open={!!userToDelete} onOpenChange={(open) => !open && setUserToDelete(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete User Account</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to permanently delete <strong>{userToDelete?.email}</strong>? 
+              This will delete their login credentials and all associated profile records. This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-2 sm:gap-0">
+            <button
+              onClick={() => setUserToDelete(null)}
+              disabled={!!isDeletingUser}
+              className="px-4 py-2 text-sm font-medium text-foreground bg-muted hover:bg-muted/80 rounded-md cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleDeleteConfirm}
+              disabled={!!isDeletingUser}
+              className="px-4 py-2 text-sm font-medium text-white bg-destructive hover:bg-destructive/90 rounded-md cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-1.5 transition-colors"
+            >
+              {isDeletingUser ? "Deleting..." : "Delete User"}
+            </button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
