@@ -60,6 +60,7 @@ export default function SettingsPage() {
   // UI states
   const [isSaving, setIsSaving] = useState(false);
   const [isUpdatingRole, setIsUpdatingRole] = useState<string | null>(null);
+  const [isUpdatingStatus, setIsUpdatingStatus] = useState<string | null>(null);
   const [banner, setBanner] = useState<{
     show: boolean;
     type: "success" | "error";
@@ -329,6 +330,7 @@ export default function SettingsPage() {
       return;
     }
 
+    setIsUpdatingStatus(userId);
     const supabase = createClient();
     try {
       const { error } = await supabase
@@ -360,6 +362,8 @@ export default function SettingsPage() {
       setTimeout(() => {
         setBanner((prev) => ({ ...prev, show: false }));
       }, 3000);
+    } finally {
+      setIsUpdatingStatus(null);
     }
   };
 
@@ -590,7 +594,7 @@ export default function SettingsPage() {
                       </td>
                       <td className="p-3 text-right">
                         <div className="flex items-center justify-end gap-2">
-                          {isUpdatingRole === profile.id ? (
+                          {isUpdatingRole === profile.id || isUpdatingStatus === profile.id ? (
                             <div className="inline-flex items-center gap-1.5 text-xs text-muted-foreground mr-3">
                               <IconLoader2 className="h-3 w-3 animate-spin" />
                               Updating...
