@@ -34,6 +34,7 @@ interface MemberProfile {
   id: string;
   email: string | null;
   role: string;
+  status: "pending" | "approved" | "rejected";
 }
 
 export default function SettingsPage() {
@@ -103,7 +104,7 @@ export default function SettingsPage() {
             if (userRole === "admin") {
               const { data: allProfiles } = await supabase
                 .from("profiles")
-                .select("id, email, role")
+                .select("id, email, role, status")
                 .order("email");
 
               if (allProfiles) {
@@ -261,6 +262,56 @@ export default function SettingsPage() {
       }, 3000);
     } finally {
       setIsUpdatingRole(null);
+    }
+  };
+
+  const handleStatusChange = async (
+    userId: string,
+    newStatus: "pending" | "approved" | "rejected"
+  ) => {
+    const supabase = createClient();
+    try {
+      const { error } = await supabase
+        .from("profiles")
+        .update({ status: newStatus })
+        .eq("id", userId);
+
+      if (error) throw error;
+
+      setProfiles((prev) =>
+        prev.map((p) => (p.id === userId ? { ...p, status: newStatus } : p))
+      );
+
+      setBanner({
+        show: true,
+        type: "success",
+        message: "User status updated successfully.",
+      });
+      setTimeout(() => {
+        setBanner((prev) => ({ ...prev, show: false }));
+      }, 3000);
+    } catch (e) {
+      console.error(e);
+      setBanner({
+        show: true,
+        type: "error",
+        message: "Failed to update user status.",
+      });
+      setTimeout(() => {
+        setBanner((prev) => ({ ...prev, show: false }));
+      }, 3000);
+    }
+  };
+
+  const getStatusBadge = (status: "pending" | "approved" | "rejected") => {
+    switch (status) {
+      case "approved":
+        return <span className="px-2 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">Approved</span>;
+      case "rejected":
+        return <span className="px-2 py-1 rounded-full text-xs font-semibold bg-rose-500/10 text-rose-500 border border-rose-500/20">Declined</span>;
+      case "pending":
+      default:
+        return <span className="px-2 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-500 border border-amber-500/20 animate-pulse">Pending Approval</span>;
     }
   };
 
@@ -468,7 +519,8 @@ export default function SettingsPage() {
                 <thead>
                   <tr className="bg-muted/10 text-muted-foreground font-medium border-b border-border/40">
                     <th className="p-3">Email Address</th>
-                    <th className="p-3 text-right">Role</th>
+                    <th className="p-3">Status</th>
+                    <th className="p-3 text-right">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border/20">
@@ -480,32 +532,60 @@ export default function SettingsPage() {
                       <td className="p-3 text-foreground font-medium">
                         {profile.email}
                       </td>
+                      <td className="p-3">
+                        {getStatusBadge(profile.status)}
+                      </td>
                       <td className="p-3 text-right">
-                        {isUpdatingRole === profile.id ? (
-                          <div className="inline-flex items-center gap-1.5 text-xs text-muted-foreground mr-3">
-                            <IconLoader2 className="h-3 w-3 animate-spin" />
-                            Updating...
-                          </div>
-                        ) : (
-                          <Select
-                            value={profile.role}
-                            onValueChange={(val) =>
-                              handleRoleChange(
-                                profile.id,
-                                val as "admin" | "member",
-                              )
-                            }
-                            disabled={profile.id === currentUser?.id} // Prevent editing self
-                          >
-                            <SelectTrigger className="w-28 h-8 bg-muted/20 border-border/50 justify-between inline-flex text-xs ml-auto">
-                              <SelectValue placeholder="Role" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="admin">Admin</SelectItem>
-                              <SelectItem value="member">Member</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        )}
+                        <div className="flex items-center justify-end gap-2">
+                          {isUpdatingRole === profile.id ? (
+                            <div className="inline-flex items-center gap-1.5 text-xs text-muted-foreground mr-3">
+                              <IconLoader2 className="h-3 w-3 animate-spin" />
+                              Updating...
+                            </div>
+                          ) : (
+                            <>
+                              <Select
+                                value={profile.role}
+                                onValueChange={(val) =>
+                                  handleRoleChange(
+                                    profile.id,
+                                    val as "admin" | "member",
+                                  )
+                                }
+                                disabled={profile.id === currentUser?.id} // Prevent editing self
+                              >
+                                <SelectTrigger className="w-28 h-8 bg-muted/20 border-border/50 justify-between inline-flex text-xs">
+                                  <SelectValue placeholder="Role" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="admin">Admin</SelectItem>
+                                  <SelectItem value="member">Member</SelectItem>
+                                </SelectContent>
+                              </Select>
+                              
+                              {profile.id !== currentUser?.id && (
+                                <>
+                                  {profile.status !== "approved" && (
+                                    <button
+                                      onClick={() => handleStatusChange(profile.id, "approved")}
+                                      className="px-2.5 py-1 text-xs font-medium text-white bg-emerald-600 hover:bg-emerald-700 rounded-md cursor-pointer transition-colors shadow-sm"
+                                    >
+                                      Approve
+                                    </button>
+                                  )}
+                                  {profile.status !== "rejected" && (
+                                    <button
+                                      onClick={() => handleStatusChange(profile.id, "rejected")}
+                                      className="px-2.5 py-1 text-xs font-medium text-rose-600 border border-rose-600/20 hover:bg-rose-500/5 rounded-md cursor-pointer transition-colors"
+                                    >
+                                      Decline
+                                    </button>
+                                  )}
+                                </>
+                              )}
+                            </>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   ))}
