@@ -380,11 +380,12 @@ export default function SettingsPage() {
 
   const handleDeleteConfirm = async () => {
     if (!userToDelete) return;
-    setIsDeletingUser(userToDelete.id);
+    const targetUserId = userToDelete.id;
+    setIsDeletingUser(targetUserId);
     try {
-      const res = await deleteUserAction(userToDelete.id);
+      const res = await deleteUserAction(targetUserId);
       if (res.success) {
-        setProfiles((prev) => prev.filter((p) => p.id !== userToDelete.id));
+        setProfiles((prev) => prev.filter((p) => p.id !== targetUserId));
         setUserToDelete(null);
         setBanner({
           show: true,
@@ -715,7 +716,7 @@ export default function SettingsPage() {
         </div>
       </div>
 
-      <Dialog open={!!userToDelete} onOpenChange={(open) => !open && setUserToDelete(null)}>
+      <Dialog open={!!userToDelete} onOpenChange={(open) => !open && !isDeletingUser && setUserToDelete(null)}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Delete User Account</DialogTitle>
