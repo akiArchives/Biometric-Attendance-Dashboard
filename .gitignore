@@ -49,3 +49,7 @@ docs/superpowers/
 # git worktrees
 .worktrees/
 worktrees/
+
+# hosting docs
+docs/self-hosting-guide.md
+
