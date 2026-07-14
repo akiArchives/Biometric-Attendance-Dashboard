@@ -69,11 +69,15 @@ export async function proxy(request: NextRequest) {
 
   // Fetch user status from profiles
   let status = "pending";
-  const { data: profile } = await supabase
+  const { data: profile, error: profileError } = await supabase
     .from("profiles")
     .select("status")
     .eq("id", user.id)
     .single();
+
+  if (profileError) {
+    console.error("Middleware profiles query error:", profileError);
+  }
 
   if (profile) {
     status = profile.status;

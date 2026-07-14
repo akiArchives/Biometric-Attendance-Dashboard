@@ -11,4 +11,16 @@ ALTER TABLE public.profiles ALTER COLUMN status SET DEFAULT 'pending';
 ALTER TABLE public.profiles ALTER COLUMN status SET NOT NULL;
 
 -- Drop the insecure update policy that allows self-promotion and self-approval
-DROP POLICY "Allow update profile for own user" ON public.profiles;
+DROP POLICY IF EXISTS "Allow update profile for own user" ON public.profiles;
+
+-- Update is_admin() helper function to ensure administrators are approved
+CREATE OR REPLACE FUNCTION public.is_admin()
+ RETURNS boolean
+ LANGUAGE sql
+ SECURITY DEFINER
+AS $function$
+  SELECT EXISTS (
+    SELECT 1 FROM profiles 
+    WHERE id = auth.uid() AND role = 'admin' AND status = 'approved'
+  );
+$function$;

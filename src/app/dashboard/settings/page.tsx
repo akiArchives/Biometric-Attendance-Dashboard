@@ -406,13 +406,13 @@ export default function SettingsPage() {
           setBanner((prev) => ({ ...prev, show: false }));
         }, 3000);
       }
-    } catch (e: any) {
+    } catch (e) {
       console.error(e);
       setUserToDelete(null);
       setBanner({
         show: true,
         type: "error",
-        message: e.message || "Failed to delete user account.",
+        message: e instanceof Error ? e.message : "Failed to delete user account.",
       });
       setTimeout(() => {
         setBanner((prev) => ({ ...prev, show: false }));
@@ -728,7 +728,7 @@ export default function SettingsPage() {
       </div>
 
       <Dialog open={!!userToDelete} onOpenChange={(open) => !open && !isDeletingUser && setUserToDelete(null)}>
-        <DialogContent>
+        <DialogContent showCloseButton={!isDeletingUser}>
           <DialogHeader>
             <DialogTitle>Delete User Account</DialogTitle>
             <DialogDescription>

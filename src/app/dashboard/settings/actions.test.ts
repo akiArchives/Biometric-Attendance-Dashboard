@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { deleteUserAction } from "./actions";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
@@ -39,11 +40,26 @@ describe("deleteUserAction Server Action", () => {
       from: vi.fn().mockReturnThis(),
       select: vi.fn().mockReturnThis(),
       eq: vi.fn().mockReturnThis(),
-      single: vi.fn().mockResolvedValue({ data: { role: "member" }, error: null }),
+      single: vi.fn().mockResolvedValue({ data: { role: "member", status: "approved" }, error: null }),
     } as any);
 
     const res = await deleteUserAction("target-123");
-    expect(res).toEqual({ success: false, error: "Forbidden: Only administrators can delete users." });
+    expect(res).toEqual({ success: false, error: "Forbidden: Only approved administrators can delete users." });
+  });
+
+  it("should return failure response if caller is admin but not approved", async () => {
+    vi.mocked(createClient).mockResolvedValue({
+      auth: {
+        getUser: vi.fn().mockResolvedValue({ data: { user: { id: "admin-123" } }, error: null }),
+      },
+      from: vi.fn().mockReturnThis(),
+      select: vi.fn().mockReturnThis(),
+      eq: vi.fn().mockReturnThis(),
+      single: vi.fn().mockResolvedValue({ data: { role: "admin", status: "rejected" }, error: null }),
+    } as any);
+
+    const res = await deleteUserAction("target-123");
+    expect(res).toEqual({ success: false, error: "Forbidden: Only approved administrators can delete users." });
   });
 
   it("should return failure response if admin tries to delete themselves", async () => {
@@ -54,7 +70,7 @@ describe("deleteUserAction Server Action", () => {
       from: vi.fn().mockReturnThis(),
       select: vi.fn().mockReturnThis(),
       eq: vi.fn().mockReturnThis(),
-      single: vi.fn().mockResolvedValue({ data: { role: "admin" }, error: null }),
+      single: vi.fn().mockResolvedValue({ data: { role: "admin", status: "approved" }, error: null }),
     } as any);
 
     const res = await deleteUserAction("admin-123");
@@ -69,7 +85,7 @@ describe("deleteUserAction Server Action", () => {
       from: vi.fn().mockReturnThis(),
       select: vi.fn().mockReturnThis(),
       eq: vi.fn().mockReturnThis(),
-      single: vi.fn().mockResolvedValue({ data: { role: "admin" }, error: null }),
+      single: vi.fn().mockResolvedValue({ data: { role: "admin", status: "approved" }, error: null }),
     } as any);
 
     const mockDeleteUser = vi.fn().mockResolvedValue({ error: null });

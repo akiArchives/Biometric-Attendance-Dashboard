@@ -4,7 +4,11 @@ import { createClient, createAdminClient } from "@/lib/supabase/server";
 
 export async function deleteUserAction(targetUserId: string): Promise<{ success: boolean; error?: string }> {
   try {
-    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    if (
+      !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+      !process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
+      !process.env.SUPABASE_SERVICE_ROLE_KEY
+    ) {
       return { success: false, error: "Configuration Error: Supabase keys are missing on the server." };
     }
 
@@ -17,12 +21,12 @@ export async function deleteUserAction(targetUserId: string): Promise<{ success:
 
     const { data: profile } = await supabase
       .from("profiles")
-      .select("role")
+      .select("role, status")
       .eq("id", user.id)
       .single();
 
-    if (!profile || profile.role !== "admin") {
-      return { success: false, error: "Forbidden: Only administrators can delete users." };
+    if (!profile || profile.role !== "admin" || profile.status !== "approved") {
+      return { success: false, error: "Forbidden: Only approved administrators can delete users." };
     }
 
     if (targetUserId === user.id) {
@@ -38,8 +42,9 @@ export async function deleteUserAction(targetUserId: string): Promise<{ success:
     }
 
     return { success: true };
-  } catch (e: any) {
+  } catch (e) {
     console.error("deleteUserAction caught error:", e);
-    return { success: false, error: e.message || "An unexpected error occurred during user deletion." };
+    const errorMessage = e instanceof Error ? e.message : String(e);
+    return { success: false, error: errorMessage };
   }
 }
