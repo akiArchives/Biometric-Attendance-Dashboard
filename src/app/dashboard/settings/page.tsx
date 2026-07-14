@@ -37,6 +37,18 @@ interface MemberProfile {
   status: "pending" | "approved" | "rejected";
 }
 
+export function getStatusBadgeStyle(status: "pending" | "approved" | "rejected") {
+  switch (status) {
+    case "approved":
+      return "bg-emerald-500/10 text-emerald-500 border border-emerald-500/20";
+    case "rejected":
+      return "bg-rose-500/10 text-rose-500 border border-rose-500/20";
+    case "pending":
+    default:
+      return "bg-amber-500/10 text-amber-500 border border-amber-500/20 animate-pulse";
+  }
+}
+
 export default function SettingsPage() {
   const { setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -228,6 +240,30 @@ export default function SettingsPage() {
     userId: string,
     newRole: "admin" | "member",
   ) => {
+    if (role !== "admin") {
+      setBanner({
+        show: true,
+        type: "error",
+        message: "You must be an administrator to perform this action.",
+      });
+      setTimeout(() => {
+        setBanner((prev) => ({ ...prev, show: false }));
+      }, 3000);
+      return;
+    }
+
+    if (userId === currentUser?.id) {
+      setBanner({
+        show: true,
+        type: "error",
+        message: "You cannot change your own role.",
+      });
+      setTimeout(() => {
+        setBanner((prev) => ({ ...prev, show: false }));
+      }, 3000);
+      return;
+    }
+
     setIsUpdatingRole(userId);
     try {
       const supabase = createClient();
@@ -269,6 +305,30 @@ export default function SettingsPage() {
     userId: string,
     newStatus: "pending" | "approved" | "rejected"
   ) => {
+    if (role !== "admin") {
+      setBanner({
+        show: true,
+        type: "error",
+        message: "You must be an administrator to perform this action.",
+      });
+      setTimeout(() => {
+        setBanner((prev) => ({ ...prev, show: false }));
+      }, 3000);
+      return;
+    }
+
+    if (userId === currentUser?.id) {
+      setBanner({
+        show: true,
+        type: "error",
+        message: "You cannot change your own status.",
+      });
+      setTimeout(() => {
+        setBanner((prev) => ({ ...prev, show: false }));
+      }, 3000);
+      return;
+    }
+
     const supabase = createClient();
     try {
       const { error } = await supabase
@@ -304,15 +364,8 @@ export default function SettingsPage() {
   };
 
   const getStatusBadge = (status: "pending" | "approved" | "rejected") => {
-    switch (status) {
-      case "approved":
-        return <span className="px-2 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">Approved</span>;
-      case "rejected":
-        return <span className="px-2 py-1 rounded-full text-xs font-semibold bg-rose-500/10 text-rose-500 border border-rose-500/20">Declined</span>;
-      case "pending":
-      default:
-        return <span className="px-2 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-500 border border-amber-500/20 animate-pulse">Pending Approval</span>;
-    }
+    const label = status === "rejected" ? "Declined" : status === "approved" ? "Approved" : "Pending Approval";
+    return <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getStatusBadgeStyle(status)}`}>{label}</span>;
   };
 
   const showAdminSettings = role === "admin";
