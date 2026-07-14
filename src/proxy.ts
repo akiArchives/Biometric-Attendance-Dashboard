@@ -35,21 +35,61 @@ export async function proxy(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const isDashboard = request.nextUrl.pathname.startsWith("/dashboard");
-  const isAuthPage =
-    request.nextUrl.pathname === "/sign-in" ||
-    request.nextUrl.pathname === "/sign-up";
+  const pathname = request.nextUrl.pathname;
+  const isDashboard = pathname.startsWith("/dashboard");
+  const isAuthPage = pathname === "/sign-in" || pathname === "/sign-up";
+  const isPendingPage = pathname === "/pending-approval";
+  const isRejectedPage = pathname === "/rejected";
 
-  if (isDashboard && !user) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/sign-in";
-    return NextResponse.redirect(url);
+  // Handle Unauthenticated State
+  if (!user) {
+    if (isDashboard || isPendingPage || isRejectedPage) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/sign-in";
+      return NextResponse.redirect(url);
+    }
+    return response;
   }
 
-  if (isAuthPage && user) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/dashboard";
-    return NextResponse.redirect(url);
+  // Fetch user status from profiles
+  let status = "pending";
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("status")
+    .eq("id", user.id)
+    .single();
+
+  if (profile) {
+    status = profile.status;
+  }
+
+  // Routing rules based on registration status
+  if (status === "pending") {
+    if (!isPendingPage) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/pending-approval";
+      return NextResponse.redirect(url);
+    }
+    return response;
+  }
+
+  if (status === "rejected") {
+    if (!isRejectedPage) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/rejected";
+      return NextResponse.redirect(url);
+    }
+    return response;
+  }
+
+  // Approved status rules
+  if (status === "approved") {
+    if (isAuthPage || isPendingPage || isRejectedPage) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/dashboard";
+      return NextResponse.redirect(url);
+    }
+    return response;
   }
 
   return response;
