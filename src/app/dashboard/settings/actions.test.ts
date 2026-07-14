@@ -1,7 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { deleteUserAction } from "./actions";
-import { createServerClient } from "@supabase/ssr";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, createAdminClient } from "@/lib/supabase/server";
 
 vi.mock("next/headers", () => ({
   cookies: vi.fn().mockResolvedValue({
@@ -9,21 +8,20 @@ vi.mock("next/headers", () => ({
   }),
 }));
 
-vi.mock("@supabase/ssr", () => ({
-  createServerClient: vi.fn(),
-}));
-
-vi.mock("@supabase/supabase-js", () => ({
+vi.mock("@/lib/supabase/server", () => ({
   createClient: vi.fn(),
+  createAdminClient: vi.fn(),
 }));
 
 describe("deleteUserAction Server Action", () => {
   beforeEach(() => {
     vi.resetAllMocks();
+    process.env.NEXT_PUBLIC_SUPABASE_URL = "https://example.supabase.co";
+    process.env.SUPABASE_SERVICE_ROLE_KEY = "service-role-key";
   });
 
   it("should return failure response if no authenticated user is found", async () => {
-    vi.mocked(createServerClient).mockReturnValue({
+    vi.mocked(createClient).mockResolvedValue({
       auth: {
         getUser: vi.fn().mockResolvedValue({ data: { user: null }, error: null }),
       },
@@ -34,7 +32,7 @@ describe("deleteUserAction Server Action", () => {
   });
 
   it("should return failure response if caller is not an admin", async () => {
-    vi.mocked(createServerClient).mockReturnValue({
+    vi.mocked(createClient).mockResolvedValue({
       auth: {
         getUser: vi.fn().mockResolvedValue({ data: { user: { id: "caller-123" } }, error: null }),
       },
@@ -49,7 +47,7 @@ describe("deleteUserAction Server Action", () => {
   });
 
   it("should return failure response if admin tries to delete themselves", async () => {
-    vi.mocked(createServerClient).mockReturnValue({
+    vi.mocked(createClient).mockResolvedValue({
       auth: {
         getUser: vi.fn().mockResolvedValue({ data: { user: { id: "admin-123" } }, error: null }),
       },
@@ -64,7 +62,7 @@ describe("deleteUserAction Server Action", () => {
   });
 
   it("should execute deletion successfully if caller is admin", async () => {
-    vi.mocked(createServerClient).mockReturnValue({
+    vi.mocked(createClient).mockResolvedValue({
       auth: {
         getUser: vi.fn().mockResolvedValue({ data: { user: { id: "admin-123" } }, error: null }),
       },
@@ -75,7 +73,7 @@ describe("deleteUserAction Server Action", () => {
     } as any);
 
     const mockDeleteUser = vi.fn().mockResolvedValue({ error: null });
-    vi.mocked(createClient).mockReturnValue({
+    vi.mocked(createAdminClient).mockResolvedValue({
       auth: {
         admin: {
           deleteUser: mockDeleteUser,

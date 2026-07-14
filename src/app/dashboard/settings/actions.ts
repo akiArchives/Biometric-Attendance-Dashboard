@@ -1,8 +1,6 @@
 "use server";
 
-import { createClient } from "@supabase/supabase-js";
-import { cookies } from "next/headers";
-import { createServerClient } from "@supabase/ssr";
+import { createClient, createAdminClient } from "@/lib/supabase/server";
 
 export async function deleteUserAction(targetUserId: string): Promise<{ success: boolean; error?: string }> {
   try {
@@ -10,18 +8,7 @@ export async function deleteUserAction(targetUserId: string): Promise<{ success:
       return { success: false, error: "Configuration Error: Supabase keys are missing on the server." };
     }
 
-    const cookieStore = await cookies();
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL,
-      process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
-      {
-        cookies: {
-          getAll() {
-            return cookieStore.getAll();
-          },
-        },
-      }
-    );
+    const supabase = await createClient();
 
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
@@ -42,16 +29,7 @@ export async function deleteUserAction(targetUserId: string): Promise<{ success:
       return { success: false, error: "Forbidden: You cannot delete your own account." };
     }
 
-    const supabaseAdmin = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL,
-      process.env.SUPABASE_SERVICE_ROLE_KEY,
-      {
-        auth: {
-          autoRefreshToken: false,
-          persistSession: false,
-        },
-      }
-    );
+    const supabaseAdmin = await createAdminClient();
 
     const { error } = await supabaseAdmin.auth.admin.deleteUser(targetUserId);
     if (error) {
