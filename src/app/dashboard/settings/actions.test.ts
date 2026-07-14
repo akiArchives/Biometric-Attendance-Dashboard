@@ -22,17 +22,18 @@ describe("deleteUserAction Server Action", () => {
     vi.resetAllMocks();
   });
 
-  it("should throw an error if no authenticated user is found", async () => {
+  it("should return failure response if no authenticated user is found", async () => {
     vi.mocked(createServerClient).mockReturnValue({
       auth: {
         getUser: vi.fn().mockResolvedValue({ data: { user: null }, error: null }),
       },
     } as any);
 
-    await expect(deleteUserAction("target-123")).rejects.toThrow("Unauthorized");
+    const res = await deleteUserAction("target-123");
+    expect(res).toEqual({ success: false, error: "Unauthorized: Please log in." });
   });
 
-  it("should throw an error if caller is not an admin", async () => {
+  it("should return failure response if caller is not an admin", async () => {
     vi.mocked(createServerClient).mockReturnValue({
       auth: {
         getUser: vi.fn().mockResolvedValue({ data: { user: { id: "caller-123" } }, error: null }),
@@ -43,10 +44,11 @@ describe("deleteUserAction Server Action", () => {
       single: vi.fn().mockResolvedValue({ data: { role: "member" }, error: null }),
     } as any);
 
-    await expect(deleteUserAction("target-123")).rejects.toThrow("Forbidden: Only administrators");
+    const res = await deleteUserAction("target-123");
+    expect(res).toEqual({ success: false, error: "Forbidden: Only administrators can delete users." });
   });
 
-  it("should throw an error if admin tries to delete themselves", async () => {
+  it("should return failure response if admin tries to delete themselves", async () => {
     vi.mocked(createServerClient).mockReturnValue({
       auth: {
         getUser: vi.fn().mockResolvedValue({ data: { user: { id: "admin-123" } }, error: null }),
@@ -57,7 +59,8 @@ describe("deleteUserAction Server Action", () => {
       single: vi.fn().mockResolvedValue({ data: { role: "admin" }, error: null }),
     } as any);
 
-    await expect(deleteUserAction("admin-123")).rejects.toThrow("Forbidden: You cannot delete your own account");
+    const res = await deleteUserAction("admin-123");
+    expect(res).toEqual({ success: false, error: "Forbidden: You cannot delete your own account." });
   });
 
   it("should execute deletion successfully if caller is admin", async () => {

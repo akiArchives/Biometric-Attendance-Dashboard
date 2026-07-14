@@ -395,9 +395,20 @@ export default function SettingsPage() {
         setTimeout(() => {
           setBanner((prev) => ({ ...prev, show: false }));
         }, 3000);
+      } else {
+        setUserToDelete(null);
+        setBanner({
+          show: true,
+          type: "error",
+          message: res.error || "Failed to delete user account.",
+        });
+        setTimeout(() => {
+          setBanner((prev) => ({ ...prev, show: false }));
+        }, 3000);
       }
     } catch (e: any) {
       console.error(e);
+      setUserToDelete(null);
       setBanner({
         show: true,
         type: "error",
