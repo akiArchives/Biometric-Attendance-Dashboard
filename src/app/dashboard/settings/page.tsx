@@ -195,12 +195,23 @@ export default function SettingsPage() {
         currentUser &&
         settings.adminName !== (currentUser.user_metadata?.full_name || currentUser.user_metadata?.name)
       ) {
-        await supabase.auth.updateUser({
+        const { data: { user: updatedUser }, error: updateError } = await supabase.auth.updateUser({
           data: {
             name: settings.adminName,
             full_name: settings.adminName
           },
         });
+        if (updateError) throw updateError;
+        if (updatedUser) {
+          setCurrentUser(updatedUser);
+          
+          // Instantly update the local members list name for the current user
+          setProfiles((prev) =>
+            prev.map((p) =>
+              p.id === updatedUser.id ? { ...p, name: settings.adminName } : p
+            )
+          );
+        }
       }
 
       // Save System settings if admin
