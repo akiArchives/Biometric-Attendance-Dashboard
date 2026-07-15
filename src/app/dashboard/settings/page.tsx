@@ -13,7 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { IconLoader2, IconCheck, IconXFilled, IconCheckFilled } from "@tabler/icons-react";
+import { IconLoader2, IconXFilled, IconCheckFilled } from "@tabler/icons-react";
 import { useTheme } from "next-themes";
 import SettingsLoading from "./loading";
 import { deleteUserAction } from "./actions";
@@ -26,6 +26,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { toast } from "sonner";
 
 // Default settings state
 const defaultSettings = {
@@ -55,7 +56,7 @@ export function getStatusBadgeStyle(status: "pending" | "approved" | "rejected")
       return "bg-rose-500/10 text-rose-500 border border-rose-500";
     case "pending":
     default:
-      return "bg-amber-500/10 text-amber-500 border border-amber-500";
+      return "bg-amber-500/10 text-amber-500 border border-amber-500 animate-pulse";
   }
 }
 
@@ -72,11 +73,6 @@ export default function SettingsPage() {
   const [isUpdatingStatus, setIsUpdatingStatus] = useState<string | null>(null);
   const [isDeletingUser, setIsDeletingUser] = useState<string | null>(null);
   const [userToDelete, setUserToDelete] = useState<MemberProfile | null>(null);
-  const [banner, setBanner] = useState<{
-    show: boolean;
-    type: "success" | "error";
-    message: string;
-  }>({ show: false, type: "success", message: "" });
 
   const updateSetting = (key: keyof typeof defaultSettings, value: string) => {
     setSettings((prev) => ({
@@ -176,14 +172,7 @@ export default function SettingsPage() {
   const handleSaveAll = async () => {
     const timeRegex = /^(?:[01]\d|2[0-3]):[0-5]\d$/;
     if (!timeRegex.test(settings.workStartTime)) {
-      setBanner({
-        show: true,
-        type: "error",
-        message: "Standard Work Start Time must be in 24h format (e.g. 09:00 or 17:30).",
-      });
-      setTimeout(() => {
-        setBanner((prev) => ({ ...prev, show: false }));
-      }, 3000);
+      toast.error("Standard Work Start Time must be in 24h format (e.g. 09:00 or 17:30).");
       return;
     }
 
@@ -225,24 +214,10 @@ export default function SettingsPage() {
         if (settingsError) throw settingsError;
       }
 
-      setBanner({
-        show: true,
-        type: "success",
-        message: "Settings saved successfully.",
-      });
-      setTimeout(() => {
-        setBanner((prev) => ({ ...prev, show: false }));
-      }, 3000);
+      toast.success("Settings saved successfully.");
     } catch (e) {
       console.error(e);
-      setBanner({
-        show: true,
-        type: "error",
-        message: "Failed to save settings.",
-      });
-      setTimeout(() => {
-        setBanner((prev) => ({ ...prev, show: false }));
-      }, 3000);
+      toast.error("Failed to save settings.");
     } finally {
       setIsSaving(false);
     }
@@ -253,26 +228,12 @@ export default function SettingsPage() {
     newRole: "admin" | "member",
   ) => {
     if (role !== "admin") {
-      setBanner({
-        show: true,
-        type: "error",
-        message: "You must be an administrator to perform this action.",
-      });
-      setTimeout(() => {
-        setBanner((prev) => ({ ...prev, show: false }));
-      }, 3000);
+      toast.error("You must be an administrator to perform this action.");
       return;
     }
 
     if (userId === currentUser?.id) {
-      setBanner({
-        show: true,
-        type: "error",
-        message: "You cannot change your own role.",
-      });
-      setTimeout(() => {
-        setBanner((prev) => ({ ...prev, show: false }));
-      }, 3000);
+      toast.error("You cannot change your own role.");
       return;
     }
 
@@ -290,24 +251,10 @@ export default function SettingsPage() {
         prev.map((p) => (p.id === userId ? { ...p, role: newRole } : p)),
       );
 
-      setBanner({
-        show: true,
-        type: "success",
-        message: "User role updated successfully.",
-      });
-      setTimeout(() => {
-        setBanner((prev) => ({ ...prev, show: false }));
-      }, 3000);
+      toast.success("User role updated successfully.");
     } catch (e) {
       console.error("Failed to update user role", e);
-      setBanner({
-        show: true,
-        type: "error",
-        message: "Failed to update user role.",
-      });
-      setTimeout(() => {
-        setBanner((prev) => ({ ...prev, show: false }));
-      }, 3000);
+      toast.error("Failed to update user role.");
     } finally {
       setIsUpdatingRole(null);
     }
@@ -318,26 +265,12 @@ export default function SettingsPage() {
     newStatus: "pending" | "approved" | "rejected"
   ) => {
     if (role !== "admin") {
-      setBanner({
-        show: true,
-        type: "error",
-        message: "You must be an administrator to perform this action.",
-      });
-      setTimeout(() => {
-        setBanner((prev) => ({ ...prev, show: false }));
-      }, 3000);
+      toast.error("You must be an administrator to perform this action.");
       return;
     }
 
     if (userId === currentUser?.id) {
-      setBanner({
-        show: true,
-        type: "error",
-        message: "You cannot change your own status.",
-      });
-      setTimeout(() => {
-        setBanner((prev) => ({ ...prev, show: false }));
-      }, 3000);
+      toast.error("You cannot change your own status.");
       return;
     }
 
@@ -355,24 +288,10 @@ export default function SettingsPage() {
         prev.map((p) => (p.id === userId ? { ...p, status: newStatus } : p))
       );
 
-      setBanner({
-        show: true,
-        type: "success",
-        message: "User status updated successfully.",
-      });
-      setTimeout(() => {
-        setBanner((prev) => ({ ...prev, show: false }));
-      }, 3000);
+      toast.success("User status updated successfully.");
     } catch (e) {
       console.error(e);
-      setBanner({
-        show: true,
-        type: "error",
-        message: "Failed to update user status.",
-      });
-      setTimeout(() => {
-        setBanner((prev) => ({ ...prev, show: false }));
-      }, 3000);
+      toast.error("Failed to update user status.");
     } finally {
       setIsUpdatingStatus(null);
     }
@@ -387,36 +306,15 @@ export default function SettingsPage() {
       if (res.success) {
         setProfiles((prev) => prev.filter((p) => p.id !== targetUserId));
         setUserToDelete(null);
-        setBanner({
-          show: true,
-          type: "success",
-          message: "User account deleted successfully.",
-        });
-        setTimeout(() => {
-          setBanner((prev) => ({ ...prev, show: false }));
-        }, 3000);
+        toast.success("User account deleted successfully.");
       } else {
         setUserToDelete(null);
-        setBanner({
-          show: true,
-          type: "error",
-          message: res.error || "Failed to delete user account.",
-        });
-        setTimeout(() => {
-          setBanner((prev) => ({ ...prev, show: false }));
-        }, 3000);
+        toast.error(res.error || "Failed to delete user account.");
       }
     } catch (e) {
       console.error(e);
       setUserToDelete(null);
-      setBanner({
-        show: true,
-        type: "error",
-        message: e instanceof Error ? e.message : "Failed to delete user account.",
-      });
-      setTimeout(() => {
-        setBanner((prev) => ({ ...prev, show: false }));
-      }, 3000);
+      toast.error(e instanceof Error ? e.message : "Failed to delete user account.");
     } finally {
       setIsDeletingUser(null);
     }
@@ -432,21 +330,6 @@ export default function SettingsPage() {
   return (
     <div className="max-w-5xl mx-auto p-6 md:p-10 space-y-10 bg-background min-h-full">
       {/* HEADER */}
-
-      {banner.show && (
-        <div className={`flex items-center gap-3 p-4 rounded-xl border text-sm transition-all duration-300 animate-in fade-in slide-in-from-top-2 ${
-          banner.type === "success"
-            ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
-            : "border-destructive/20 bg-destructive/10 text-destructive dark:text-destructive-foreground"
-        }`}>
-          {banner.type === "success" ? (
-            <IconCheck className="h-5 w-5 shrink-0" />
-          ) : (
-            <span className="h-5 w-5 shrink-0 font-bold">⚠️</span>
-          )}
-          <span className="font-medium">{banner.message}</span>
-        </div>
-      )}
 
       <div className="space-y-8">
         {/* ACCOUNT PROFILE */}
