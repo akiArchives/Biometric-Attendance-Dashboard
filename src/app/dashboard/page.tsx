@@ -209,7 +209,7 @@ export default async function DashboardPage({
             <Link href="/dashboard/analytics?status=present">
               <Button
                 variant="link"
-                className="h-auto p-0 text-xs gap-1 text-muted-foreground hover:text-primary hover:no-underline group"
+                className="h-auto p-0 text-xs gap-1 text-muted-foreground hover:text-emerald-600 hover:font-bold hover:no-underline group"
               >
                 View details
                 <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" />
@@ -236,7 +236,7 @@ export default async function DashboardPage({
             <Link href="/dashboard/analytics?status=late">
               <Button
                 variant="link"
-                className="h-auto p-0 text-xs gap-1 text-muted-foreground hover:text-primary hover:no-underline group"
+                className="h-auto p-0 text-xs gap-1 text-muted-foreground hover:text-yellow-600 hover:font-bold hover:no-underline group"
               >
                 View details
                 <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" />
@@ -263,7 +263,7 @@ export default async function DashboardPage({
             <Link href="/dashboard/analytics?status=absent">
               <Button
                 variant="link"
-                className="h-auto p-0 text-xs gap-1 text-muted-foreground hover:text-primary hover:no-underline group"
+                className="h-auto p-0 text-xs gap-1 text-muted-foreground hover:text-red-600 hover:font-bold hover:no-underline group"
               >
                 View details
                 <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" />
@@ -290,7 +290,7 @@ export default async function DashboardPage({
             <Link href="/dashboard/analytics">
               <Button
                 variant="link"
-                className="h-auto p-0 text-xs gap-1 text-muted-foreground hover:text-primary hover:no-underline group"
+                className="h-auto p-0 text-xs gap-1 text-muted-foreground hover:text-indigo-600 hover:font-bold hover:no-underline group"
               >
                 View details
                 <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" />

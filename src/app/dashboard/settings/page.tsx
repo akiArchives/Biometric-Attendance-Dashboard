@@ -13,7 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { IconLoader2, IconCheck } from "@tabler/icons-react";
+import { IconLoader2, IconCheck, IconXFilled, IconCheckFilled } from "@tabler/icons-react";
 import { useTheme } from "next-themes";
 import SettingsLoading from "./loading";
 import { deleteUserAction } from "./actions";
@@ -50,12 +50,12 @@ interface MemberProfile {
 export function getStatusBadgeStyle(status: "pending" | "approved" | "rejected") {
   switch (status) {
     case "approved":
-      return "bg-emerald-500/10 text-emerald-500 border border-emerald-500/20";
+      return "bg-emerald-500/10 text-emerald-500 border border-emerald-500";
     case "rejected":
-      return "bg-rose-500/10 text-rose-500 border border-rose-500/20";
+      return "bg-rose-500/10 text-rose-500 border border-rose-500";
     case "pending":
     default:
-      return "bg-amber-500/10 text-amber-500 border border-amber-500/20 animate-pulse";
+      return "bg-amber-500/10 text-amber-500 border border-amber-500";
   }
 }
 
@@ -206,7 +206,7 @@ export default function SettingsPage() {
         settings.adminName !== (currentUser.user_metadata?.full_name || currentUser.user_metadata?.name)
       ) {
         await supabase.auth.updateUser({
-          data: { 
+          data: {
             name: settings.adminName,
             full_name: settings.adminName
           },
@@ -430,13 +430,13 @@ export default function SettingsPage() {
   const showAdminSettings = role === "admin";
 
   return (
-    <div className="max-w-4xl mx-auto p-6 md:p-10 space-y-10 bg-background min-h-full">
+    <div className="max-w-5xl mx-auto p-6 md:p-10 space-y-10 bg-background min-h-full">
       {/* HEADER */}
 
       {banner.show && (
         <div className={`flex items-center gap-3 p-4 rounded-xl border text-sm transition-all duration-300 animate-in fade-in slide-in-from-top-2 ${
-          banner.type === "success" 
-            ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400" 
+          banner.type === "success"
+            ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
             : "border-destructive/20 bg-destructive/10 text-destructive dark:text-destructive-foreground"
         }`}>
           {banner.type === "success" ? (
@@ -456,7 +456,7 @@ export default function SettingsPage() {
           </div>
 
           <div className="space-y-5">
-            <div className="flex items-center justify-between border-b border-border/10 pb-4">
+            <div className="flex items-center justify-between border-b border-border/10 pb-4 gap-3">
               <div className="space-y-0.5">
                 <Label className="text-sm font-medium text-foreground">
                   Display Name
@@ -470,11 +470,11 @@ export default function SettingsPage() {
                 value={settings.adminName}
                 onChange={(e) => updateSetting("adminName", e.target.value)}
                 placeholder="Enter display name"
-                className="w-fit"
+                className="w-fit border-border"
               />
             </div>
 
-            <div className="flex items-center justify-between border-b border-border/10 pb-4">
+            <div className="flex items-center justify-between border-b border-border/10 pb-4 gap-3">
               <div className="space-y-0.5">
                 <Label className="text-sm font-medium text-foreground">
                   Account Email
@@ -491,27 +491,6 @@ export default function SettingsPage() {
                 className="w-fit"
               />
             </div>
-
-            {/*<div className="grid gap-2">
-              <Label htmlFor="adminName">Display Name</Label>
-              <Input
-                id="adminName"
-                value={settings.adminName}
-                onChange={(e) => updateSetting("adminName", e.target.value)}
-                placeholder="Enter display name"
-                className="bg-muted/10 border-border/50 focus:bg-transparent"
-              />
-            <>
-            <div className="grid gap-2">
-              <Label htmlFor="adminEmail">Account Email</Label>
-              <Input
-                id="adminEmail"
-                type="email"
-                value={settings.adminEmail}
-                disabled
-                className="bg-muted/20 border-border/40 text-muted-foreground cursor-not-allowed opacity-80"
-              />
-            </div>*/}
           </div>
         </div>
 
@@ -522,7 +501,7 @@ export default function SettingsPage() {
           </div>
 
           <div className="space-y-5">
-            <div className="flex items-center justify-between border-b border-border/10 pb-4">
+            <div className="flex items-center justify-between border-b border-border/10 pb-4 gap-3">
               <div className="space-y-0.5">
                 <Label className="text-sm font-medium text-foreground">
                   Appearance
@@ -535,7 +514,7 @@ export default function SettingsPage() {
                 value={settings.theme}
                 onValueChange={(val) => updateSetting("theme", val)}
               >
-                <SelectTrigger className="w-36 h-9 bg-muted/20 border-border/50 justify-between">
+                <SelectTrigger className="w-36 h-9 bg-muted/20 border-border justify-between">
                   <SelectValue placeholder="Theme" />
                 </SelectTrigger>
                 <SelectContent>
@@ -546,7 +525,7 @@ export default function SettingsPage() {
               </Select>
             </div>
 
-            <div className="flex items-center justify-between pb-2">
+            <div className="flex items-center justify-between pb-2 gap-3">
               <div className="space-y-0.5">
                 <Label className="text-sm font-medium text-foreground">
                   Default Landing Page
@@ -559,7 +538,7 @@ export default function SettingsPage() {
                 value={settings.defaultHomePage}
                 onValueChange={(val) => updateSetting("defaultHomePage", val)}
               >
-                <SelectTrigger className="w-36 h-9 bg-muted/20 border-border/50 justify-between">
+                <SelectTrigger className="w-36 h-9 bg-muted/20 border-border justify-between">
                   <SelectValue placeholder="Default Page" />
                 </SelectTrigger>
                 <SelectContent>
@@ -572,64 +551,76 @@ export default function SettingsPage() {
           </div>
         </div>
 
+
         {/* SHIFT RULES (ADMIN ONLY) */}
-        {showAdminSettings && (
-          <div className="space-y-5 border-b pb-8">
-            <div className="flex items-center gap-2 text-foreground font-semibold text-lg pb-2">
-              <h2>Shift Rules</h2>
-            </div>
-            <div className="grid md:grid-cols-2 gap-6">
-              <div className="grid gap-2">
-                <Label htmlFor="workStartTime">
+        {showAdminSettings && (<div className="space-y-5 border-b pb-8">
+          <div className="flex items-center gap-2 text-foreground font-semibold text-lg pb-2">
+            <h2>Shift Rules</h2>
+          </div>
+
+          <div className="space-y-5">
+            <div className="flex items-center justify-between border-b border-border/10 pb-4 gap-3">
+              <div className="space-y-0.5">
+                <Label className="text-sm font-medium text-foreground">
                   Standard Work Start Time (24h)
                 </Label>
-                <Input
-                  id="workStartTime"
-                  type="text"
-                  value={settings.workStartTime}
-                  onChange={(e) =>
-                    updateSetting("workStartTime", e.target.value)
-                  }
-                  placeholder="e.g. 09:00"
-                  className="bg-muted/10 border-border/50 focus:bg-transparent"
-                />
+                <p className="text-xs text-muted-foreground">
+                  Lorem Ipsum
+                </p>
               </div>
+              <Input
+                id="workStartTime"
+                type="text"
+                value={settings.workStartTime}
+                onChange={(e) =>
+                  updateSetting("workStartTime", e.target.value)
+                }
+                placeholder="e.g. 09:00"
+                className="w-36 h-9 justify-between bg-muted/10 border-border focus:bg-transparent"
+              />
+            </div>
 
-              <div className="grid gap-2">
-                <Label htmlFor="gracePeriod">Late Grace Period</Label>
-                <Select
-                  value={settings.gracePeriod}
-                  onValueChange={(val) => updateSetting("gracePeriod", val)}
-                >
-                  <SelectTrigger
-                    id="gracePeriod"
-                    className="w-full justify-between h-9 bg-muted/20 border-border/50"
-                  >
-                    <SelectValue placeholder="Select minutes" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="0">No Grace Period</SelectItem>
-                    <SelectItem value="5">5 Minutes</SelectItem>
-                    <SelectItem value="10">10 Minutes</SelectItem>
-                    <SelectItem value="15">15 Minutes</SelectItem>
-                    <SelectItem value="30">30 Minutes</SelectItem>
-                  </SelectContent>
-                </Select>
+            <div className="flex items-center justify-between pb-2 gap-3">
+              <div className="space-y-0.5">
+                <Label className="text-sm font-medium text-foreground">
+                  Late Grace Period
+                </Label>
+                <p className="text-xs text-muted-foreground">
+                  Lorem Ipsum
+                </p>
               </div>
+              <Select
+                value={settings.gracePeriod}
+                onValueChange={(val) => updateSetting("gracePeriod", val)}
+              >
+                <SelectTrigger
+                  id="gracePeriod"
+                  className="w-36 h-9 justify-between bg-muted/20 border-border"
+                >
+                  <SelectValue placeholder="Select minutes" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="0">No Grace Period</SelectItem>
+                  <SelectItem value="5">5 Minutes</SelectItem>
+                  <SelectItem value="10">10 Minutes</SelectItem>
+                  <SelectItem value="15">15 Minutes</SelectItem>
+                  <SelectItem value="30">30 Minutes</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
-        )}
+        </div>)}
 
         {/* MEMBERS LIST (ADMIN ONLY) */}
         {showAdminSettings && profiles.length > 0 && (
-          <div className="space-y-5 pb-8">
+          <div className="space-y-5">
             <div className="flex items-center gap-2 text-foreground font-semibold text-lg pb-2">
               <h2>Workspace Members</h2>
             </div>
-            <div className="border border-border/40 rounded-xl overflow-hidden bg-muted/5">
+            <div className="border border-border rounded-xl overflow-hidden bg-muted/5">
               <table className="w-full border-collapse text-sm text-left">
                 <thead>
-                  <tr className="bg-muted/10 text-muted-foreground font-medium border-b border-border/40">
+                  <tr className="bg-muted/10 text-muted-foreground font-medium border-b border-border">
                     <th className="p-3">Email Address</th>
                     <th className="p-3">Status</th>
                     <th className="p-3 text-right">Actions</th>
@@ -666,7 +657,7 @@ export default function SettingsPage() {
                                 }
                                 disabled={profile.id === currentUser?.id} // Prevent editing self
                               >
-                                <SelectTrigger className="w-28 h-8 bg-muted/20 border-border/50 justify-between inline-flex text-xs">
+                                <SelectTrigger className="w-28 h-8 bg-muted/20 border-border justify-between inline-flex text-xs">
                                   <SelectValue placeholder="Role" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -674,28 +665,30 @@ export default function SettingsPage() {
                                   <SelectItem value="member">Member</SelectItem>
                                 </SelectContent>
                               </Select>
-                              
+
                               {profile.id !== currentUser?.id && (
                                 <>
                                   {profile.status !== "approved" && (
                                     <button
                                       onClick={() => handleStatusChange(profile.id, "approved")}
-                                      className="px-2.5 py-1 text-xs font-medium text-white bg-emerald-600 hover:bg-emerald-700 rounded-md cursor-pointer transition-colors shadow-sm"
-                                    >
-                                      Approve
+                                      className="p-1.5 border-2 border-emerald-500/90 rounded-md text-emerald-500/90 cursor-pointer transition-colors hover:bg-emerald-500/90 hover:text-emerald-100"
+                                      title="Approve User"
+                                      >
+                                      <IconCheckFilled className="size-4" />
                                     </button>
                                   )}
                                   {profile.status !== "rejected" && (
                                     <button
                                       onClick={() => handleStatusChange(profile.id, "rejected")}
-                                      className="px-2.5 py-1 text-xs font-medium text-rose-600 border border-rose-600/20 hover:bg-rose-500/5 rounded-md cursor-pointer transition-colors"
-                                    >
-                                      Decline
+                                      className="p-1.5 border-2 border-rose-500/90 rounded-md text-rose-500/90 cursor-pointer transition-colors hover:bg-rose-500/90 hover:text-rose-100"
+                                      title="Reject User"
+                                      >
+                                        <IconXFilled className="size-4" />
                                     </button>
                                   )}
                                   <button
                                     onClick={() => setUserToDelete(profile)}
-                                    className="p-1.5 text-muted-foreground hover:text-destructive border border-border/40 hover:border-destructive/20 rounded-md cursor-pointer transition-colors"
+                                    className="p-1.5 border-2 border-border rounded-md text-muted-foreground hover:text-destructive hover:border-destructive/20 cursor-pointer transition-colors"
                                     title="Delete User"
                                   >
                                     <Trash2 className="size-4" />
@@ -732,7 +725,7 @@ export default function SettingsPage() {
           <DialogHeader>
             <DialogTitle>Delete User Account</DialogTitle>
             <DialogDescription>
-              Are you sure you want to permanently delete <strong>{userToDelete?.email}</strong>? 
+              Are you sure you want to permanently delete <strong>{userToDelete?.email}</strong>?
               This will delete their login credentials and all associated profile records. This action cannot be undone.
             </DialogDescription>
           </DialogHeader>
