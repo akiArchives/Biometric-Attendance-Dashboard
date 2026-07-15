@@ -43,6 +43,7 @@ const defaultSettings = {
 
 interface MemberProfile {
   id: string;
+  name: string | null;
   email: string | null;
   role: string;
   status: "pending" | "approved" | "rejected";
@@ -124,7 +125,7 @@ export default function SettingsPage() {
             if (userRole === "admin") {
               const { data: allProfiles } = await supabase
                 .from("profiles")
-                .select("id, email, role, status")
+                .select("id, name, email, role, status")
                 .order("email");
 
               if (allProfiles) {
@@ -504,6 +505,7 @@ export default function SettingsPage() {
               <table className="w-full border-collapse text-sm text-left">
                 <thead>
                   <tr className="bg-muted/10 text-muted-foreground font-medium border-b border-border">
+                    <th className="p-3">Name</th>
                     <th className="p-3">Email Address</th>
                     <th className="p-3">Status</th>
                     <th className="p-3 text-right">Actions</th>
@@ -515,6 +517,9 @@ export default function SettingsPage() {
                       key={profile.id}
                       className="hover:bg-muted/5 transition-colors"
                     >
+                      <td className="p-3 text-foreground font-medium">
+                        {profile.name || "—"}
+                      </td>
                       <td className="p-3 text-foreground font-medium">
                         {profile.email}
                       </td>
