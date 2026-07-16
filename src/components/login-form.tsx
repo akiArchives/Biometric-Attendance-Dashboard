@@ -16,26 +16,25 @@ import { Field, FieldDescription, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { login } from "@/app/(login)/actions";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { toast } from "sonner";
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-  const [error, setError] = React.useState<string | null>(null);
   const [pending, setPending] = React.useState(false);
   const [showPassword, setShowPassword] = React.useState(false);
   const router = useRouter();
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setError(null);
     setPending(true);
 
     const formData = new FormData(event.currentTarget);
     const result = await login(formData);
 
     if (result?.error) {
-      setError(result.error);
+      toast.error(result.error);
       setPending(false);
     } else {
       router.push("/dashboard");
@@ -99,11 +98,7 @@ export function LoginForm({
                 </a>
               </div>
 
-              {error && (
-                <p className="text-sm text-red-500 text-center font-medium mt-1">
-                  {error}
-                </p>
-              )}
+
               <Field className="gap-3">
                 <Button
                   type="submit"

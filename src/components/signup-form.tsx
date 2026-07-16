@@ -15,12 +15,12 @@ import {
 import { Field, FieldDescription, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { signup } from "@/app/(login)/actions";
+import { toast } from "sonner";
 
 export function SignupForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-  const [error, setError] = React.useState<string | null>(null);
   const [message, setMessage] = React.useState<string | null>(null);
   const [pending, setPending] = React.useState(false);
   const [showPassword, setShowPassword] = React.useState(false);
@@ -28,7 +28,6 @@ export function SignupForm({
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setError(null);
     setMessage(null);
     setPending(true);
 
@@ -36,9 +35,10 @@ export function SignupForm({
     const result = await signup(formData);
 
     if (result?.error) {
-      setError(result.error);
+      toast.error(result.error);
       setPending(false);
     } else {
+      toast.success(result.message || "Account created successfully!");
       setMessage(result.message || "Account created successfully!");
       setPending(false);
     }
@@ -135,11 +135,7 @@ export function SignupForm({
               <FieldDescription className="text-xs -mt-1 pl-1">
                 Must be at least 8 characters long.
               </FieldDescription>
-              {error && (
-                <p className="text-sm text-red-500 text-center font-medium mt-1">
-                  {error}
-                </p>
-              )}
+
               {message && (
                 <p className="text-sm text-emerald-600 text-center font-medium mt-1">
                   {message}
