@@ -8,6 +8,8 @@ import {
   IconCircleXFilled,
   IconCalendar,
   IconAlarmFilled,
+  IconPencil,
+  IconTrash,
 } from "@tabler/icons-react";
 
 function formatRawTime(iso: string): string {
@@ -203,6 +205,36 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
           <span>
             {hours}h {minutes}m
           </span>
+        </div>
+      );
+    },
+  },
+  {
+    id: "actions",
+    header: () => (
+      <div className="text-center font-semibold text-slate-900 dark:text-slate-100 pr-4">
+        Actions
+      </div>
+    ),
+    cell: ({ row }) => {
+      return (
+        <div className="flex items-center gap-1 justify-center pr-4">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 text-slate-500 hover:text-blue-600 hover:bg-blue-500/10 dark:hover:text-blue-400 rounded-md transition-colors"
+            title="Edit Log"
+          >
+            <IconPencil className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 text-slate-500 hover:text-rose-600 hover:bg-rose-500/10 dark:hover:text-rose-400 rounded-md transition-colors"
+            title="Delete Log"
+          >
+            <IconTrash className="h-4 w-4" />
+          </Button>
         </div>
       );
     },
