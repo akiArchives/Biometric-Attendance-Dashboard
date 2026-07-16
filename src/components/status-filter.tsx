@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import { IconFilter, IconCircleCheckFilled, IconAlarmFilled, IconCircleXFilled } from "@tabler/icons-react";
+import { IconFilter2, IconCircleCheckFilled, IconAlarmFilled, IconCircleXFilled } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -61,10 +61,10 @@ export function StatusFilter() {
         <Button
           variant="outline"
           size="icon"
-          className="h-9 w-9 border-transparent text-gray-700 bg-white dark:bg-transparent dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 shrink-0"
+          className="border-transparent text-gray-700 bg-primary dark:bg-transparent dark:text-slate-300 hover:bg-primary/90 dark:hover:bg-slate-800 shrink-0"
           title="Filter by Status"
         >
-          <IconFilter className="size-5" />
+          <IconFilter2 className="size-4 text-primary-foreground" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48">
