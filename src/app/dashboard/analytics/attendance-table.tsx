@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardAction,
   CardContent,
+  CardFooter,
 } from "@/components/ui/card";
 import { flexRender, Row } from "@tanstack/react-table";
 import { Separator } from "@/components/ui/separator";
@@ -74,6 +75,15 @@ export function AttendanceTable({ data }: AttendanceTableProps) {
                 </div>
               </div>
             </CardContent>
+
+            <Separator className="" />
+
+            <CardFooter className="py-2.5 flex justify-end gap-2 px-4 bg-muted/5 rounded-b-lg">
+              {flexRender(
+                cells[5].column.columnDef.cell,
+                cells[5].getContext(),
+              )}
+            </CardFooter>
           </Card>
         );
       }}
