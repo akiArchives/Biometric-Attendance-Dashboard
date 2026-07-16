@@ -3,7 +3,7 @@ import { AttendanceTable } from "./attendance-table";
 import { processDailyLogs } from "@/utils/attendance-processor";
 
 interface PageProps {
-  searchParams: Promise<{ date?: string }>;
+  searchParams: Promise<{ date?: string; status?: string }>;
 }
 
 export default async function AttendancePage({ searchParams }: PageProps) {
@@ -69,9 +69,16 @@ export default async function AttendancePage({ searchParams }: PageProps) {
     gracePeriod,
   );
 
+  const statusParam = resolvedParams.status;
+  const selectedStatuses = statusParam ? statusParam.split(",") : [];
+
+  const filteredData = selectedStatuses.length > 0
+    ? processedData.filter((item) => selectedStatuses.includes(item.status))
+    : processedData;
+
   return (
     <div className="w-full h-auto mt-6 px-6">
-      <AttendanceTable data={processedData} />
+      <AttendanceTable data={filteredData} />
     </div>
   );
 }
