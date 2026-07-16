@@ -85,11 +85,11 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
       </SidebarHeader>
 
       <SidebarContent className="">
-        <NavMain items={data.navMain} />
+
         {user?.role === "admin" && (
-          <div className="px-4 py-2 group-data-[collapsible=icon]:px-2 animate-fade-in">
+          <div className="px-2.5 py-2 group-data-[collapsible=icon]:px-1.5 group-data-[collapsible=icon]:py-1.5 animate-fade-in group-data-[collapsible=icon]:my-2">
             <Button
-              className="w-full gap-2 rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-xs h-9 justify-start px-3 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-0"
+              className="w-full h-10 gap-2 rounded-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-xs justify-start px-4 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:w-full group-data-[collapsible=icon]:h-9 group-data-[collapsible=icon]:items-center items-center align-center flex"
               title="Add Attendance"
             >
               <IconPlus className="size-4 shrink-0" />
@@ -97,6 +97,7 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
             </Button>
           </div>
         )}
+        <NavMain items={data.navMain} />
       </SidebarContent>
       <SidebarFooter className="p-3 group-data-[collapsible=icon]:p-2">
         {user && <NavUser user={user} />}

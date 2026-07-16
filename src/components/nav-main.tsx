@@ -51,7 +51,7 @@ export function NavMain({
                   asChild
                   tooltip={item.title}
                   isActive={isActive}
-                  className="h-9 text-xs font-medium group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:mx-1 group-data-[collapsible=icon]:size-9!"
+                  className="h-9 text-xs font-medium hover:bg-muted hover:text-sidebar-hover-foreground group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:mx-1 group-data-[collapsible=icon]:size-9!"
                 >
                   <Link href={item.url}>
                     <span className="ml-1.5 group-data-[collapsible=icon]:ml-0">
