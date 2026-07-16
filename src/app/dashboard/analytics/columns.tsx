@@ -37,7 +37,7 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="hover:bg-transparent dark:text-slate-100"
+          className="hover:bg-transparent dark:text-slate-100 animate-fade-in"
         >
           Employee
           <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -50,7 +50,7 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
       const dept = row.original.department_name;
 
       return (
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 animate-fade-in">
           <div>
             <div className="ml-2 font-semibold text-slate-900 dark:text-slate-100 capitalize">
               {name || "Unregistered Token"}
@@ -69,7 +69,7 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
       <Button
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        className="justify-center flex w-fit mx-auto hover:bg-transparent dark:text-slate-100"
+        className="justify-center flex w-fit mx-auto hover:bg-transparent dark:text-slate-100 animate-fade-in"
       >
         Status
         <ArrowUpDown className="ml-2 h-4 w-4 data-[state=sorted]:border-blue-500 data-[state=sorted]:border data-[state=sorted]:text-blue-500" />
@@ -112,7 +112,7 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
       const { icon, label } = styles[status];
 
       return (
-        <span className="flex w-fit mx-auto justify-center items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium border border-slate-300 bg-white text-slate-700 dark:border-slate-600 dark:bg-transparent dark:text-slate-300">
+        <span className="flex w-fit mx-auto justify-center items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium border border-slate-300 bg-white text-slate-700 dark:border-slate-600 dark:bg-transparent dark:text-slate-300 animate-fade-in">
           {icon}
           {label}
         </span>
@@ -125,7 +125,7 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
       <Button
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        className="justify-center flex w-fit mx-auto hover:bg-transparent dark:text-slate-100"
+        className="justify-center flex w-fit mx-auto hover:bg-transparent dark:text-slate-100 animate-fade-in"
       >
         Time in
         <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -139,7 +139,7 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
         );
 
       return (
-        <div className="flex w-fit mx-auto items-center gap-1.5 text-slate-700 dark:text-slate-300 font-medium font-mono text-xs">
+        <div className="flex w-fit mx-auto items-center gap-1.5 text-slate-700 dark:text-slate-300 font-medium font-mono text-xs animate-fade-in">
           {formatRawTime(rawTime)}
         </div>
       );
@@ -151,7 +151,7 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
       <Button
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        className="justify-center flex w-fit mx-auto hover:bg-transparent dark:text-slate-100"
+        className="justify-center flex w-fit mx-auto hover:bg-transparent dark:text-slate-100 animate-fade-in"
       >
         Time out
         <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -165,7 +165,7 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
         );
 
       return (
-        <div className="flex w-fit mx-auto items-center gap-1.5 text-slate-700 dark:text-slate-300 font-medium font-mono text-xs">
+        <div className="flex w-fit mx-auto items-center gap-1.5 text-slate-700 dark:text-slate-300 font-medium font-mono text-xs animate-fade-in">
           {formatRawTime(rawTime)}
         </div>
       );
@@ -177,7 +177,7 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
       <Button
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        className="justify-center flex w-fit mx-auto hover:bg-transparent dark:text-slate-100"
+        className="justify-center flex w-fit mx-auto hover:bg-transparent dark:text-slate-100 animate-fade-in"
       >
         Hours Logged
         <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -192,14 +192,14 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
 
       if (decimalHours === 0 || isNaN(decimalHours)) {
         return (
-          <span className="text-slate-400 text-xs flex w-fit mx-auto">
+          <span className="text-slate-400 text-xs flex w-fit mx-auto animate-fade-in">
             0h 0m
           </span>
         );
       }
 
       return (
-        <div className="flex w-fit mx-auto items-center gap-1.5 text-slate-900 dark:text-slate-100 font-semibold">
+        <div className="flex w-fit mx-auto items-center gap-1.5 text-slate-900 dark:text-slate-100 font-semibold animate-fade-in">
           <span>
             {hours}h {minutes}m
           </span>

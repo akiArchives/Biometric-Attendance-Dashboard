@@ -196,7 +196,7 @@ export default async function DashboardPage({
             <CardDescription className="flex items-center text-gray-500 dark:text-gray-400 gap-2">
               Present
             </CardDescription>
-            <CardTitle className="text-2xl font-semibold text-gray-700 dark:text-gray-100 tabular-nums @[250px]/card:text-3xl">
+            <CardTitle className="text-2xl font-semibold text-gray-700 dark:text-gray-100 tabular-nums @[250px]/card:text-3xl animate-fade-in">
               {presentCount}
             </CardTitle>
             <CardAction>
@@ -209,7 +209,7 @@ export default async function DashboardPage({
             <Link href="/dashboard/analytics?status=present">
               <Button
                 variant="link"
-                className="h-auto p-0 text-xs gap-1 text-muted-foreground hover:text-emerald-600 hover:font-bold hover:no-underline group"
+                className="h-auto p-0 text-xs gap-1 text-muted-foreground hover:text-emerald-600 hover:font-bold hover:no-underline group animate-fade-in"
               >
                 View details
                 <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" />
@@ -223,7 +223,7 @@ export default async function DashboardPage({
             <CardDescription className="flex items-center text-gray-500 dark:text-gray-400 gap-2">
               Late
             </CardDescription>
-            <CardTitle className="text-2xl font-semibold text-gray-700 dark:text-gray-100 tabular-nums @[250px]/card:text-3xl">
+            <CardTitle className="text-2xl font-semibold text-gray-700 dark:text-gray-100 tabular-nums @[250px]/card:text-3xl animate-fade-in">
               {lateCount}
             </CardTitle>
             <CardAction>
@@ -236,7 +236,7 @@ export default async function DashboardPage({
             <Link href="/dashboard/analytics?status=late">
               <Button
                 variant="link"
-                className="h-auto p-0 text-xs gap-1 text-muted-foreground hover:text-yellow-600 hover:font-bold hover:no-underline group"
+                className="h-auto p-0 text-xs gap-1 text-muted-foreground hover:text-yellow-600 hover:font-bold hover:no-underline group animate-fade-in"
               >
                 View details
                 <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" />
@@ -250,7 +250,7 @@ export default async function DashboardPage({
             <CardDescription className="flex items-center text-gray-500 dark:text-gray-400 gap-2">
               Absent
             </CardDescription>
-            <CardTitle className="text-2xl font-semibold text-gray-700 dark:text-gray-100 tabular-nums @[250px]/card:text-3xl">
+            <CardTitle className="text-2xl font-semibold text-gray-700 dark:text-gray-100 tabular-nums @[250px]/card:text-3xl animate-fade-in">
               {absentCount}
             </CardTitle>
             <CardAction>
@@ -263,7 +263,7 @@ export default async function DashboardPage({
             <Link href="/dashboard/analytics?status=absent">
               <Button
                 variant="link"
-                className="h-auto p-0 text-xs gap-1 text-muted-foreground hover:text-red-600 hover:font-bold hover:no-underline group"
+                className="h-auto p-0 text-xs gap-1 text-muted-foreground hover:text-red-600 hover:font-bold hover:no-underline group animate-fade-in"
               >
                 View details
                 <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" />
@@ -277,7 +277,7 @@ export default async function DashboardPage({
             <CardDescription className="flex items-center text-gray-500 dark:text-gray-400 gap-2">
               Total Employees
             </CardDescription>
-            <CardTitle className="text-2xl font-semibold text-gray-700 dark:text-gray-100 tabular-nums @[250px]/card:text-3xl">
+            <CardTitle className="text-2xl font-semibold text-gray-700 dark:text-gray-100 tabular-nums @[250px]/card:text-3xl animate-fade-in">
               {totalCount}
             </CardTitle>
             <CardAction>
@@ -290,7 +290,7 @@ export default async function DashboardPage({
             <Link href="/dashboard/analytics">
               <Button
                 variant="link"
-                className="h-auto p-0 text-xs gap-1 text-muted-foreground hover:text-indigo-600 hover:font-bold hover:no-underline group"
+                className="h-auto p-0 text-xs gap-1 text-muted-foreground hover:text-indigo-600 hover:font-bold hover:no-underline group animate-fade-in"
               >
                 View details
                 <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" />
@@ -317,7 +317,7 @@ export default async function DashboardPage({
               Recent Logs
             </CardTitle>
           </CardHeader>
-          <CardContent className="rounded-none flex-1 px-3 whitespace-nowrap">
+          <CardContent className="rounded-none flex-1 px-3 whitespace-nowrap animate-fade-in">
             {recentLogs.length > 0 ? (
               <div className="rounded-none">
                 {recentLogs.map((log) => (

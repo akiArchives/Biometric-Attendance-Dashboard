@@ -204,7 +204,7 @@ export default function SettingsPage() {
         if (updateError) throw updateError;
         if (updatedUser) {
           setCurrentUser(updatedUser);
-          
+
           // Instantly update the local members list name for the current user
           setProfiles((prev) =>
             prev.map((p) =>
@@ -340,7 +340,7 @@ export default function SettingsPage() {
   const showAdminSettings = role === "admin";
 
   return (
-    <div className="max-w-5xl mx-auto p-6 md:p-10 space-y-10 bg-background min-h-full">
+    <div className="max-w-5xl mx-auto p-6 md:p-10 space-y-10 bg-background min-h-full animate-fade-in">
       {/* HEADER */}
 
       <div className="space-y-8">

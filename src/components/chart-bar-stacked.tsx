@@ -55,11 +55,11 @@ export function ChartBarStacked({
         <CardTitle className="text-sm font-medium flex items-center gap-2">
           Weekly Attendance Metrics
         </CardTitle>
-        <CardAction>
+        <CardAction className="animate-fade-in">
           <DatePicker selected={selectedDate} label={weekRange} />
         </CardAction>
       </CardHeader>
-      <CardContent className="">
+      <CardContent className="animate-fade-in">
         <ChartContainer
           config={chartConfig}
           className="w-full aspect-4/3 md:aspect-2/1 max-h-100"
