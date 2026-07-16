@@ -2,10 +2,11 @@
 
 import * as React from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import { IconFilter } from "@tabler/icons-react";
+import { IconFilter, IconCircleCheckFilled, IconAlarmFilled, IconCircleXFilled } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
+  DropdownMenuLabel,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuTrigger,
@@ -43,7 +44,7 @@ export function StatusFilter() {
     }
 
     const params = new URLSearchParams(searchParams.toString());
-    
+
     // If all statuses are selected, remove the param to keep the URL clean.
     if (newSelected.size === FILTERABLE_STATUSES.length) {
       params.delete("status");
@@ -60,29 +61,42 @@ export function StatusFilter() {
         <Button
           variant="outline"
           size="icon"
-          className="h-9 w-9 border-slate-300 dark:border-slate-600 bg-white dark:bg-transparent text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 shrink-0"
+          className="h-9 w-9 border-transparent text-gray-700 bg-white dark:bg-transparent dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 shrink-0"
           title="Filter by Status"
         >
-          <IconFilter className="h-4 w-4" />
+          <IconFilter className="size-5" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48">
+        <DropdownMenuLabel>Status</DropdownMenuLabel>
         <DropdownMenuCheckboxItem
           checked={selectedStatuses.has("present")}
           onCheckedChange={() => handleToggle("present")}
         >
+          <IconCircleCheckFilled
+            size={14}
+            className="text-emerald-500 shrink-0"
+          />
           Present
         </DropdownMenuCheckboxItem>
         <DropdownMenuCheckboxItem
           checked={selectedStatuses.has("late")}
           onCheckedChange={() => handleToggle("late")}
         >
+          <IconAlarmFilled
+            size={14}
+            className="text-orange-500 shrink-0"
+          />
           Late
         </DropdownMenuCheckboxItem>
         <DropdownMenuCheckboxItem
           checked={selectedStatuses.has("absent")}
           onCheckedChange={() => handleToggle("absent")}
         >
+          <IconCircleXFilled
+            size={14}
+            className="text-rose-500 shrink-0"
+          />
           Absent
         </DropdownMenuCheckboxItem>
       </DropdownMenuContent>

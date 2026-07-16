@@ -7,7 +7,6 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { IconBrandGithub } from "@tabler/icons-react";
 import { DatePicker } from "@/components/ui/date-picker";
 import { StatusFilter } from "@/components/status-filter";
-import { ModeToggle } from "@/components/mode-toggle";
 import * as React from "react";
 
 export function SiteHeader() {
@@ -32,8 +31,8 @@ export function SiteHeader() {
     const selectedDate = searchParams.get("date") || today;
     rightControls = (
       <div className="flex items-center gap-2">
-        <DatePicker selected={selectedDate} />
         <StatusFilter />
+        <DatePicker selected={selectedDate} />
       </div>
     );
   } else if (pathname === "/dashboard/reports") {
