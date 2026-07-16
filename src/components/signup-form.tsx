@@ -136,11 +136,7 @@ export function SignupForm({
                 Must be at least 8 characters long.
               </FieldDescription>
 
-              {message && (
-                <p className="text-sm text-emerald-600 text-center font-medium mt-1">
-                  {message}
-                </p>
-              )}
+
               <Field className="gap-3">
                 {message ? (
                   <Button asChild className="shadow-sm rounded-full h-10 mt-2 border-none w-full">
