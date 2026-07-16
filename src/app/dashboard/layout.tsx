@@ -14,10 +14,17 @@ export default async function Layout({ children }: { children: React.ReactNode }
     redirect("/sign-in");
   }
 
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+
   const sidebarUser = {
     name: user.user_metadata?.name || user.email?.split("@")[0] || "User",
     email: user.email || "",
     avatar: user.user_metadata?.avatar_url || "",
+    role: profile?.role || "member",
   };
 
   return (
