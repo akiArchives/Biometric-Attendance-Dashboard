@@ -41,7 +41,7 @@ export function AttendanceTable({ data }: AttendanceTableProps) {
               </CardAction>
             </CardHeader>
 
-            <Separator className="" />
+            <Separator className="w-0" />
 
             {/* Grid Details: Time In, Time Out, Logged Hours */}
             <CardContent className="-mx-6 -my-1">
@@ -76,9 +76,7 @@ export function AttendanceTable({ data }: AttendanceTableProps) {
               </div>
             </CardContent>
 
-            <Separator className="" />
-
-            <CardFooter className="py-2.5 flex justify-end gap-2 px-4 bg-muted/5 rounded-b-lg">
+            <CardFooter className="py-2 flex justify-end gap-2 px-0 bg-muted/5 rounded-b-lg">
               {flexRender(
                 cells[5].column.columnDef.cell,
                 cells[5].getContext(),
