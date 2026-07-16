@@ -11,8 +11,9 @@ import {
   SidebarFooter,
 } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
 import { Settings2 } from "lucide-react";
-import { IconDashboard, IconListDetails, IconReport } from "@tabler/icons-react"
+import { IconDashboard, IconListDetails, IconReport, IconPlus } from "@tabler/icons-react"
 
 const data = {
   navMain: [
@@ -58,6 +59,7 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
     name: string;
     email: string;
     avatar: string;
+    role?: string;
   };
 }
 
@@ -84,6 +86,17 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
 
       <SidebarContent className="">
         <NavMain items={data.navMain} />
+        {user?.role === "admin" && (
+          <div className="px-4 py-2 group-data-[collapsible=icon]:px-2 animate-fade-in">
+            <Button
+              className="w-full gap-2 rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-xs h-9 justify-start px-3 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-0"
+              title="Add Attendance"
+            >
+              <IconPlus className="size-4 shrink-0" />
+              <span className="group-data-[collapsible=icon]:hidden">Add Attendance</span>
+            </Button>
+          </div>
+        )}
       </SidebarContent>
       <SidebarFooter className="p-3 group-data-[collapsible=icon]:p-2">
         {user && <NavUser user={user} />}
