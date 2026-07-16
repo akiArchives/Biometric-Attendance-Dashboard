@@ -34,15 +34,15 @@ export function NavUser({
 
   return (
     <SidebarMenu>
-      <SidebarMenuItem className="border rounded-md p-1 shadow-md">
+      <SidebarMenuItem className="border rounded-md shadow-md">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+              className="text-gray-700 data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <div className="grid flex-1 text-left text-sm leading-tight gap-1">
-                <span className="truncate font-bold">{user.name}</span>
+                <span className="truncate dark:text-white font-bold">{user.name}</span>
                 <span className="truncate text-xs">{user.email}</span>
               </div>
               <ChevronsUpDownIcon className="ml-auto size-4" />

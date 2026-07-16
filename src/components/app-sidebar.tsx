@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { FingerprintPattern, LayoutDashboard } from "lucide-react";
+import { FingerprintPattern } from "lucide-react";
 import { NavMain } from "@/components/nav-main";
 import { NavUser } from "@/components/nav-user";
 import {
@@ -11,7 +11,8 @@ import {
   SidebarFooter,
 } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
-import { ClipboardClock, ChartBar, Settings } from "lucide-react";
+import { Settings2 } from "lucide-react";
+import { IconDashboard, IconListDetails, IconReport } from "@tabler/icons-react"
 
 const data = {
   navMain: [
@@ -19,7 +20,7 @@ const data = {
       title: "Dashboard",
       url: "/dashboard",
       icon: (
-        <LayoutDashboard
+        <IconDashboard
           style={{ width: "1rem", height: "1rem" }}
           strokeWidth={2.5}
         />
@@ -29,7 +30,7 @@ const data = {
       title: "Daily Logs",
       url: "/dashboard/analytics",
       icon: (
-        <ClipboardClock
+        <IconListDetails
           style={{ width: "1rem", height: "1rem" }}
           strokeWidth={2.5}
         />
@@ -39,14 +40,14 @@ const data = {
       title: "Reports",
       url: "/dashboard/reports",
       icon: (
-        <ChartBar style={{ width: "1rem", height: "1rem" }} strokeWidth={2.5} />
+        <IconReport style={{ width: "1rem", height: "1rem" }} strokeWidth={2.5} />
       ),
     },
     {
       title: "Settings",
       url: "/dashboard/settings",
       icon: (
-        <Settings style={{ width: "1rem", height: "1rem" }} strokeWidth={2.5} />
+        <Settings2 style={{ width: "1rem", height: "1rem" }} strokeWidth={2.5} />
       ),
     },
   ],
