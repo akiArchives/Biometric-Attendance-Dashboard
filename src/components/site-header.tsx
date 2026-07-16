@@ -6,6 +6,7 @@ import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { IconBrandGithub } from "@tabler/icons-react";
 import { DatePicker } from "@/components/ui/date-picker";
+import { StatusFilter } from "@/components/status-filter";
 import { ModeToggle } from "@/components/mode-toggle";
 import * as React from "react";
 
@@ -32,6 +33,7 @@ export function SiteHeader() {
     rightControls = (
       <div className="flex items-center gap-2">
         <DatePicker selected={selectedDate} />
+        <StatusFilter />
       </div>
     );
   } else if (pathname === "/dashboard/reports") {
@@ -60,7 +62,7 @@ export function SiteHeader() {
 
         <div className="flex items-center gap-1.5 md:gap-2">
           {rightControls}
-          <ModeToggle />
+          {/*<ModeToggle />*/}
           <Button variant="ghost" size="icon" className="shrink-0" asChild>
             <a
               href="https://github.com/akiArchives/Biometric-Attendance-Dashboard"
