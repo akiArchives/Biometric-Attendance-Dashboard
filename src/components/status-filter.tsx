@@ -61,13 +61,13 @@ export function StatusFilter() {
         <Button
           variant="outline"
           size="icon"
-          className="border-transparent text-gray-700 bg-primary dark:bg-transparent dark:text-slate-300 hover:bg-primary/90 dark:hover:bg-slate-800 shrink-0"
+          className="border-transparent text-gray-700 bg-primary dark:bg-primary dark:hover:bg-primary/90 hover:bg-primary/90 shrink-0"
           title="Filter by Status"
         >
           <IconFilter2 className="size-4 text-primary-foreground" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-48">
+      <DropdownMenuContent align="end" className="w-36">
         <DropdownMenuLabel>Status</DropdownMenuLabel>
         <DropdownMenuCheckboxItem
           checked={selectedStatuses.has("present")}
