@@ -47,6 +47,7 @@ interface MemberProfile {
   email: string | null;
   role: string;
   status: "pending" | "approved" | "rejected";
+  employee_id: number | null;
 }
 
 export function getStatusBadgeStyle(status: "pending" | "approved" | "rejected") {
@@ -61,6 +62,11 @@ export function getStatusBadgeStyle(status: "pending" | "approved" | "rejected")
   }
 }
 
+interface Employee {
+  employee_id: number;
+  employee_name: string;
+}
+
 export default function SettingsPage() {
   const { setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -68,10 +74,12 @@ export default function SettingsPage() {
   const [role, setRole] = useState<"admin" | "member" | null>(null);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [profiles, setProfiles] = useState<MemberProfile[]>([]);
+  const [employees, setEmployees] = useState<Employee[]>([]);
 
   const [isSaving, setIsSaving] = useState(false);
   const [isUpdatingRole, setIsUpdatingRole] = useState<string | null>(null);
   const [isUpdatingStatus, setIsUpdatingStatus] = useState<string | null>(null);
+  const [isUpdatingEmployee, setIsUpdatingEmployee] = useState<string | null>(null);
   const [isDeletingUser, setIsDeletingUser] = useState<string | null>(null);
   const [userToDelete, setUserToDelete] = useState<MemberProfile | null>(null);
 
@@ -121,15 +129,25 @@ export default function SettingsPage() {
             const userRole = selfProfile.role as "admin" | "member";
             setRole(userRole);
 
-            // If user is admin, fetch all workspace profiles
+            // If user is admin, fetch all workspace profiles and active employees
             if (userRole === "admin") {
-              const { data: allProfiles } = await supabase
-                .from("profiles")
-                .select("id, name, email, role, status")
-                .order("email");
+              const [profilesRes, empsRes] = await Promise.all([
+                supabase
+                  .from("profiles")
+                  .select("id, name, email, role, status, employee_id")
+                  .order("email"),
+                supabase
+                  .from("employees")
+                  .select("employee_id, employee_name")
+                  .eq("is_active", true)
+                  .order("employee_name")
+              ]);
 
-              if (allProfiles) {
-                setProfiles(allProfiles as MemberProfile[]);
+              if (profilesRes.data) {
+                setProfiles(profilesRes.data as MemberProfile[]);
+              }
+              if (empsRes.data) {
+                setEmployees(empsRes.data as Employee[]);
               }
             }
           } else {
@@ -272,6 +290,38 @@ export default function SettingsPage() {
     }
   };
 
+  const handleEmployeeChange = async (
+    userId: string,
+    employeeId: number | null
+  ) => {
+    if (role !== "admin") {
+      toast.error("You must be an administrator to perform this action.");
+      return;
+    }
+
+    setIsUpdatingEmployee(userId);
+    const supabase = createClient();
+    try {
+      const { error } = await supabase
+        .from("profiles")
+        .update({ employee_id: employeeId })
+        .eq("id", userId);
+
+      if (error) throw error;
+
+      setProfiles((prev) =>
+        prev.map((p) => (p.id === userId ? { ...p, employee_id: employeeId } : p))
+      );
+
+      toast.success("Employee mapping updated successfully.");
+    } catch (e) {
+      console.error(e);
+      toast.error("Failed to update employee mapping.");
+    } finally {
+      setIsUpdatingEmployee(null);
+    }
+  };
+
   const handleStatusChange = async (
     userId: string,
     newStatus: "pending" | "approved" | "rejected"
@@ -283,6 +333,12 @@ export default function SettingsPage() {
 
     if (userId === currentUser?.id) {
       toast.error("You cannot change your own status.");
+      return;
+    }
+
+    const targetProfile = profiles.find((p) => p.id === userId);
+    if (newStatus === "approved" && targetProfile && targetProfile.role === "member" && !targetProfile.employee_id) {
+      toast.error("Please map this user to an Employee ID before approving.");
       return;
     }
 
@@ -518,6 +574,7 @@ export default function SettingsPage() {
                   <tr className="bg-muted/10 text-muted-foreground font-medium border-b border-border">
                     <th className="p-3">Name</th>
                     <th className="p-3">Email Address</th>
+                    <th className="p-3">Linked Employee</th>
                     <th className="p-3">Status</th>
                     <th className="p-3 text-right">Actions</th>
                   </tr>
@@ -533,6 +590,34 @@ export default function SettingsPage() {
                       </td>
                       <td className="p-3 text-foreground font-medium">
                         {profile.email}
+                      </td>
+                      <td className="p-3">
+                        {profile.role === "admin" ? (
+                          <span className="text-xs text-muted-foreground">N/A (Admin)</span>
+                        ) : (
+                          <Select
+                            value={profile.employee_id !== null ? String(profile.employee_id) : "unlinked"}
+                            onValueChange={(val) =>
+                              handleEmployeeChange(
+                                profile.id,
+                                val === "unlinked" ? null : parseInt(val, 10)
+                              )
+                            }
+                            disabled={isUpdatingEmployee === profile.id}
+                          >
+                            <SelectTrigger className="w-48 h-8 bg-muted/20 border-border justify-between inline-flex text-xs">
+                              <SelectValue placeholder="Select Employee..." />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="unlinked">Unlinked</SelectItem>
+                              {employees.map((emp) => (
+                                <SelectItem key={emp.employee_id} value={String(emp.employee_id)}>
+                                  {emp.employee_name} ({emp.employee_id})
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        )}
                       </td>
                       <td className="p-3">
                         {getStatusBadge(profile.status)}

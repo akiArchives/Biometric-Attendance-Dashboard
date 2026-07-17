@@ -102,20 +102,37 @@ export default async function DashboardPage({
   let gracePeriod = 15;
   let errorMsg = "";
 
+  // Fetch self role and employee_id
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role, employee_id")
+    .eq("id", user?.id || "")
+    .single();
+
+  let empQuery = supabase
+    .from("employees")
+    .select("employee_id, employee_name")
+    .eq("is_active", true)
+    .order("employee_name", { ascending: true })
+    .neq("employee_id", 1111);
+
+  let logsQuery = supabase
+    .from("hik_biometric_logs")
+    .select("*")
+    .gte("log_date", weekDates[0])
+    .lte("log_date", weekDates[4])
+    .order("log_date_time", { ascending: true });
+
+  if (profile?.role !== "admin") {
+    const userEmpId = profile?.employee_id || 0;
+    empQuery = empQuery.eq("employee_id", userEmpId);
+    logsQuery = logsQuery.eq("employee_id", userEmpId);
+  }
+
   try {
     const [empRes, logsRes, sysSettingsRes] = await Promise.all([
-      supabase
-        .from("employees")
-        .select("employee_id, employee_name")
-        .eq("is_active", true)
-        .order("employee_name", { ascending: true })
-        .neq("employee_id", 1111),
-      supabase
-        .from("hik_biometric_logs")
-        .select("*")
-        .gte("log_date", weekDates[0])
-        .lte("log_date", weekDates[4])
-        .order("log_date_time", { ascending: true }),
+      empQuery,
+      logsQuery,
       supabase
         .from("system_settings")
         .select("work_start_time, grace_period")

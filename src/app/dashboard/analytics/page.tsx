@@ -10,6 +10,15 @@ export default async function AttendancePage({ searchParams }: PageProps) {
   const supabase = await createClient();
   const resolvedParams = await searchParams;
 
+  const { data: { user } } = await supabase.auth.getUser();
+
+  // Fetch self role and employee_id
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role, employee_id")
+    .eq("id", user?.id || "")
+    .single();
+
   const d = new Date();
   const yyyy = d.getFullYear();
   const mm = String(d.getMonth() + 1).padStart(2, "0");
@@ -17,22 +26,32 @@ export default async function AttendancePage({ searchParams }: PageProps) {
   const today = `${yyyy}-${mm}-${dd}`;
   const selectedDate = resolvedParams.date || today;
 
+  let logsQuery = supabase
+    .from("hik_biometric_logs")
+    .select("*")
+    .eq("log_date", selectedDate)
+    .order("log_date_time", { ascending: true });
+
+  let empQuery = supabase
+    .from("employees")
+    .select("employee_id, employee_name")
+    .eq("is_active", true)
+    .order("employee_name", { ascending: true })
+    .neq("employee_id", 1111);
+
+  if (profile?.role !== "admin") {
+    const userEmpId = profile?.employee_id || 0;
+    logsQuery = logsQuery.eq("employee_id", userEmpId);
+    empQuery = empQuery.eq("employee_id", userEmpId);
+  }
+
   const [
     { data: rawLogs, error },
     { data: allEmployees, error: employeesError },
     { data: sysSettings, error: sysSettingsError }
   ] = await Promise.all([
-    supabase
-      .from("hik_biometric_logs")
-      .select("*")
-      .eq("log_date", selectedDate)
-      .order("log_date_time", { ascending: true }),
-    supabase
-      .from("employees")
-      .select("employee_id, employee_name")
-      .eq("is_active", true)
-      .order("employee_name", { ascending: true })
-      .neq("employee_id", 1111),
+    logsQuery,
+    empQuery,
     supabase
       .from("system_settings")
       .select("work_start_time, grace_period")
