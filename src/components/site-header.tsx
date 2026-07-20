@@ -9,7 +9,11 @@ import { DatePicker } from "@/components/ui/date-picker";
 import { StatusFilter } from "@/components/status-filter";
 import * as React from "react";
 
-export function SiteHeader() {
+interface SiteHeaderProps {
+  isAdmin?: boolean;
+}
+
+export function SiteHeader({ isAdmin = true }: SiteHeaderProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
@@ -24,7 +28,7 @@ export function SiteHeader() {
     rightControls = (
       <div className="flex items-center gap-2">
         <StatusFilter />
-        <DatePicker selected={selectedDate} />
+        {isAdmin && <DatePicker selected={selectedDate} />}
       </div>
     );
   } else if (pathname === "/dashboard/reports") {

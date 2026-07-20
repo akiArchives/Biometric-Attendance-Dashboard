@@ -35,7 +35,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
         <Suspense fallback={
           <header className="flex h-17.25 shrink-0 items-center gap-2 border-b w-full bg-background transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-14.25" />
         }>
-          <SiteHeader />
+          <SiteHeader isAdmin={sidebarUser.role === "admin"} />
         </Suspense>
 
         <div className="h-full overflow-y-auto">{children}</div>
