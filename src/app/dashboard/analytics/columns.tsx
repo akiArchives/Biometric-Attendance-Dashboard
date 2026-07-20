@@ -19,6 +19,19 @@ function formatRawTime(iso: string): string {
   return `${display}:${String(m).padStart(2, "0")} ${ampm}`;
 }
 
+function formatDateFormatted(dateStr?: string): string {
+  if (!dateStr) return "—";
+  const [y, m, d] = dateStr.split("-").map(Number);
+  if (!y || !m || !d) return dateStr;
+  const dateObj = new Date(y, m - 1, d, 12, 0, 0);
+  return dateObj.toLocaleDateString("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
 export type AttendanceStatus = "present" | "late" | "absent" | "on_leave";
 
 export type PersonnelAnalytics = {
@@ -33,6 +46,32 @@ export type PersonnelAnalytics = {
 };
 
 export const columns: ColumnDef<PersonnelAnalytics>[] = [
+  {
+    accessorKey: "date",
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        className="justify-center flex w-fit mx-auto hover:bg-transparent dark:text-slate-100 animate-fade-in"
+      >
+        Date
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
+    cell: ({ row }) => {
+      const dateVal = row.getValue("date") as string | undefined;
+      if (!dateVal)
+        return (
+          <span className="text-slate-400 text-xs flex w-fit mx-auto">—</span>
+        );
+
+      return (
+        <div className="flex w-fit mx-auto items-center gap-1.5 text-slate-700 dark:text-slate-300 font-mono text-xs font-medium animate-fade-in">
+          {formatDateFormatted(dateVal)}
+        </div>
+      );
+    },
+  },
   {
     accessorKey: "employee_name",
     header: ({ column }) => {
@@ -62,32 +101,6 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
               ID: {empId} {dept && `• ${dept}`}
             </div>
           </div>
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: "date",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        className="justify-center flex w-fit mx-auto hover:bg-transparent dark:text-slate-100 animate-fade-in"
-      >
-        Date
-        <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
-    ),
-    cell: ({ row }) => {
-      const dateVal = row.getValue("date") as string | undefined;
-      if (!dateVal)
-        return (
-          <span className="text-slate-400 text-xs flex w-fit mx-auto">—</span>
-        );
-
-      return (
-        <div className="flex w-fit mx-auto items-center gap-1.5 text-slate-700 dark:text-slate-300 font-mono text-xs font-medium animate-fade-in">
-          {dateVal}
         </div>
       );
     },
