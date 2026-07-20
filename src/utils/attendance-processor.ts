@@ -524,7 +524,7 @@ export function generateMonthlyCalendarMatrix(
 
   const firstDayOfMonth = new Date(Date.UTC(year, month - 1, 1, 12, 0, 0));
   const dayOfWeek = firstDayOfMonth.getUTCDay(); // 0 is Sun, 1 is Mon...
-  const leadingPaddingDays = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+  const leadingPaddingDays = dayOfWeek;
 
   const lastDayOfMonth = new Date(Date.UTC(year, month, 0, 12, 0, 0));
   const daysInMonth = lastDayOfMonth.getUTCDate();

@@ -50,7 +50,7 @@ export interface EmployeeAttendanceCalendarProps {
   hideMonthNavigation?: boolean;
 }
 
-const WEEKDAY_NAMES = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+const WEEKDAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 export function formatTimeDisplay(punchStr: string | null, includeSeconds = false): string {
   if (!punchStr) return "--:--";

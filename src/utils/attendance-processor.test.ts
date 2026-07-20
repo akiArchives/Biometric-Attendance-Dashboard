@@ -443,5 +443,14 @@ describe("generateMonthlyCalendarMatrix", () => {
     const july1 = matrix.find((d) => d.date === "2026-07-01");
     expect(july1?.status).toBe("absent");
   });
+
+  it("should align grid matrix with Sunday as the first column of the week", () => {
+    // July 1, 2026 is a Wednesday (getUTCDay = 3).
+    // For Sunday-first calendar, leading padding starts on Sunday June 28, 2026.
+    const matrix = generateMonthlyCalendarMatrix([], 101, 2026, 7, "09:00", 15, "2026-07-07");
+    expect(matrix[0].date).toBe("2026-06-28"); // Sunday
+    expect(matrix[0].isWeekend).toBe(true);
+    expect(matrix[3].date).toBe("2026-07-01"); // Wednesday (July 1st)
+  });
 });
 
