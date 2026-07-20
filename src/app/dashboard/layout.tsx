@@ -38,7 +38,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
           <SiteHeader isAdmin={sidebarUser.role === "admin"} />
         </Suspense>
 
-        <div className="h-full overflow-y-auto">{children}</div>
+        <div className="h-full overflow-y-auto [scrollbar-gutter:stable]">{children}</div>
       </SidebarInset>
     </SidebarProvider>
   );
