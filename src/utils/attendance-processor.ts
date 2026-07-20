@@ -157,10 +157,58 @@ export function processUserHistoryLogs(
     dateGroups[dateStr].push(log);
   });
 
-  const sortedDates = Object.keys(dateGroups).sort((a, b) => b.localeCompare(a));
+  const loggedDates = Object.keys(dateGroups);
+  if (loggedDates.length === 0) return [];
+
+  const d = new Date();
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
+  const todayStr = `${yyyy}-${mm}-${dd}`;
+
+  const minDateStr = loggedDates.reduce(
+    (min, cur) => (cur < min ? cur : min),
+    loggedDates[0]
+  );
+
+  const allDatesToEvaluate = new Set<string>();
+  Object.keys(dateGroups).forEach((d) => allDatesToEvaluate.add(d));
+
+  const curr = new Date(minDateStr + "T12:00:00");
+  const end = new Date(todayStr + "T12:00:00");
+
+  while (curr <= end) {
+    const dayOfWeek = curr.getDay();
+    const y = curr.getFullYear();
+    const m = String(curr.getMonth() + 1).padStart(2, "0");
+    const dayVal = String(curr.getDate()).padStart(2, "0");
+    const dateStr = `${y}-${m}-${dayVal}`;
+
+    if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+      allDatesToEvaluate.add(dateStr);
+    }
+    curr.setDate(curr.getDate() + 1);
+  }
+
+  const sortedDates = Array.from(allDatesToEvaluate).sort((a, b) =>
+    b.localeCompare(a)
+  );
 
   return sortedDates.map((dateStr) => {
     const dayLogs = dateGroups[dateStr];
+
+    if (!dayLogs || dayLogs.length === 0) {
+      return {
+        employee_id: String(employee.employee_id),
+        employee_name: employee.employee_name || "Unregistered Token",
+        first_punch: null,
+        last_punch: null,
+        total_hours_worked: 0,
+        status: "absent" as AttendanceStatus,
+        date: dateStr,
+      };
+    }
+
     const [dailyRecord] = processDailyLogs(
       dayLogs,
       [employee],

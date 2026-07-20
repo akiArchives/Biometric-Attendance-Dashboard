@@ -263,18 +263,59 @@ describe("processUserHistoryLogs", () => {
 
     const result = processUserHistoryLogs(logs, employee, "08:00", 15);
 
-    expect(result).toHaveLength(3);
-    // Should be sorted descending by date
-    expect(result[0].date).toBe("2026-06-23");
-    expect(result[1].date).toBe("2026-06-22");
-    expect(result[2].date).toBe("2026-06-21");
+    // Verify descending sort order across all generated dates
+    const dates = result.map((r) => r.date);
+    const expectedSorted = [...dates].sort((a, b) => b.localeCompare(a));
+    expect(dates).toEqual(expectedSorted);
+
+    const rec23 = result.find((r) => r.date === "2026-06-23");
+    const rec22 = result.find((r) => r.date === "2026-06-22");
+    const rec21 = result.find((r) => r.date === "2026-06-21");
+
+    expect(rec23).toBeDefined();
+    expect(rec22).toBeDefined();
+    expect(rec21).toBeDefined();
 
     // Check 2026-06-23 record (log at 08:30 with workStartTime 08:00, gracePeriod 15 => late)
-    expect(result[0].employee_id).toBe("1");
-    expect(result[0].status).toBe("late");
+    expect(rec23?.employee_id).toBe("1");
+    expect(rec23?.status).toBe("late");
 
     // Check 2026-06-21 record (hours logged)
-    expect(result[2].total_hours_worked).toBe(8);
+    expect(rec21?.total_hours_worked).toBe(8);
+  });
+
+  it("should generate absent records for missing weekdays and exclude weekends", () => {
+    const mockEmployee = { employee_id: 1, employee_name: "Alice Smith" };
+    const logs = [
+      {
+        id: 1,
+        employee_id: 1,
+        employee_name: "Alice Smith",
+        log_date_time: "2026-06-19T08:00:00.000Z",
+        log_time: "08:00:00",
+        log_date: "2026-06-19",
+      },
+      {
+        id: 2,
+        employee_id: 1,
+        employee_name: "Alice Smith",
+        log_date_time: "2026-06-23T08:00:00.000Z",
+        log_time: "08:00:00",
+        log_date: "2026-06-23",
+      },
+    ];
+
+    const result = processUserHistoryLogs(logs, mockEmployee, "08:00", 0);
+
+    const dates = result.map((r) => r.date);
+    expect(dates).toContain("2026-06-19");
+    expect(dates).toContain("2026-06-22");
+    expect(dates).toContain("2026-06-23");
+    expect(dates).not.toContain("2026-06-20");
+    expect(dates).not.toContain("2026-06-21");
+
+    const mon = result.find((r) => r.date === "2026-06-22");
+    expect(mon?.status).toBe("absent");
   });
 });
 
