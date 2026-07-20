@@ -26,6 +26,7 @@ export function AttendanceTable({
   userEmployee,
 }: AttendanceTableProps) {
   const columnVisibility = {
+    date: Boolean(isSingleUserView),
     employee_name: !isSingleUserView,
     actions: Boolean(isAdmin),
   };

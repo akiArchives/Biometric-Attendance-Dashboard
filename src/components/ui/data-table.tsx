@@ -5,6 +5,7 @@ import {
   ColumnDef,
   Row,
   SortingState,
+  VisibilityState,
   flexRender,
   getCoreRowModel,
   getPaginationRowModel,
@@ -36,6 +37,12 @@ export function DataTable<TData, TValue>({
   renderMobileCard,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [columnVisibilityState, setColumnVisibilityState] =
+    React.useState<VisibilityState>(columnVisibility || {});
+
+  React.useEffect(() => {
+    setColumnVisibilityState(columnVisibility || {});
+  }, [columnVisibility]);
 
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
@@ -44,6 +51,7 @@ export function DataTable<TData, TValue>({
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
+    onColumnVisibilityChange: setColumnVisibilityState,
     getSortedRowModel: getSortedRowModel(),
     initialState: {
       pagination: {
@@ -52,7 +60,7 @@ export function DataTable<TData, TValue>({
     },
     state: {
       sorting,
-      ...(columnVisibility ? { columnVisibility } : {}),
+      columnVisibility: columnVisibilityState,
     },
   });
 
