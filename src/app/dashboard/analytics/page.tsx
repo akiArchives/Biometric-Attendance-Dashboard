@@ -49,7 +49,21 @@ export default async function AttendancePage({ searchParams }: PageProps) {
     const userEmpId = profile?.employee_id || 0;
     logsQuery = logsQuery.eq("employee_id", userEmpId);
     if (dateParamProvided) {
-      logsQuery = logsQuery.eq("log_date", selectedDate);
+      const [selYearStr, selMonthStr] = selectedDate.split("-");
+      if (selYearStr && selMonthStr) {
+        const startOfMonth = `${selYearStr}-${selMonthStr}-01`;
+        const lastDayNum = new Date(
+          Number(selYearStr),
+          Number(selMonthStr),
+          0
+        ).getDate();
+        const endOfMonth = `${selYearStr}-${selMonthStr}-${String(
+          lastDayNum
+        ).padStart(2, "0")}`;
+        logsQuery = logsQuery
+          .gte("log_date", startOfMonth)
+          .lte("log_date", endOfMonth);
+      }
     }
     empQuery = empQuery.eq("employee_id", userEmpId);
   } else {
@@ -140,6 +154,9 @@ export default async function AttendancePage({ searchParams }: PageProps) {
         isAdmin={isAdmin}
         isSingleUserView={isSingleUserView}
         userEmployee={userEmployee}
+        rawLogs={rawLogs || []}
+        workStartTime={workStartTime}
+        gracePeriod={gracePeriod}
       />
     </div>
   );
