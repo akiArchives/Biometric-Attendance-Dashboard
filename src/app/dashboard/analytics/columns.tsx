@@ -52,7 +52,7 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
       <Button
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        className="justify-center flex w-fit mx-auto hover:bg-transparent dark:text-slate-100 animate-fade-in"
+        className="hover:bg-transparent dark:text-slate-100 animate-fade-in -ml-3"
       >
         Date
         <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -62,11 +62,11 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
       const dateVal = row.getValue("date") as string | undefined;
       if (!dateVal)
         return (
-          <span className="text-slate-400 text-xs flex w-fit mx-auto">—</span>
+          <span className="text-slate-400 text-xs">—</span>
         );
 
       return (
-        <div className="flex w-fit mx-auto items-center gap-1.5 text-slate-700 dark:text-slate-300 font-mono text-xs font-medium animate-fade-in">
+        <div className="flex items-center gap-1.5 text-slate-700 dark:text-slate-300 font-mono text-xs font-medium animate-fade-in">
           {formatDateFormatted(dateVal)}
         </div>
       );
@@ -79,7 +79,7 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="hover:bg-transparent dark:text-slate-100 animate-fade-in"
+          className="hover:bg-transparent dark:text-slate-100 animate-fade-in -ml-3"
         >
           Employee
           <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -111,7 +111,7 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
       <Button
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        className="justify-center flex w-fit mx-auto hover:bg-transparent dark:text-slate-100 animate-fade-in"
+        className="hover:bg-transparent dark:text-slate-100 animate-fade-in -ml-3"
       >
         Status
         <ArrowUpDown className="ml-2 h-4 w-4 data-[state=sorted]:border-blue-500 data-[state=sorted]:border data-[state=sorted]:text-blue-500" />
@@ -154,7 +154,7 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
       const { icon, label } = styles[status];
 
       return (
-        <span className="flex w-fit mx-auto justify-center items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium border border-slate-300 bg-white text-slate-700 dark:border-slate-600 dark:bg-transparent dark:text-slate-300 animate-fade-in">
+        <span className="flex w-fit items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium border border-slate-300 bg-white text-slate-700 dark:border-slate-600 dark:bg-transparent dark:text-slate-300 animate-fade-in">
           {icon}
           {label}
         </span>
@@ -167,7 +167,7 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
       <Button
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        className="justify-center flex w-fit mx-auto hover:bg-transparent dark:text-slate-100 animate-fade-in"
+        className="hover:bg-transparent dark:text-slate-100 animate-fade-in -ml-3"
       >
         Time in
         <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -177,11 +177,11 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
       const rawTime = row.getValue("first_punch") as string;
       if (!rawTime)
         return (
-          <span className="text-slate-400 text-xs flex w-fit mx-auto">—</span>
+          <span className="text-slate-400 text-xs">—</span>
         );
 
       return (
-        <div className="flex w-fit mx-auto items-center gap-1.5 text-slate-700 dark:text-slate-300 font-medium font-mono text-xs animate-fade-in">
+        <div className="flex items-center gap-1.5 text-slate-700 dark:text-slate-300 font-medium font-mono text-xs animate-fade-in">
           {formatRawTime(rawTime)}
         </div>
       );
@@ -193,7 +193,7 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
       <Button
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        className="justify-center flex w-fit mx-auto hover:bg-transparent dark:text-slate-100 animate-fade-in"
+        className="hover:bg-transparent dark:text-slate-100 animate-fade-in -ml-3"
       >
         Time out
         <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -203,11 +203,11 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
       const rawTime = row.getValue("last_punch") as string;
       if (!rawTime)
         return (
-          <span className="text-slate-400 text-xs flex w-fit mx-auto">—</span>
+          <span className="text-slate-400 text-xs">—</span>
         );
 
       return (
-        <div className="flex w-fit mx-auto items-center gap-1.5 text-slate-700 dark:text-slate-300 font-medium font-mono text-xs animate-fade-in">
+        <div className="flex items-center gap-1.5 text-slate-700 dark:text-slate-300 font-medium font-mono text-xs animate-fade-in">
           {formatRawTime(rawTime)}
         </div>
       );
@@ -219,7 +219,7 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
       <Button
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        className="justify-center flex w-fit mx-auto hover:bg-transparent dark:text-slate-100 animate-fade-in"
+        className="hover:bg-transparent dark:text-slate-100 animate-fade-in -ml-3"
       >
         Hours Logged
         <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -234,14 +234,14 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
 
       if (decimalHours === 0 || isNaN(decimalHours)) {
         return (
-          <span className="text-slate-400 text-xs flex w-fit mx-auto animate-fade-in">
+          <span className="text-slate-400 text-xs animate-fade-in">
             0h 0m
           </span>
         );
       }
 
       return (
-        <div className="flex w-fit mx-auto items-center gap-1.5 text-slate-900 dark:text-slate-100 font-semibold animate-fade-in">
+        <div className="flex items-center gap-1.5 text-slate-900 dark:text-slate-100 font-semibold animate-fade-in">
           <span>
             {hours}h {minutes}m
           </span>
@@ -252,13 +252,13 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
   {
     id: "actions",
     header: () => (
-      <div className="text-center font-semibold text-slate-900 dark:text-slate-100 pr-4">
+      <div className="font-semibold text-slate-900 dark:text-slate-100">
         Actions
       </div>
     ),
     cell: ({ row }) => {
       return (
-        <div className="flex items-center gap-1 justify-center pr-4">
+        <div className="flex items-center gap-1">
           <Button
             variant="ghost"
             size="icon"
