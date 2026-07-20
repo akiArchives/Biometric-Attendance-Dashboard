@@ -94,35 +94,6 @@ export function EmployeeDashboardView({
 
   return (
     <div className="flex flex-col gap-6 w-full">
-      {/* 1. Header Card / Section */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-xl border bg-card text-card-foreground shadow-xs">
-        <div className="flex items-center gap-4">
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary font-bold text-lg border border-primary/20 shrink-0">
-            {userEmployee.employee_name
-              ? userEmployee.employee_name.charAt(0).toUpperCase()
-              : "E"}
-          </div>
-          <div>
-            <div className="flex items-center gap-2 flex-wrap">
-              <h1 className="text-xl font-bold text-foreground tracking-tight">
-                {userEmployee.employee_name}
-              </h1>
-              <Badge variant="outline" className="text-xs font-mono">
-                ID: {userEmployee.employee_id}
-              </Badge>
-            </div>
-            <p className="text-xs text-muted-foreground mt-0.5">
-              Employee Dashboard & Personal Logs
-            </p>
-          </div>
-        </div>
-        <div className="shrink-0">
-          <Badge variant="secondary" className="px-3 py-1 text-xs font-medium gap-1.5 border">
-            <UserCheck className="size-3.5 text-primary" />
-            Personal Attendance Dashboard
-          </Badge>
-        </div>
-      </div>
 
       {/* 2. 4 Personal Summary Stat Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
@@ -132,23 +103,14 @@ export function EmployeeDashboardView({
             <CardDescription className="flex items-center text-muted-foreground gap-2">
               Monthly On-Time Rate
             </CardDescription>
-            <div className="flex items-baseline gap-2 mt-1">
-              <CardTitle className="text-2xl font-bold tabular-nums @[250px]/card:text-3xl">
+            <div className="flex items-baseline gap-2">
+              <CardTitle className="text-2xl font-semibold text-gray-700 dark:text-gray-100 tabular-nums @[250px]/card:text-3xl">
                 {stats.onTimeRatePercent}%
               </CardTitle>
-              <Badge
-                className={
-                  stats.onTimeRatePercent >= 90
-                    ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400 border-emerald-300 dark:border-emerald-800"
-                    : "bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-400 border-amber-300 dark:border-amber-800"
-                }
-              >
-                {stats.onTimeRatePercent >= 90 ? "Excellent" : "Needs Imp."}
-              </Badge>
             </div>
             <CardAction>
-              <div className="flex h-12 w-12 items-center justify-center rounded-md bg-emerald-100/80 text-emerald-600 border border-emerald-600/20 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-400/30">
-                <CalendarCheck2 className="size-7" />
+              <div className="flex h-13 w-13 items-center justify-center rounded-md bg-emerald-100/80 text-emerald-600 border-3 border-emerald-600/20 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-400/30">
+                <CalendarCheck2 className="size-9" />
               </div>
             </CardAction>
           </CardHeader>
@@ -157,43 +119,32 @@ export function EmployeeDashboardView({
         {/* Card 2: Logged Hours This Week */}
         <Card className="@container/card shadow-xs">
           <CardHeader>
-            <CardDescription className="flex items-center text-muted-foreground gap-2">
+            <CardDescription className="flex items-center text-gray-500 dark:text-gray-400 gap-2">
               Logged Hours This Week
             </CardDescription>
-            <CardTitle className="text-2xl font-bold tabular-nums @[250px]/card:text-3xl mt-1">
+            <CardTitle className="text-2xl font-semibold text-gray-700 dark:text-gray-100 tabular-nums @[250px]/card:text-3xl">
               {stats.loggedHoursThisWeek.toFixed(1)} / 40.0 hrs
             </CardTitle>
             <CardAction>
-              <div className="flex h-12 w-12 items-center justify-center rounded-md bg-blue-100/80 text-blue-600 border border-blue-600/20 dark:bg-blue-950/40 dark:text-blue-400 dark:border-blue-400/30">
-                <Clock className="size-7" />
+              <div className="flex h-13 w-13 items-center justify-center rounded-md bg-blue-100/80 text-blue-600 border-3 border-blue-600/20 dark:bg-blue-950/40 dark:text-blue-400 dark:border-blue-400/30">
+                <Clock className="size-9" />
               </div>
             </CardAction>
           </CardHeader>
-          <CardContent className="pt-0 pb-4">
-            <div className="w-full bg-muted rounded-full h-2 overflow-hidden">
-              <div
-                className="bg-blue-600 dark:bg-blue-500 h-2 rounded-full transition-all duration-300"
-                style={{ width: `${loggedHoursProgress}%` }}
-              />
-            </div>
-          </CardContent>
         </Card>
 
         {/* Card 3: Late Arrivals */}
         <Card className="@container/card shadow-xs">
           <CardHeader>
-            <CardDescription className="flex items-center text-muted-foreground gap-2">
+            <CardDescription className="flex items-center text-gray-500 dark:text-gray-400 gap-2">
               Late Arrivals
             </CardDescription>
-            <CardTitle className="text-2xl font-bold tabular-nums @[250px]/card:text-3xl mt-1">
+            <CardTitle className="text-2xl font-semibold text-gray-700 dark:text-gray-100 tabular-nums @[250px]/card:text-3xl">
               {stats.lateCount} {stats.lateCount === 1 ? "time" : "times"}
             </CardTitle>
-            <p className="text-xs text-muted-foreground mt-0.5">
-              avg {stats.avgLateMins} mins late
-            </p>
             <CardAction>
-              <div className="flex h-12 w-12 items-center justify-center rounded-md bg-amber-100/80 text-amber-600 border border-amber-600/20 dark:bg-amber-950/40 dark:text-amber-400 dark:border-amber-400/30">
-                <ClockAlert className="size-7" />
+              <div className="flex h-13 w-13 items-center justify-center rounded-md bg-amber-100/80 text-amber-600 border-3 border-amber-600/20 dark:bg-amber-950/40 dark:text-amber-400 dark:border-amber-400/30">
+                <ClockAlert className="size-9" />
               </div>
             </CardAction>
           </CardHeader>
@@ -202,15 +153,15 @@ export function EmployeeDashboardView({
         {/* Card 4: Days Present */}
         <Card className="@container/card shadow-xs">
           <CardHeader>
-            <CardDescription className="flex items-center text-muted-foreground gap-2">
+            <CardDescription className="flex items-center text-gray-500 dark:text-gray-400 gap-2">
               Days Present
             </CardDescription>
-            <CardTitle className="text-2xl font-bold tabular-nums @[250px]/card:text-3xl mt-1">
+            <CardTitle className="text-2xl font-semibold text-gray-700 dark:text-gray-100 tabular-nums @[250px]/card:text-3xl">
               {stats.presentDaysCount} / {stats.elapsedWorkdaysCount} days
             </CardTitle>
             <CardAction>
-              <div className="flex h-12 w-12 items-center justify-center rounded-md bg-indigo-100/80 text-indigo-600 border border-indigo-600/20 dark:bg-indigo-950/40 dark:text-indigo-400 dark:border-indigo-400/30">
-                <UserCheck className="size-7" />
+              <div className="flex h-13 w-13 items-center justify-center rounded-md bg-indigo-100/80 text-indigo-600 border-3 border-indigo-600/20 dark:bg-indigo-950/40 dark:text-indigo-400 dark:border-indigo-400/30">
+                <UserCheck className="size-9" />
               </div>
             </CardAction>
           </CardHeader>
@@ -218,7 +169,7 @@ export function EmployeeDashboardView({
       </div>
 
       {/* 3. Lower Section (2 columns on large screens) */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start mb-8">
         {/* Column 1: Today's Shift Status */}
         <Card className="shadow-xs">
           <CardHeader className="border-b pb-4">
@@ -234,12 +185,7 @@ export function EmployeeDashboardView({
               {renderTodayStatusBadge()}
             </div>
           </CardHeader>
-          <CardContent className="pt-6">
-            <div className="mb-6 p-4 rounded-lg bg-muted/50 border flex items-center justify-between">
-              <span className="text-base font-semibold text-foreground">
-                {renderTodayStatusHeadline()}
-              </span>
-            </div>
+          <CardContent className="">
 
             <div className="grid grid-cols-2 gap-4">
               <div className="flex items-center gap-3 p-3 rounded-md border bg-card">
@@ -270,17 +216,16 @@ export function EmployeeDashboardView({
         </Card>
 
         {/* Column 2: Recent Personal Biometric Scans */}
-        <Card className="shadow-xs">
+        <Card className="shadow-xs gap-1">
           <CardHeader className="border-b pb-4">
-            <CardTitle className="text-base font-semibold flex items-center gap-2">
-              <Fingerprint className="size-4 text-primary" />
+            <CardTitle className="text-base font-semibold flex items-center">
               Recent Personal Biometric Scans
             </CardTitle>
             <CardDescription className="text-xs">
               Timeline of recent device logs
             </CardDescription>
           </CardHeader>
-          <CardContent className="pt-4">
+          <CardContent className="-mb-2">
             {recentLogs && recentLogs.length > 0 ? (
               <div className="divide-y">
                 {recentLogs.map((log) => (

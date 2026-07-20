@@ -44,6 +44,10 @@ export interface EmployeeAttendanceCalendarProps {
    * Initial month 1-indexed (1 = January, 12 = December). Defaults to current month.
    */
   initialMonth?: number;
+  /**
+   * If true, hides the month navigation header (useful when parent component renders navigation).
+   */
+  hideMonthNavigation?: boolean;
 }
 
 const WEEKDAY_NAMES = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
@@ -100,6 +104,7 @@ export function EmployeeAttendanceCalendar({
   gracePeriod,
   initialYear,
   initialMonth,
+  hideMonthNavigation = false,
 }: EmployeeAttendanceCalendarProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -203,41 +208,43 @@ export function EmployeeAttendanceCalendar({
   return (
     <div className="w-full space-y-4">
       {/* Month Navigation & Legend Header */}
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between rounded-xl border bg-card p-4 shadow-xs">
-        <div className="flex items-center gap-3">
-          <CalendarIcon className="h-5 w-5 text-primary" />
-          <h2 className="text-lg font-bold text-foreground">{monthLabel}</h2>
-        </div>
+      {!hideMonthNavigation && (
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between rounded-xl ml-4">
+          <div className="flex items-center gap-3">
+            <CalendarIcon className="h-5 w-5 text-primary" />
+            <h2 className="text-lg font-bold text-foreground">{monthLabel}</h2>
+          </div>
 
-        <div className="flex flex-wrap items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handlePrevMonth}
-            className="h-8 px-2.5"
-            aria-label="Previous Month"
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleToday}
-            className="h-8 px-3 text-xs font-medium"
-          >
-            Today
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleNextMonth}
-            className="h-8 px-2.5"
-            aria-label="Next Month"
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
+          <div className="flex flex-wrap items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handlePrevMonth}
+              className="h-8 px-2.5"
+              aria-label="Previous Month"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleToday}
+              className="h-8 px-3 text-xs font-medium"
+            >
+              Today
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleNextMonth}
+              className="h-8 px-2.5"
+              aria-label="Next Month"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Legend Bar */}
       <div className="flex flex-wrap items-center gap-2 rounded-lg border bg-muted/30 px-3 py-2 text-xs">

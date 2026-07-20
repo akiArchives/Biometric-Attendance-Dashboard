@@ -1,5 +1,7 @@
 "use client";
 
+import { useMemo } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { DataTable } from "@/components/ui/data-table";
 import { columns, PersonnelAnalytics } from "./columns";
 import {
@@ -12,7 +14,13 @@ import {
 import { flexRender, Row } from "@tanstack/react-table";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Calendar as CalendarIcon, Table as TableIcon } from "lucide-react";
+import {
+  Calendar as CalendarIcon,
+  Table as TableIcon,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { EmployeeAttendanceCalendar } from "@/components/employee-attendance-calendar";
 import { RawBiometricLog } from "@/utils/attendance-processor";
 
@@ -35,6 +43,9 @@ export function AttendanceTable({
   workStartTime = "09:00",
   gracePeriod = 15,
 }: AttendanceTableProps) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
   const columnVisibility = {
     date: Boolean(isSingleUserView),
     employee_name: !isSingleUserView,
@@ -42,6 +53,71 @@ export function AttendanceTable({
   };
 
   const userEmpId = Number(userEmployee?.employee_id || 0);
+
+  const todayObj = useMemo(() => new Date(), []);
+  const dateParam = searchParams ? searchParams.get("date") : null;
+
+  const { currentYear, currentMonth } = useMemo(() => {
+    if (dateParam && /^\d{4}-\d{2}-\d{2}$/.test(dateParam)) {
+      const [yStr, mStr] = dateParam.split("-");
+      const y = parseInt(yStr, 10);
+      const m = parseInt(mStr, 10);
+      if (!isNaN(y) && !isNaN(m) && m >= 1 && m <= 12) {
+        return { currentYear: y, currentMonth: m };
+      }
+    }
+    if (rawLogs && rawLogs.length > 0) {
+      const firstLog = rawLogs.find((l) => l.log_date || l.log_date_time);
+      const dateStr =
+        firstLog?.log_date || firstLog?.log_date_time?.substring(0, 10);
+      if (dateStr && /^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+        const [yStr, mStr] = dateStr.split("-");
+        const y = parseInt(yStr, 10);
+        const m = parseInt(mStr, 10);
+        if (!isNaN(y) && !isNaN(m) && m >= 1 && m <= 12) {
+          return { currentYear: y, currentMonth: m };
+        }
+      }
+    }
+    return {
+      currentYear: todayObj.getFullYear(),
+      currentMonth: todayObj.getMonth() + 1,
+    };
+  }, [dateParam, rawLogs, todayObj]);
+
+  const monthLabel = useMemo(() => {
+    const d = new Date(currentYear, currentMonth - 1, 1);
+    return d.toLocaleString("en-US", { month: "long", year: "numeric" });
+  }, [currentYear, currentMonth]);
+
+  const handlePrevMonth = () => {
+    let newMonth = currentMonth - 1;
+    let newYear = currentYear;
+    if (newMonth < 1) {
+      newMonth = 12;
+      newYear = currentYear - 1;
+    }
+    const formattedDate = `${newYear}-${String(newMonth).padStart(2, "0")}-01`;
+    router.push("/dashboard/analytics?date=" + formattedDate);
+  };
+
+  const handleNextMonth = () => {
+    let newMonth = currentMonth + 1;
+    let newYear = currentYear;
+    if (newMonth > 12) {
+      newMonth = 1;
+      newYear = currentYear + 1;
+    }
+    const formattedDate = `${newYear}-${String(newMonth).padStart(2, "0")}-01`;
+    router.push("/dashboard/analytics?date=" + formattedDate);
+  };
+
+  const handleToday = () => {
+    const newYear = todayObj.getFullYear();
+    const newMonth = todayObj.getMonth() + 1;
+    const formattedDate = `${newYear}-${String(newMonth).padStart(2, "0")}-01`;
+    router.push("/dashboard/analytics?date=" + formattedDate);
+  };
 
   const dataTableElement = (
     <DataTable
@@ -142,30 +218,57 @@ export function AttendanceTable({
 
   return (
     <div className="space-y-4">
-      {userEmployee && (
-        <div className="p-3.5 rounded-lg border bg-muted/30 flex items-center justify-between text-sm">
-          <div className="flex items-center gap-2">
-            <span className="font-semibold text-foreground">
-              {userEmployee.employee_name}
-            </span>
-            <span className="text-xs font-mono text-muted-foreground">
-              ID: {userEmployee.employee_id}
-            </span>
-          </div>
-          <span className="text-xs text-muted-foreground bg-background px-2.5 py-1 rounded-md border font-medium">
-            Personal Attendance History
-          </span>
-        </div>
-      )}
-
       <Tabs defaultValue="calendar" className="w-full">
-        <div className="flex items-center justify-between border-b pb-3 mb-4">
-          <TabsList className="grid w-full max-w-[280px] grid-cols-2">
-            <TabsTrigger value="calendar" className="flex items-center gap-1.5 text-xs">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between pb-3">
+          <div className="flex flex-wrap items-center gap-3">
+            <div className="flex items-center gap-2">
+              <CalendarIcon className="h-5 w-5 text-primary" />
+              <h2 className="text-lg font-bold text-foreground">
+                {monthLabel}
+              </h2>
+            </div>
+            <div className="flex items-center gap-1.5 ml-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handlePrevMonth}
+                className="h-8 px-2.5"
+                aria-label="Previous Month"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleToday}
+                className="h-8 px-3 text-xs font-medium"
+              >
+                Today
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleNextMonth}
+                className="h-8 px-2.5"
+                aria-label="Next Month"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+
+          <TabsList className="grid w-full sm:w-auto grid-cols-2">
+            <TabsTrigger
+              value="calendar"
+              className="flex items-center gap-1.5 text-xs px-4"
+            >
               <CalendarIcon className="h-3.5 w-3.5" />
               Calendar View
             </TabsTrigger>
-            <TabsTrigger value="table" className="flex items-center gap-1.5 text-xs">
+            <TabsTrigger
+              value="table"
+              className="flex items-center gap-1.5 text-xs px-4"
+            >
               <TableIcon className="h-3.5 w-3.5" />
               Table View
             </TabsTrigger>
@@ -178,6 +281,7 @@ export function AttendanceTable({
             employeeId={userEmpId}
             workStartTime={workStartTime}
             gracePeriod={gracePeriod}
+            hideMonthNavigation={true}
           />
         </TabsContent>
 

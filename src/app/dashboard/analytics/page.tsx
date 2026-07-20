@@ -48,22 +48,20 @@ export default async function AttendancePage({ searchParams }: PageProps) {
   if (profile?.role !== "admin") {
     const userEmpId = profile?.employee_id || 0;
     logsQuery = logsQuery.eq("employee_id", userEmpId);
-    if (dateParamProvided) {
-      const [selYearStr, selMonthStr] = selectedDate.split("-");
-      if (selYearStr && selMonthStr) {
-        const startOfMonth = `${selYearStr}-${selMonthStr}-01`;
-        const lastDayNum = new Date(
-          Number(selYearStr),
-          Number(selMonthStr),
-          0
-        ).getDate();
-        const endOfMonth = `${selYearStr}-${selMonthStr}-${String(
-          lastDayNum
-        ).padStart(2, "0")}`;
-        logsQuery = logsQuery
-          .gte("log_date", startOfMonth)
-          .lte("log_date", endOfMonth);
-      }
+    const [selYearStr, selMonthStr] = selectedDate.split("-");
+    if (selYearStr && selMonthStr) {
+      const startOfMonth = `${selYearStr}-${selMonthStr}-01`;
+      const lastDayNum = new Date(
+        Number(selYearStr),
+        Number(selMonthStr),
+        0
+      ).getDate();
+      const endOfMonth = `${selYearStr}-${selMonthStr}-${String(
+        lastDayNum
+      ).padStart(2, "0")}`;
+      logsQuery = logsQuery
+        .gte("log_date", startOfMonth)
+        .lte("log_date", endOfMonth);
     }
     empQuery = empQuery.eq("employee_id", userEmpId);
   } else {
@@ -123,19 +121,19 @@ export default async function AttendancePage({ searchParams }: PageProps) {
 
   let processedData: PersonnelAnalytics[] = [];
 
-  if (!isAdmin && !dateParamProvided) {
+  if (!isAdmin) {
     processedData = processUserHistoryLogs(
       rawLogs || [],
       currentEmp,
       workStartTime,
-      gracePeriod,
+      gracePeriod
     );
   } else {
     processedData = processDailyLogs(
       rawLogs || [],
       allEmployees || [],
       workStartTime,
-      gracePeriod,
+      gracePeriod
     ).map((item) => ({ ...item, date: selectedDate }));
   }
 
