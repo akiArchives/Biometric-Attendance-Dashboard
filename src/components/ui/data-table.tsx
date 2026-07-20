@@ -25,12 +25,14 @@ import { DataTablePagination } from "@/components/ui/data-table-pagination";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  columnVisibility?: Record<string, boolean>;
   renderMobileCard?: (row: Row<TData>) => React.ReactNode;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  columnVisibility,
   renderMobileCard,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -50,6 +52,7 @@ export function DataTable<TData, TValue>({
     },
     state: {
       sorting,
+      ...(columnVisibility ? { columnVisibility } : {}),
     },
   });
 

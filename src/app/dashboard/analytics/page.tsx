@@ -92,13 +92,24 @@ export default async function AttendancePage({ searchParams }: PageProps) {
     gracePeriod = sysSettings.grace_period;
   }
 
+  const isAdmin = profile?.role === "admin";
+  const isSingleUserView = !isAdmin;
+
+  const currentEmp = (allEmployees || [])[0] || {
+    employee_id: profile?.employee_id || 0,
+    employee_name: null,
+  };
+
+  const userEmployee = isSingleUserView
+    ? {
+        employee_name: currentEmp.employee_name || "Employee",
+        employee_id: String(currentEmp.employee_id),
+      }
+    : undefined;
+
   let processedData: PersonnelAnalytics[] = [];
 
-  if (profile?.role !== "admin" && !dateParamProvided) {
-    const currentEmp = (allEmployees || [])[0] || {
-      employee_id: profile?.employee_id || 0,
-      employee_name: null,
-    };
+  if (!isAdmin && !dateParamProvided) {
     processedData = processUserHistoryLogs(
       rawLogs || [],
       currentEmp,
@@ -124,7 +135,12 @@ export default async function AttendancePage({ searchParams }: PageProps) {
 
   return (
     <div className="w-full h-auto mt-6 px-6">
-      <AttendanceTable data={filteredData} />
+      <AttendanceTable
+        data={filteredData}
+        isAdmin={isAdmin}
+        isSingleUserView={isSingleUserView}
+        userEmployee={userEmployee}
+      />
     </div>
   );
 }
