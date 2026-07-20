@@ -67,6 +67,32 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
     },
   },
   {
+    accessorKey: "date",
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        className="justify-center flex w-fit mx-auto hover:bg-transparent dark:text-slate-100 animate-fade-in"
+      >
+        Date
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
+    cell: ({ row }) => {
+      const dateVal = row.getValue("date") as string | undefined;
+      if (!dateVal)
+        return (
+          <span className="text-slate-400 text-xs flex w-fit mx-auto">—</span>
+        );
+
+      return (
+        <div className="flex w-fit mx-auto items-center gap-1.5 text-slate-700 dark:text-slate-300 font-mono text-xs font-medium animate-fade-in">
+          {dateVal}
+        </div>
+      );
+    },
+  },
+  {
     accessorKey: "status",
     header: ({ column }) => (
       <Button

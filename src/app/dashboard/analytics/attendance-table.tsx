@@ -23,21 +23,37 @@ export function AttendanceTable({ data }: AttendanceTableProps) {
       data={data}
       renderMobileCard={(row: Row<PersonnelAnalytics>) => {
         const cells = row.getVisibleCells();
+        const getCell = (columnId: string) =>
+          cells.find((c) => c.column.id === columnId);
+        const empCell = getCell("employee_name") || cells[0];
+        const statusCell = getCell("status") || cells[1];
+        const firstPunchCell = getCell("first_punch") || cells[2];
+        const lastPunchCell = getCell("last_punch") || cells[3];
+        const totalHoursCell = getCell("total_hours_worked") || cells[4];
+        const actionsCell = getCell("actions") || cells[5];
+
         return (
           <Card key={row.id} className="shadow-sm bg-card mb-2">
             {/* Header: Employee Info & Status Badge */}
             <CardHeader className="">
               <div>
-                {flexRender(
-                  cells[0].column.columnDef.cell,
-                  cells[0].getContext(),
+                {empCell &&
+                  flexRender(
+                    empCell.column.columnDef.cell,
+                    empCell.getContext(),
+                  )}
+                {row.original.date && (
+                  <div className="ml-2 text-xs text-muted-foreground font-mono mt-0.5">
+                    Date: {row.original.date}
+                  </div>
                 )}
               </div>
               <CardAction className="">
-                {flexRender(
-                  cells[1].column.columnDef.cell,
-                  cells[1].getContext(),
-                )}
+                {statusCell &&
+                  flexRender(
+                    statusCell.column.columnDef.cell,
+                    statusCell.getContext(),
+                  )}
               </CardAction>
             </CardHeader>
 
@@ -50,37 +66,41 @@ export function AttendanceTable({ data }: AttendanceTableProps) {
                   <span className="text-muted-foreground font-medium">
                     Time In
                   </span>
-                  {flexRender(
-                    cells[2].column.columnDef.cell,
-                    cells[2].getContext(),
-                  )}
+                  {firstPunchCell &&
+                    flexRender(
+                      firstPunchCell.column.columnDef.cell,
+                      firstPunchCell.getContext(),
+                    )}
                 </div>
                 <div className="flex flex-col gap-1 items-center text-center rounded-lg">
                   <span className="text-muted-foreground font-medium">
                     Time Out
                   </span>
-                  {flexRender(
-                    cells[3].column.columnDef.cell,
-                    cells[3].getContext(),
-                  )}
+                  {lastPunchCell &&
+                    flexRender(
+                      lastPunchCell.column.columnDef.cell,
+                      lastPunchCell.getContext(),
+                    )}
                 </div>
                 <div className="flex flex-col gap-1 items-center text-center rounded-lg">
                   <span className="text-muted-foreground font-medium">
                     Logged
                   </span>
-                  {flexRender(
-                    cells[4].column.columnDef.cell,
-                    cells[4].getContext(),
-                  )}
+                  {totalHoursCell &&
+                    flexRender(
+                      totalHoursCell.column.columnDef.cell,
+                      totalHoursCell.getContext(),
+                    )}
                 </div>
               </div>
             </CardContent>
 
             <CardFooter className="py-2 flex justify-end gap-2 px-0 bg-muted/5 rounded-b-lg">
-              {flexRender(
-                cells[5].column.columnDef.cell,
-                cells[5].getContext(),
-              )}
+              {actionsCell &&
+                flexRender(
+                  actionsCell.column.columnDef.cell,
+                  actionsCell.getContext(),
+                )}
             </CardFooter>
           </Card>
         );
