@@ -2,8 +2,8 @@
 
 import * as React from "react";
 import { format } from "date-fns";
-import { IconCalendarFilled } from "@tabler/icons-react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { IconCalendarFilled, IconX } from "@tabler/icons-react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -15,20 +15,24 @@ import {
 } from "@/components/ui/popover";
 
 interface DatePickerProps {
-  selected: string; // "YYYY-MM-DD"
-  label?: string; // Optional label to override the default "PPP" format
+  selected?: string; // "YYYY-MM-DD"
+  label?: string; // Optional label to override the default format
 }
 
 export function DatePicker({ selected, label }: DatePickerProps) {
   const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
+
+  const activeDate = searchParams.get("date") || selected || "";
 
   // Parse YYYY-MM-DD safely into local timezone Date
   const date = React.useMemo(() => {
-    if (!selected) return new Date();
-    const [year, month, day] = selected.split("-").map(Number);
+    if (!activeDate) return undefined;
+    const [year, month, day] = activeDate.split("-").map(Number);
+    if (!year || !month || !day) return undefined;
     return new Date(year, month - 1, day);
-  }, [selected]);
+  }, [activeDate]);
 
   const handleSelect = (selectedDate: Date | undefined) => {
     if (selectedDate) {
@@ -39,9 +43,19 @@ export function DatePicker({ selected, label }: DatePickerProps) {
 
       const params = new URLSearchParams(searchParams.toString());
       params.set("date", dateString);
-      router.push("?" + params.toString());
+      router.push(`${pathname}?${params.toString()}`);
     }
   };
+
+  const handleClear = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("date");
+    router.push(`${pathname}?${params.toString()}`);
+  };
+
+  const hasDateFilter = Boolean(searchParams.get("date") || selected);
 
   return (
     <Popover>
@@ -49,20 +63,36 @@ export function DatePicker({ selected, label }: DatePickerProps) {
         <Button
           variant={"default"}
           className={cn(
-            "w-8 md:w-auto justify-center md:justify-start text-left font-medium bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground px-0 md:px-2.5",
-            !selected && "text-muted-foreground",
+            "w-auto justify-start text-left font-medium bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground px-2.5 gap-1.5",
+            !hasDateFilter && "text-primary-foreground/90",
           )}
         >
-          <IconCalendarFilled className="h-4 w-4 text-primary-foreground" />
+          <IconCalendarFilled className="h-4 w-4 shrink-0 text-primary-foreground" />
           <span className="hidden md:inline">
             {label ? (
               label
             ) : date ? (
               format(date, "PPP")
             ) : (
-              "Pick a date"
+              "All Dates"
             )}
           </span>
+          {hasDateFilter && (
+            <span
+              role="button"
+              tabIndex={0}
+              onClick={handleClear}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  handleClear(e as unknown as React.MouseEvent);
+                }
+              }}
+              className="flex items-center justify-center p-0.5 rounded-full hover:bg-primary-foreground/20 transition-colors ml-0.5"
+              title="Clear date filter"
+            >
+              <IconX className="h-3.5 w-3.5 text-primary-foreground" />
+            </span>
+          )}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="end">
@@ -78,3 +108,4 @@ export function DatePicker({ selected, label }: DatePickerProps) {
     </Popover>
   );
 }
+
