@@ -52,28 +52,22 @@ export interface EmployeeAttendanceCalendarProps {
 
 const WEEKDAY_NAMES = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
-function formatTimeDisplay(punchStr: string | null, includeSeconds = false): string {
+export function formatTimeDisplay(punchStr: string | null, includeSeconds = false): string {
   if (!punchStr) return "--:--";
   try {
-    if (punchStr.includes("T") || punchStr.includes("-")) {
-      const date = new Date(punchStr);
-      if (!isNaN(date.getTime())) {
-        return date.toLocaleTimeString("en-US", {
-          hour: "2-digit",
-          minute: "2-digit",
-          second: includeSeconds ? "2-digit" : undefined,
-          hour12: true,
-        });
-      }
+    let timePart = punchStr;
+    if (punchStr.includes("T")) {
+      timePart = punchStr.substring(11);
     }
-    const parts = punchStr.split(":");
+    const parts = timePart.split(":");
     if (parts.length >= 2) {
       let hours = parseInt(parts[0], 10);
-      const minutes = parts[1];
-      const seconds = parts[2] ? `:${parts[2]}` : "";
+      const minutes = parts[1].substring(0, 2);
+      const rawSecs = parts[2] ? parts[2].substring(0, 2) : "";
+      const seconds = rawSecs ? `:${rawSecs}` : "";
       const ampm = hours >= 12 ? "PM" : "AM";
       hours = hours % 12 || 12;
-      return `${String(hours).padStart(2, "0")}:${minutes}${includeSeconds ? seconds : ""} ${ampm}`;
+      return `${String(hours).padStart(2, "0")}:${minutes}${includeSeconds && seconds ? seconds : ""} ${ampm}`;
     }
   } catch {
     // Return original string on parse failure

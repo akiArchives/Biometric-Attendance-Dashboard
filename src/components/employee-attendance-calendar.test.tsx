@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { EmployeeAttendanceCalendar } from "./employee-attendance-calendar";
+import { EmployeeAttendanceCalendar, formatTimeDisplay } from "./employee-attendance-calendar";
 import { RawBiometricLog } from "@/utils/attendance-processor";
 
 vi.mock("next/navigation", () => ({
@@ -27,5 +27,12 @@ describe("EmployeeAttendanceCalendar", () => {
   it("should be exported as a React component function", () => {
     expect(EmployeeAttendanceCalendar).toBeTypeOf("function");
     expect(EmployeeAttendanceCalendar.name).toBe("EmployeeAttendanceCalendar");
+  });
+
+  it("should format ISO timestamp strings directly without applying local timezone offset shifts", () => {
+    expect(formatTimeDisplay("2026-06-10T07:49:00.000Z")).toBe("07:49 AM");
+    expect(formatTimeDisplay("2026-06-10T17:42:00.000Z")).toBe("05:42 PM");
+    expect(formatTimeDisplay("07:49:00")).toBe("07:49 AM");
+    expect(formatTimeDisplay("17:42:00")).toBe("05:42 PM");
   });
 });
