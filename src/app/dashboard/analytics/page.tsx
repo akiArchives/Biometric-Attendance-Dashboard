@@ -1,6 +1,10 @@
 import { createClient } from "@/lib/supabase/server";
 import { AttendanceTable } from "./attendance-table";
-import { processDailyLogs } from "@/utils/attendance-processor";
+import {
+  processDailyLogs,
+  processUserHistoryLogs,
+} from "@/utils/attendance-processor";
+import { PersonnelAnalytics } from "./columns";
 
 interface PageProps {
   searchParams: Promise<{ date?: string; status?: string }>;
@@ -9,8 +13,11 @@ interface PageProps {
 export default async function AttendancePage({ searchParams }: PageProps) {
   const supabase = await createClient();
   const resolvedParams = await searchParams;
+  const dateParamProvided = Boolean(resolvedParams.date);
 
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   // Fetch self role and employee_id
   const { data: profile } = await supabase
@@ -29,7 +36,6 @@ export default async function AttendancePage({ searchParams }: PageProps) {
   let logsQuery = supabase
     .from("hik_biometric_logs")
     .select("*")
-    .eq("log_date", selectedDate)
     .order("log_date_time", { ascending: true });
 
   let empQuery = supabase
@@ -42,13 +48,18 @@ export default async function AttendancePage({ searchParams }: PageProps) {
   if (profile?.role !== "admin") {
     const userEmpId = profile?.employee_id || 0;
     logsQuery = logsQuery.eq("employee_id", userEmpId);
+    if (dateParamProvided) {
+      logsQuery = logsQuery.eq("log_date", selectedDate);
+    }
     empQuery = empQuery.eq("employee_id", userEmpId);
+  } else {
+    logsQuery = logsQuery.eq("log_date", selectedDate);
   }
 
   const [
     { data: rawLogs, error },
     { data: allEmployees, error: employeesError },
-    { data: sysSettings, error: sysSettingsError }
+    { data: sysSettings, error: sysSettingsError },
   ] = await Promise.all([
     logsQuery,
     empQuery,
@@ -81,19 +92,35 @@ export default async function AttendancePage({ searchParams }: PageProps) {
     gracePeriod = sysSettings.grace_period;
   }
 
-  const processedData = processDailyLogs(
-    rawLogs || [],
-    allEmployees || [],
-    workStartTime,
-    gracePeriod,
-  );
+  let processedData: PersonnelAnalytics[] = [];
+
+  if (profile?.role !== "admin" && !dateParamProvided) {
+    const currentEmp = (allEmployees || [])[0] || {
+      employee_id: profile?.employee_id || 0,
+      employee_name: null,
+    };
+    processedData = processUserHistoryLogs(
+      rawLogs || [],
+      currentEmp,
+      workStartTime,
+      gracePeriod,
+    );
+  } else {
+    processedData = processDailyLogs(
+      rawLogs || [],
+      allEmployees || [],
+      workStartTime,
+      gracePeriod,
+    ).map((item) => ({ ...item, date: selectedDate }));
+  }
 
   const statusParam = resolvedParams.status;
   const selectedStatuses = statusParam ? statusParam.split(",") : [];
 
-  const filteredData = selectedStatuses.length > 0
-    ? processedData.filter((item) => selectedStatuses.includes(item.status))
-    : processedData;
+  const filteredData =
+    selectedStatuses.length > 0
+      ? processedData.filter((item) => selectedStatuses.includes(item.status))
+      : processedData;
 
   return (
     <div className="w-full h-auto mt-6 px-6">
@@ -101,3 +128,4 @@ export default async function AttendancePage({ searchParams }: PageProps) {
     </div>
   );
 }
+
