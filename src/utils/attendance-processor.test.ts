@@ -270,7 +270,7 @@ describe("processUserHistoryLogs", () => {
     const result = processUserHistoryLogs(logs, employee, "08:00", 15);
 
     // Verify descending sort order across all generated dates
-    const dates = result.map((r) => r.date);
+    const dates = result.map((r) => r.date || "");
     const expectedSorted = [...dates].sort((a, b) => b.localeCompare(a));
     expect(dates).toEqual(expectedSorted);
 
@@ -313,7 +313,7 @@ describe("processUserHistoryLogs", () => {
 
     const result = processUserHistoryLogs(logs, mockEmployee, "08:00", 0);
 
-    const dates = result.map((r) => r.date);
+    const dates = result.map((r) => r.date || "");
     expect(dates).toContain("2026-06-19");
     expect(dates).toContain("2026-06-22");
     expect(dates).toContain("2026-06-23");
@@ -322,6 +322,28 @@ describe("processUserHistoryLogs", () => {
 
     const mon = result.find((r) => r.date === "2026-06-22");
     expect(mon?.status).toBe("absent");
+  });
+
+  it("should restrict evaluated dates to the target month when selectedDate is provided", () => {
+    const mockEmployee = { employee_id: 1, employee_name: "Alice Smith" };
+    const logs = [
+      {
+        id: 1,
+        employee_id: 1,
+        employee_name: "Alice Smith",
+        log_date_time: "2026-06-15T08:00:00.000Z",
+        log_time: "08:00:00",
+        log_date: "2026-06-15",
+      },
+    ];
+
+    // Evaluate for June 2026 when selectedDate is "2026-06-01"
+    const result = processUserHistoryLogs(logs, mockEmployee, "08:00", 0, "2026-06-01");
+
+    const dates = result.map((r) => r.date || "");
+    expect(dates.length).toBeGreaterThan(0);
+    expect(dates.every((d) => d.startsWith("2026-06-"))).toBe(true);
+    expect(dates).not.toContain("2026-07-01");
   });
 });
 

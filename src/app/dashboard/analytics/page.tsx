@@ -126,7 +126,8 @@ export default async function AttendancePage({ searchParams }: PageProps) {
       rawLogs || [],
       currentEmp,
       workStartTime,
-      gracePeriod
+      gracePeriod,
+      selectedDate
     );
   } else {
     processedData = processDailyLogs(

@@ -141,7 +141,8 @@ export function processUserHistoryLogs(
   logs: RawBiometricLog[],
   employee: EmployeeStub,
   workStartTime: string = "08:00",
-  gracePeriod: number = 0
+  gracePeriod: number = 0,
+  selectedDate?: string
 ): PersonnelAnalytics[] {
   const dateGroups: Record<string, RawBiometricLog[]> = {};
 
@@ -158,7 +159,24 @@ export function processUserHistoryLogs(
   });
 
   const loggedDates = Object.keys(dateGroups);
-  if (loggedDates.length === 0) return [];
+
+  const refDateStr =
+    selectedDate && /^\d{4}-\d{2}-\d{2}$/.test(selectedDate)
+      ? selectedDate
+      : loggedDates.length > 0
+      ? loggedDates[0]
+      : null;
+
+  if (!refDateStr && loggedDates.length === 0) return [];
+
+  const targetDateStr = refDateStr || new Date().toISOString().substring(0, 10);
+  const [selYearStr, selMonthStr] = targetDateStr.split("-");
+  const selYear = parseInt(selYearStr, 10);
+  const selMonth = parseInt(selMonthStr, 10);
+
+  const monthStart = `${selYearStr}-${selMonthStr}-01`;
+  const daysInMonth = new Date(selYear, selMonth, 0).getDate();
+  const monthEnd = `${selYearStr}-${selMonthStr}-${String(daysInMonth).padStart(2, "0")}`;
 
   const d = new Date();
   const yyyy = d.getFullYear();
@@ -166,28 +184,32 @@ export function processUserHistoryLogs(
   const dd = String(d.getDate()).padStart(2, "0");
   const todayStr = `${yyyy}-${mm}-${dd}`;
 
-  const minDateStr = loggedDates.reduce(
-    (min, cur) => (cur < min ? cur : min),
-    loggedDates[0]
-  );
+  const evalEnd = monthEnd < todayStr ? monthEnd : todayStr;
 
   const allDatesToEvaluate = new Set<string>();
-  Object.keys(dateGroups).forEach((d) => allDatesToEvaluate.add(d));
 
-  const curr = new Date(minDateStr + "T12:00:00");
-  const end = new Date(todayStr + "T12:00:00");
-
-  while (curr <= end) {
-    const dayOfWeek = curr.getDay();
-    const y = curr.getFullYear();
-    const m = String(curr.getMonth() + 1).padStart(2, "0");
-    const dayVal = String(curr.getDate()).padStart(2, "0");
-    const dateStr = `${y}-${m}-${dayVal}`;
-
-    if (dayOfWeek !== 0 && dayOfWeek !== 6) {
-      allDatesToEvaluate.add(dateStr);
+  loggedDates.forEach((dStr) => {
+    if (dStr >= monthStart && dStr <= monthEnd) {
+      allDatesToEvaluate.add(dStr);
     }
-    curr.setDate(curr.getDate() + 1);
+  });
+
+  if (monthStart <= evalEnd) {
+    const curr = new Date(monthStart + "T12:00:00");
+    const end = new Date(evalEnd + "T12:00:00");
+
+    while (curr <= end) {
+      const dayOfWeek = curr.getDay();
+      const y = curr.getFullYear();
+      const m = String(curr.getMonth() + 1).padStart(2, "0");
+      const dayVal = String(curr.getDate()).padStart(2, "0");
+      const dateStr = `${y}-${m}-${dayVal}`;
+
+      if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+        allDatesToEvaluate.add(dateStr);
+      }
+      curr.setDate(curr.getDate() + 1);
+    }
   }
 
   const sortedDates = Array.from(allDatesToEvaluate).sort((a, b) =>
