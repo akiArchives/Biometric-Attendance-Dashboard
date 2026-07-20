@@ -1,5 +1,11 @@
 import { describe, it, expect } from "vitest";
-import { processDailyLogs, processUserHistoryLogs } from "./attendance-processor";
+import {
+  processDailyLogs,
+  processUserHistoryLogs,
+  calculateEmployeePersonalStats,
+  generateMonthlyCalendarMatrix,
+  RawBiometricLog,
+} from "./attendance-processor";
 
 describe("processDailyLogs", () => {
   const mockEmployees = [
@@ -316,6 +322,89 @@ describe("processUserHistoryLogs", () => {
 
     const mon = result.find((r) => r.date === "2026-06-22");
     expect(mon?.status).toBe("absent");
+  });
+});
+
+describe("calculateEmployeePersonalStats", () => {
+  it("calculates monthly on-time rate, weekly hours, late count, and present days correctly", () => {
+    const mockLogs: RawBiometricLog[] = [
+      { id: 1, employee_id: 101, employee_name: "Alice", log_date: "2026-07-06", log_time: "08:50:00", log_date_time: "2026-07-06T08:50:00Z" },
+      { id: 2, employee_id: 101, employee_name: "Alice", log_date: "2026-07-06", log_time: "17:00:00", log_date_time: "2026-07-06T17:00:00Z" },
+      { id: 3, employee_id: 101, employee_name: "Alice", log_date: "2026-07-07", log_time: "09:30:00", log_date_time: "2026-07-07T09:30:00Z" },
+      { id: 4, employee_id: 101, employee_name: "Alice", log_date: "2026-07-07", log_time: "17:00:00", log_date_time: "2026-07-07T17:00:00Z" },
+    ];
+    const monthDates = ["2026-07-06", "2026-07-07", "2026-07-08"]; // 3 workdays
+    const stats = calculateEmployeePersonalStats(mockLogs, 101, "09:00", 15, monthDates, "2026-07-07");
+    expect(stats.presentDaysCount).toBe(2);
+    expect(stats.lateCount).toBe(1);
+    expect(stats.onTimeRatePercent).toBe(50);
+    expect(stats.avgLateMins).toBe(30);
+    expect(stats.elapsedWorkdaysCount).toBe(2);
+    expect(stats.loggedHoursThisWeek).toBe(13.67);
+    expect(stats.todayStatus.state).toBe("checked_out");
+    expect(stats.todayStatus.firstPunch).toBe("2026-07-07T09:30:00Z");
+    expect(stats.todayStatus.lastPunch).toBe("2026-07-07T17:00:00Z");
+  });
+
+  it("handles todayStatus with no scans (not_scanned) and single scan (checked_in)", () => {
+    const mockLogs: RawBiometricLog[] = [
+      { id: 1, employee_id: 101, employee_name: "Alice", log_date: "2026-07-07", log_time: "08:50:00", log_date_time: "2026-07-07T08:50:00Z" },
+    ];
+    const monthDates = ["2026-07-07"];
+    const stats1 = calculateEmployeePersonalStats(mockLogs, 101, "09:00", 15, monthDates, "2026-07-07");
+    expect(stats1.todayStatus).toEqual({
+      state: "checked_in",
+      firstPunch: "2026-07-07T08:50:00Z",
+      lastPunch: null,
+    });
+
+    const stats2 = calculateEmployeePersonalStats([], 101, "09:00", 15, monthDates, "2026-07-07");
+    expect(stats2.todayStatus).toEqual({
+      state: "not_scanned",
+      firstPunch: null,
+      lastPunch: null,
+    });
+  });
+});
+
+describe("generateMonthlyCalendarMatrix", () => {
+  it("generates calendar days with correct status, weekend flags, and current month flags", () => {
+    const mockLogs: RawBiometricLog[] = [
+      { id: 1, employee_id: 101, employee_name: "Alice", log_date: "2026-07-06", log_time: "08:50:00", log_date_time: "2026-07-06T08:50:00Z" },
+      { id: 2, employee_id: 101, employee_name: "Alice", log_date: "2026-07-06", log_time: "17:00:00", log_date_time: "2026-07-06T17:00:00Z" },
+      { id: 3, employee_id: 101, employee_name: "Alice", log_date: "2026-07-07", log_time: "09:30:00", log_date_time: "2026-07-07T09:30:00Z" },
+      { id: 4, employee_id: 101, employee_name: "Alice", log_date: "2026-07-07", log_time: "17:00:00", log_date_time: "2026-07-07T17:00:00Z" },
+    ];
+    // Year 2026, Month 7 (July 2026). todayStr: "2026-07-07"
+    const matrix = generateMonthlyCalendarMatrix(mockLogs, 101, 2026, 7, "09:00", 15, "2026-07-07");
+
+    expect(matrix.length).toBeGreaterThanOrEqual(31);
+
+    // Find July 6, 2026
+    const july6 = matrix.find((d) => d.date === "2026-07-06");
+    expect(july6).toBeDefined();
+    expect(july6?.isCurrentMonth).toBe(true);
+    expect(july6?.isWeekend).toBe(false);
+    expect(july6?.status).toBe("on_time");
+    expect(july6?.totalHours).toBe(7.17);
+
+    // Find July 7, 2026
+    const july7 = matrix.find((d) => d.date === "2026-07-07");
+    expect(july7?.status).toBe("late");
+    expect(july7?.lateMins).toBe(30);
+
+    // Find July 8, 2026 (future date > todayStr)
+    const july8 = matrix.find((d) => d.date === "2026-07-08");
+    expect(july8?.status).toBe("future");
+
+    // Find July 5, 2026 (Sunday -> weekend)
+    const july5 = matrix.find((d) => d.date === "2026-07-05");
+    expect(july5?.status).toBe("weekend");
+    expect(july5?.isWeekend).toBe(true);
+
+    // Find July 1, 2026 (Wednesday, past date before July 6 with no logs -> absent)
+    const july1 = matrix.find((d) => d.date === "2026-07-01");
+    expect(july1?.status).toBe("absent");
   });
 });
 
