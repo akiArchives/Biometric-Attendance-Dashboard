@@ -136,3 +136,41 @@ export function processDailyLogs(
     };
   });
 }
+
+export function processUserHistoryLogs(
+  logs: RawBiometricLog[],
+  employee: EmployeeStub,
+  workStartTime: string = "08:00",
+  gracePeriod: number = 0
+): PersonnelAnalytics[] {
+  const dateGroups: Record<string, RawBiometricLog[]> = {};
+
+  logs.forEach((log) => {
+    const dateStr =
+      log.log_date ||
+      (log.log_date_time ? log.log_date_time.substring(0, 10) : null);
+    if (!dateStr) return;
+
+    if (!dateGroups[dateStr]) {
+      dateGroups[dateStr] = [];
+    }
+    dateGroups[dateStr].push(log);
+  });
+
+  const sortedDates = Object.keys(dateGroups).sort((a, b) => b.localeCompare(a));
+
+  return sortedDates.map((dateStr) => {
+    const dayLogs = dateGroups[dateStr];
+    const [dailyRecord] = processDailyLogs(
+      dayLogs,
+      [employee],
+      workStartTime,
+      gracePeriod
+    );
+
+    return {
+      ...dailyRecord,
+      date: dateStr,
+    };
+  });
+}

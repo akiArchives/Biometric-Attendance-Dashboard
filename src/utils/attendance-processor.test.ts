@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { processDailyLogs } from "./attendance-processor";
+import { processDailyLogs, processUserHistoryLogs } from "./attendance-processor";
 
 describe("processDailyLogs", () => {
   const mockEmployees = [
@@ -216,3 +216,65 @@ describe("processDailyLogs", () => {
     expect(bob?.status).toBe("late");    // 09:20 > 09:15
   });
 });
+
+describe("processUserHistoryLogs", () => {
+  const employee = { employee_id: 1, employee_name: "Alice Smith" };
+
+  it("should return an empty array if logs is empty", () => {
+    const result = processUserHistoryLogs([], employee);
+    expect(result).toEqual([]);
+  });
+
+  it("should group logs by date, sort dates descending, and attach date string to each PersonnelAnalytics record", () => {
+    const logs = [
+      {
+        id: 1,
+        employee_id: 1,
+        employee_name: "Alice Smith",
+        log_date_time: "2026-06-21T08:00:00.000Z",
+        log_time: "08:00:00",
+        log_date: "2026-06-21",
+      },
+      {
+        id: 2,
+        employee_id: 1,
+        employee_name: "Alice Smith",
+        log_date_time: "2026-06-21T17:00:00.000Z",
+        log_time: "17:00:00",
+        log_date: "2026-06-21",
+      },
+      {
+        id: 3,
+        employee_id: 1,
+        employee_name: "Alice Smith",
+        log_date_time: "2026-06-23T08:30:00.000Z",
+        log_time: "08:30:00",
+        log_date: "2026-06-23",
+      },
+      {
+        id: 4,
+        employee_id: 1,
+        employee_name: "Alice Smith",
+        log_date_time: "2026-06-22T08:00:00.000Z",
+        log_time: "08:00:00",
+        log_date: "2026-06-22",
+      },
+    ];
+
+    const result = processUserHistoryLogs(logs, employee, "08:00", 15);
+
+    expect(result).toHaveLength(3);
+    // Should be sorted descending by date
+    expect(result[0].date).toBe("2026-06-23");
+    expect(result[1].date).toBe("2026-06-22");
+    expect(result[2].date).toBe("2026-06-21");
+
+    // Check 2026-06-23 record (log at 08:30 with workStartTime 08:00, gracePeriod 15 => late)
+    expect(result[0].employee_id).toBe("1");
+    expect(result[0].status).toBe("late");
+
+    // Check 2026-06-21 record (hours logged)
+    expect(result[2].total_hours_worked).toBe(8);
+  });
+});
+

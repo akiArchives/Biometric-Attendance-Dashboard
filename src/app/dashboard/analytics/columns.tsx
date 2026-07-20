@@ -29,6 +29,7 @@ export type PersonnelAnalytics = {
   last_punch: string | null;
   total_hours_worked: number;
   status: AttendanceStatus;
+  date?: string;
 };
 
 export const columns: ColumnDef<PersonnelAnalytics>[] = [
