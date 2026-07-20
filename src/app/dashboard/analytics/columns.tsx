@@ -52,7 +52,7 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
       <Button
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        className="hover:bg-transparent dark:text-slate-100 animate-fade-in -ml-3"
+        className="hover:bg-transparent dark:text-slate-100 animate-fade-in mx-auto"
       >
         Date
         <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -62,11 +62,11 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
       const dateVal = row.getValue("date") as string | undefined;
       if (!dateVal)
         return (
-          <span className="text-slate-400 text-xs">—</span>
+          <span className="text-slate-400 text-xs mx-auto">—</span>
         );
 
       return (
-        <div className="flex items-center gap-1.5 text-slate-700 dark:text-slate-300 font-mono text-xs font-medium animate-fade-in">
+        <div className="flex items-center ml-3 gap-1.5 text-slate-700 dark:text-slate-300 font-mono text-xs font-medium animate-fade-in">
           {formatDateFormatted(dateVal)}
         </div>
       );
