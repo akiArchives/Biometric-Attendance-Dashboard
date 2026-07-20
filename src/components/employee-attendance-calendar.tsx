@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   ChevronLeft,
   ChevronRight,
@@ -100,6 +101,9 @@ export function EmployeeAttendanceCalendar({
   initialYear,
   initialMonth,
 }: EmployeeAttendanceCalendarProps) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
   const todayObj = useMemo(() => new Date(), []);
   const todayStr = useMemo(() => {
     const yyyy = todayObj.getFullYear();
@@ -108,37 +112,75 @@ export function EmployeeAttendanceCalendar({
     return `${yyyy}-${mm}-${dd}`;
   }, [todayObj]);
 
-  const [year, setYear] = useState<number>(
-    initialYear ?? todayObj.getFullYear()
-  );
-  const [month, setMonth] = useState<number>(
-    initialMonth ?? todayObj.getMonth() + 1
-  );
+  const dateParam = searchParams ? searchParams.get("date") : null;
+
+  const [year, setYear] = useState<number>(() => {
+    if (initialYear !== undefined) return initialYear;
+    if (dateParam && /^\d{4}-\d{2}-\d{2}$/.test(dateParam)) {
+      const y = parseInt(dateParam.split("-")[0], 10);
+      if (!isNaN(y)) return y;
+    }
+    return todayObj.getFullYear();
+  });
+
+  const [month, setMonth] = useState<number>(() => {
+    if (initialMonth !== undefined) return initialMonth;
+    if (dateParam && /^\d{4}-\d{2}-\d{2}$/.test(dateParam)) {
+      const m = parseInt(dateParam.split("-")[1], 10);
+      if (!isNaN(m) && m >= 1 && m <= 12) return m;
+    }
+    return todayObj.getMonth() + 1;
+  });
+
+  useEffect(() => {
+    if (dateParam && /^\d{4}-\d{2}-\d{2}$/.test(dateParam)) {
+      const [yStr, mStr] = dateParam.split("-");
+      const y = parseInt(yStr, 10);
+      const m = parseInt(mStr, 10);
+      if (!isNaN(y) && !isNaN(m) && m >= 1 && m <= 12) {
+        setYear(y);
+        setMonth(m);
+      }
+    }
+  }, [dateParam]);
+
   const [selectedDay, setSelectedDay] = useState<CalendarDayStatus | null>(
     null
   );
 
   const handlePrevMonth = () => {
-    if (month === 1) {
-      setMonth(12);
-      setYear((y) => y - 1);
-    } else {
-      setMonth((m) => m - 1);
+    let newMonth = month - 1;
+    let newYear = year;
+    if (newMonth < 1) {
+      newMonth = 12;
+      newYear = year - 1;
     }
+    setMonth(newMonth);
+    setYear(newYear);
+    const formattedFirstDayOfMonth = `${newYear}-${String(newMonth).padStart(2, "0")}-01`;
+    router.push("/dashboard/analytics?date=" + formattedFirstDayOfMonth);
   };
 
   const handleNextMonth = () => {
-    if (month === 12) {
-      setMonth(1);
-      setYear((y) => y + 1);
-    } else {
-      setMonth((m) => m + 1);
+    let newMonth = month + 1;
+    let newYear = year;
+    if (newMonth > 12) {
+      newMonth = 1;
+      newYear = year + 1;
     }
+    setMonth(newMonth);
+    setYear(newYear);
+    const formattedFirstDayOfMonth = `${newYear}-${String(newMonth).padStart(2, "0")}-01`;
+    router.push("/dashboard/analytics?date=" + formattedFirstDayOfMonth);
   };
 
   const handleToday = () => {
-    setYear(todayObj.getFullYear());
-    setMonth(todayObj.getMonth() + 1);
+    const newYear = todayObj.getFullYear();
+    const newMonth = todayObj.getMonth() + 1;
+    setYear(newYear);
+    setMonth(newMonth);
+    const formattedFirstDayOfMonth = `${newYear}-${String(newMonth).padStart(2, "0")}-01`;
+    router.push("/dashboard/analytics?date=" + formattedFirstDayOfMonth);
   };
 
   const monthLabel = useMemo(() => {
@@ -239,6 +281,7 @@ export function EmployeeAttendanceCalendar({
                 key={cell.date}
                 type="button"
                 onClick={() => setSelectedDay(cell)}
+                aria-label={`${cell.date}: ${cell.status}`}
                 className={cn(
                   "group relative flex min-h-[90px] md:min-h-[105px] flex-col justify-between rounded-lg border p-1.5 md:p-2 text-left transition-all hover:border-primary/50 hover:shadow-xs focus:outline-none focus:ring-2 focus:ring-primary/20",
                   !cell.isCurrentMonth

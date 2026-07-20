@@ -365,6 +365,21 @@ describe("calculateEmployeePersonalStats", () => {
       lastPunch: null,
     });
   });
+
+  it("calculates weekly hours correctly across month transition (e.g. July 1st is Wednesday, Monday June 29 & Tuesday June 30 included)", () => {
+    const mockLogs: RawBiometricLog[] = [
+      { id: 1, employee_id: 101, employee_name: "Alice", log_date: "2026-06-29", log_time: "09:00:00", log_date_time: "2026-06-29T09:00:00Z" },
+      { id: 2, employee_id: 101, employee_name: "Alice", log_date: "2026-06-29", log_time: "17:00:00", log_date_time: "2026-06-29T17:00:00Z" },
+      { id: 3, employee_id: 101, employee_name: "Alice", log_date: "2026-06-30", log_time: "09:00:00", log_date_time: "2026-06-30T09:00:00Z" },
+      { id: 4, employee_id: 101, employee_name: "Alice", log_date: "2026-06-30", log_time: "17:00:00", log_date_time: "2026-06-30T17:00:00Z" },
+      { id: 5, employee_id: 101, employee_name: "Alice", log_date: "2026-07-01", log_time: "09:00:00", log_date_time: "2026-07-01T09:00:00Z" },
+      { id: 6, employee_id: 101, employee_name: "Alice", log_date: "2026-07-01", log_time: "17:00:00", log_date_time: "2026-07-01T17:00:00Z" },
+    ];
+    const monthDates = ["2026-07-01", "2026-07-02", "2026-07-03"];
+    const stats = calculateEmployeePersonalStats(mockLogs, 101, "09:00", 15, monthDates, "2026-07-01");
+    expect(stats.loggedHoursThisWeek).toBe(21);
+    expect(stats.presentDaysCount).toBe(1);
+  });
 });
 
 describe("generateMonthlyCalendarMatrix", () => {

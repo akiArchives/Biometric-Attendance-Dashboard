@@ -1,6 +1,16 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { EmployeeAttendanceCalendar } from "./employee-attendance-calendar";
 import { RawBiometricLog } from "@/utils/attendance-processor";
+
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({
+    push: vi.fn(),
+    replace: vi.fn(),
+  }),
+  useSearchParams: () => ({
+    get: vi.fn().mockReturnValue(null),
+  }),
+}));
 
 describe("EmployeeAttendanceCalendar", () => {
   const mockLogs: RawBiometricLog[] = [

@@ -182,7 +182,7 @@ export default async function DashboardPage({
   // 2. Regular Employee Dashboard Logic (profile?.role !== "admin")
   const userEmpId = profile?.employee_id || 0;
 
-  const [tYear, tMonth] = today.split("-").map(Number);
+  const [tYear, tMonth, tDay] = today.split("-").map(Number);
   const daysInMonth = new Date(tYear, tMonth, 0).getDate();
   const monthDates: string[] = [];
   for (let dayNum = 1; dayNum <= daysInMonth; dayNum++) {
@@ -190,6 +190,20 @@ export default async function DashboardPage({
     const mStr = String(tMonth).padStart(2, "0");
     monthDates.push(`${tYear}-${mStr}-${dayStr}`);
   }
+
+  // Calculate Monday of the current week for weekly hours calculation across month transitions
+  const todayDateObj = new Date(tYear, tMonth - 1, tDay, 12, 0, 0);
+  const dayOfWeek = todayDateObj.getDay();
+  const diffToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+  const mondayObj = new Date(todayDateObj);
+  mondayObj.setDate(todayDateObj.getDate() + diffToMonday);
+
+  const monY = mondayObj.getFullYear();
+  const monM = String(mondayObj.getMonth() + 1).padStart(2, "0");
+  const monD = String(mondayObj.getDate()).padStart(2, "0");
+  const mondayStr = `${monY}-${monM}-${monD}`;
+
+  const logsStartDate = mondayStr < monthDates[0] ? mondayStr : monthDates[0];
 
   let monthlyLogs: RawBiometricLog[] = [];
   let empName = "Employee";
@@ -205,7 +219,7 @@ export default async function DashboardPage({
         .from("hik_biometric_logs")
         .select("*")
         .eq("employee_id", userEmpId)
-        .gte("log_date", monthDates[0])
+        .gte("log_date", logsStartDate)
         .lte("log_date", monthDates[monthDates.length - 1])
         .order("log_date_time", { ascending: true }),
       supabase
