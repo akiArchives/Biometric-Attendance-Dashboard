@@ -1,6 +1,6 @@
 "use server";
 
-import { createClient } from "@/lib/supabase/server";
+import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 
 async function checkIsAdmin(supabase: Awaited<ReturnType<typeof createClient>>) {
@@ -48,7 +48,8 @@ export async function createAttendanceLogAction(payload: {
     const timeWithSec = log_time.length === 5 ? `${log_time}:00` : log_time;
     const log_date_time = `${log_date} ${timeWithSec}`;
 
-    const { error } = await supabase.from("hik_biometric_logs").insert({
+    const adminClient = await createAdminClient();
+    const { error } = await adminClient.from("hik_biometric_logs").insert({
       employee_id,
       employee_name,
       log_date,
@@ -81,7 +82,8 @@ export async function updateAttendanceLogAction(
     const timeWithSec = log_time.length === 5 ? `${log_time}:00` : log_time;
     const log_date_time = `${log_date} ${timeWithSec}`;
 
-    const { error } = await supabase
+    const adminClient = await createAdminClient();
+    const { error } = await adminClient
       .from("hik_biometric_logs")
       .update({
         log_date,
@@ -108,7 +110,8 @@ export async function deleteAttendanceLogAction(id: number) {
       return { success: false, error: "Unauthorized. Admin role required." };
     }
 
-    const { error } = await supabase
+    const adminClient = await createAdminClient();
+    const { error } = await adminClient
       .from("hik_biometric_logs")
       .delete()
       .eq("id", id);
@@ -122,3 +125,4 @@ export async function deleteAttendanceLogAction(id: number) {
     return { success: false, error: err.message || "Failed to delete attendance log" };
   }
 }
+
