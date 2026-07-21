@@ -16,11 +16,13 @@ import { Field, FieldDescription, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { signup } from "@/app/(login)/actions";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export function SignupForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const router = useRouter();
   const [message, setMessage] = React.useState<string | null>(null);
   const [pending, setPending] = React.useState(false);
   const [showPassword, setShowPassword] = React.useState(false);
@@ -41,6 +43,8 @@ export function SignupForm({
       toast.success(result.message || "Account created successfully!");
       setMessage(result.message || "Account created successfully!");
       setPending(false);
+      router.push("/dashboard");
+      router.refresh();
     }
   }
 

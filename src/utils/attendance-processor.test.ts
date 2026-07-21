@@ -27,6 +27,8 @@ describe("processDailyLogs", () => {
       last_punch: null,
       total_hours_worked: 0,
       status: "absent",
+      log_id: undefined,
+      raw_logs: [],
     });
   });
 
