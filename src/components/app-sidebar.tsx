@@ -13,7 +13,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Settings2 } from "lucide-react";
-import { IconDashboard, IconListDetails, IconReport, IconPlus } from "@tabler/icons-react"
+import { IconDashboard, IconListDetails, IconPlus } from "@tabler/icons-react"
 import { AddAttendanceDialog } from "@/components/attendance/add-attendance-dialog";
 
 const data = {
@@ -36,13 +36,6 @@ const data = {
           style={{ width: "1rem", height: "1rem" }}
           strokeWidth={2.5}
         />
-      ),
-    },
-    {
-      title: "Reports",
-      url: "/dashboard/reports",
-      icon: (
-        <IconReport style={{ width: "1rem", height: "1rem" }} strokeWidth={2.5} />
       ),
     },
     {
