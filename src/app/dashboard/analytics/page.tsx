@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { createClient } from "@/lib/supabase/server";
 import { AttendanceTable } from "./attendance-table";
 import {
@@ -5,33 +6,23 @@ import {
   processUserHistoryLogs,
 } from "@/utils/attendance-processor";
 import { PersonnelAnalytics } from "./columns";
+import { AdminAnalyticsSkeleton } from "@/components/skeletons/admin-analytics-skeleton";
+import { EmployeeAnalyticsSkeleton } from "@/components/skeletons/employee-analytics-skeleton";
 
-interface PageProps {
-  searchParams: Promise<{ date?: string; status?: string }>;
+interface AnalyticsContainerProps {
+  selectedDate: string;
+  statusParam?: string;
+  profile: { role: string; employee_id: number | null } | null;
 }
 
-export default async function AttendancePage({ searchParams }: PageProps) {
+async function AnalyticsDataContainer({
+  selectedDate,
+  statusParam,
+  profile,
+}: AnalyticsContainerProps) {
   const supabase = await createClient();
-  const resolvedParams = await searchParams;
-  const dateParamProvided = Boolean(resolvedParams.date);
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  // Fetch self role and employee_id
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("role, employee_id")
-    .eq("id", user?.id || "")
-    .single();
-
-  const d = new Date();
-  const yyyy = d.getFullYear();
-  const mm = String(d.getMonth() + 1).padStart(2, "0");
-  const dd = String(d.getDate()).padStart(2, "0");
-  const today = `${yyyy}-${mm}-${dd}`;
-  const selectedDate = resolvedParams.date || today;
+  const isAdmin = profile?.role === "admin";
+  const isSingleUserView = !isAdmin;
 
   let logsQuery = supabase
     .from("hik_biometric_logs")
@@ -45,7 +36,7 @@ export default async function AttendancePage({ searchParams }: PageProps) {
     .order("employee_name", { ascending: true })
     .neq("employee_id", 1111);
 
-  if (profile?.role !== "admin") {
+  if (!isAdmin) {
     const userEmpId = profile?.employee_id || 0;
     logsQuery = logsQuery.eq("employee_id", userEmpId);
     const [selYearStr, selMonthStr] = selectedDate.split("-");
@@ -104,9 +95,6 @@ export default async function AttendancePage({ searchParams }: PageProps) {
     gracePeriod = sysSettings.grace_period;
   }
 
-  const isAdmin = profile?.role === "admin";
-  const isSingleUserView = !isAdmin;
-
   const currentEmp = (allEmployees || [])[0] || {
     employee_id: profile?.employee_id || 0,
     employee_name: null,
@@ -138,7 +126,6 @@ export default async function AttendancePage({ searchParams }: PageProps) {
     ).map((item) => ({ ...item, date: selectedDate }));
   }
 
-  const statusParam = resolvedParams.status;
   const selectedStatuses = statusParam ? statusParam.split(",") : [];
 
   const filteredData =
@@ -147,17 +134,65 @@ export default async function AttendancePage({ searchParams }: PageProps) {
       : processedData;
 
   return (
-    <div className="w-full h-auto mt-6 px-6">
-      <AttendanceTable
-        data={filteredData}
-        isAdmin={isAdmin}
-        isSingleUserView={isSingleUserView}
-        userEmployee={userEmployee}
-        rawLogs={rawLogs || []}
-        workStartTime={workStartTime}
-        gracePeriod={gracePeriod}
-      />
-    </div>
+    <AttendanceTable
+      data={filteredData}
+      isAdmin={isAdmin}
+      isSingleUserView={isSingleUserView}
+      userEmployee={userEmployee}
+      rawLogs={rawLogs || []}
+      workStartTime={workStartTime}
+      gracePeriod={gracePeriod}
+    />
   );
 }
 
+interface PageProps {
+  searchParams: Promise<{ date?: string; status?: string }>;
+}
+
+export default async function AttendancePage({ searchParams }: PageProps) {
+  const supabase = await createClient();
+  const resolvedParams = await searchParams;
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  // Fetch self role and employee_id
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role, employee_id")
+    .eq("id", user?.id || "")
+    .single();
+
+  const d = new Date();
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
+  const today = `${yyyy}-${mm}-${dd}`;
+  const selectedDate = resolvedParams.date || today;
+
+  const isAdmin = profile?.role === "admin";
+
+  return (
+    <div className="w-full h-auto mt-6 px-6">
+      {isAdmin ? (
+        <Suspense fallback={<AdminAnalyticsSkeleton />}>
+          <AnalyticsDataContainer
+            selectedDate={selectedDate}
+            statusParam={resolvedParams.status}
+            profile={profile}
+          />
+        </Suspense>
+      ) : (
+        <Suspense fallback={<EmployeeAnalyticsSkeleton />}>
+          <AnalyticsDataContainer
+            selectedDate={selectedDate}
+            statusParam={resolvedParams.status}
+            profile={profile}
+          />
+        </Suspense>
+      )}
+    </div>
+  );
+}
