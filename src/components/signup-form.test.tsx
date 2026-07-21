@@ -1,4 +1,6 @@
+// @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import { render, fireEvent, waitFor } from "@testing-library/react";
 import { SignupForm } from "./signup-form";
 import { signup } from "@/app/(login)/actions";
 
@@ -32,19 +34,22 @@ describe("SignupForm", () => {
     expect(SignupForm).toBeTypeOf("function");
   });
 
-  it("verifies router push and refresh logic on signup success", async () => {
+  it("renders SignupForm and triggers auto-navigation on signup success", async () => {
     (signup as any).mockResolvedValue({
       success: true,
       message: "Account created successfully!",
     });
 
-    const result = await signup(new FormData());
-    if (!result?.error) {
-      mockPush("/dashboard");
-      mockRefresh();
-    }
+    const { container } = render(<SignupForm />);
+    const form = container.querySelector("form");
+    expect(form).not.toBeNull();
 
-    expect(mockPush).toHaveBeenCalledWith("/dashboard");
-    expect(mockRefresh).toHaveBeenCalled();
+    fireEvent.submit(form!);
+
+    await waitFor(() => {
+      expect(signup).toHaveBeenCalled();
+      expect(mockPush).toHaveBeenCalledWith("/dashboard");
+      expect(mockRefresh).toHaveBeenCalled();
+    });
   });
 });
