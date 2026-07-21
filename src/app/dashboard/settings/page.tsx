@@ -516,7 +516,7 @@ export default function SettingsPage() {
                   Standard Work Start Time (24h)
                 </Label>
                 <p className="text-xs text-muted-foreground">
-                  Lorem Ipsum
+                  Set the official daily start time for calculating late arrivals.
                 </p>
               </div>
               <Input
@@ -537,7 +537,7 @@ export default function SettingsPage() {
                   Late Grace Period
                 </Label>
                 <p className="text-xs text-muted-foreground">
-                  Lorem Ipsum
+                  Allow a buffer period after work start time before marking attendance as late.
                 </p>
               </div>
               <Select

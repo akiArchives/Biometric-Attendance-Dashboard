@@ -74,8 +74,8 @@ export function NavUser({
               </DropdownMenuItem>
           </DropdownMenuGroup>
           {/* <DropdownMenuSeparator /> */}
-            <DropdownMenuItem onClick={() => logout()}>
-              <LogOutIcon />
+            <DropdownMenuItem onClick={() => logout()} className="focus:bg-muted focus:text-black cursor-pointer">
+              <LogOutIcon className="hover:text-white"/>
               Log out
             </DropdownMenuItem>
           </DropdownMenuContent>

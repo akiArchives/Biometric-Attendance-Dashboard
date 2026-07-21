@@ -70,6 +70,7 @@ export function DeleteAttendanceDialog({
             variant="destructive"
             onClick={handleDelete}
             disabled={loading}
+            className="bg-destructive text-white hover:bg-destructive/80 cursor-pointer"
           >
             {loading ? <Spinner className="size-4 mr-2" /> : null}
             Delete

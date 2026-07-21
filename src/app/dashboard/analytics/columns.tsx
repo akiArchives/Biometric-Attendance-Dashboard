@@ -137,7 +137,7 @@ function RowActions({ row }: { row: Row<PersonnelAnalytics> }) {
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8 text-slate-500 hover:text-blue-600 hover:bg-blue-500/10 dark:hover:text-blue-400 rounded-md transition-colors"
+                className="h-8 w-8 text-slate-500 hover:text-blue-600 hover:bg-blue-500/10 dark:hover:text-blue-400 rounded-md transition-colors cursor-pointer"
                 title="Edit Log"
               >
                 <IconPencil className="h-4 w-4" />
@@ -154,6 +154,7 @@ function RowActions({ row }: { row: Row<PersonnelAnalytics> }) {
                   <DropdownMenuItem
                     key={l.id}
                     onClick={() => handleEditClick(l)}
+                    className="focus:bg-primary focus:text-white cursor-pointer"
                   >
                     Edit Punch ({timeLabel})
                   </DropdownMenuItem>
@@ -165,7 +166,7 @@ function RowActions({ row }: { row: Row<PersonnelAnalytics> }) {
           <Button
             variant="ghost"
             size="icon"
-            className="h-8 w-8 text-slate-500 hover:text-blue-600 hover:bg-blue-500/10 dark:hover:text-blue-400 rounded-md transition-colors"
+            className="h-8 w-8 text-slate-500 hover:text-blue-600 hover:bg-blue-500/10 dark:hover:text-blue-400 rounded-md transition-colors cursor-pointer"
             title="Edit Log"
             onClick={() => handleEditClick()}
           >
@@ -179,7 +180,7 @@ function RowActions({ row }: { row: Row<PersonnelAnalytics> }) {
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8 text-slate-500 hover:text-rose-600 hover:bg-rose-500/10 dark:hover:text-rose-400 rounded-md transition-colors"
+                className="h-8 w-8 text-slate-500 hover:text-rose-600 hover:bg-rose-500/10 dark:hover:text-rose-400 rounded-md transition-colors cursor-pointer"
                 title="Delete Log"
               >
                 <IconTrash className="h-4 w-4" />
@@ -195,7 +196,7 @@ function RowActions({ row }: { row: Row<PersonnelAnalytics> }) {
                 return (
                   <DropdownMenuItem
                     key={l.id}
-                    className="text-destructive focus:bg-destructive/10"
+                    className="text-destructive focus:bg-destructive focus:text-white"
                     onClick={() => handleDeleteClick(l)}
                   >
                     Delete Punch ({timeLabel})
