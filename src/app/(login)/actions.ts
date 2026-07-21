@@ -39,7 +39,7 @@ export async function signup(formData: FormData): Promise<{ error?: string; succ
   }
 
   const supabase = await createClient();
-  const { data, error } = await supabase.auth.signUp({
+  const { error } = await supabase.auth.signUp({
     email,
     password,
     options: {
@@ -53,11 +53,7 @@ export async function signup(formData: FormData): Promise<{ error?: string; succ
     return { error: error.message };
   }
 
-  const message = data.session 
-    ? "Account created successfully!" 
-    : "Registration successful! Please check your email to verify your account.";
-
-  return { success: true, message };
+  return { success: true, message: "Account created successfully!" };
 }
 
 export async function logout() {
