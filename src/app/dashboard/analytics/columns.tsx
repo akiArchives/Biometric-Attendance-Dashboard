@@ -1,7 +1,8 @@
 "use client";
 
+import * as React from "react";
 import { Button } from "@/components/ui/button";
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef, Row } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 import {
   IconCircleCheckFilled,
@@ -11,6 +12,18 @@ import {
   IconPencil,
   IconTrash,
 } from "@tabler/icons-react";
+import { toast } from "sonner";
+import { EditAttendanceDialog } from "@/components/attendance/edit-attendance-dialog";
+import { DeleteAttendanceDialog } from "@/components/attendance/delete-attendance-dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import type { RawBiometricLog } from "@/utils/attendance-processor";
 
 function formatRawTime(iso: string): string {
   const [h, m] = iso.substring(11, 16).split(":").map(Number);
@@ -43,7 +56,181 @@ export type PersonnelAnalytics = {
   total_hours_worked: number;
   status: AttendanceStatus;
   date?: string;
+  log_id?: number;
+  raw_log_id?: number;
+  raw_logs?: RawBiometricLog[];
 };
+
+function RowActions({ row }: { row: Row<PersonnelAnalytics> }) {
+  const [editLog, setEditLog] = React.useState<{
+    id: number;
+    employee_name: string | null;
+    log_date: string | null;
+    log_time: string | null;
+  } | null>(null);
+  const [isEditOpen, setIsEditOpen] = React.useState(false);
+
+  const [deleteLogId, setDeleteLogId] = React.useState<number | null>(null);
+  const [deleteEmpName, setDeleteEmpName] = React.useState<string | null>(null);
+  const [isDeleteOpen, setIsDeleteOpen] = React.useState(false);
+
+  const rawLogs = row.original.raw_logs || [];
+  const empName = row.original.employee_name;
+  const singleLogId = row.original.log_id || row.original.raw_log_id;
+
+  const handleEditClick = (logToEdit?: RawBiometricLog) => {
+    const targetLog = logToEdit || (rawLogs.length > 0 ? rawLogs[0] : null);
+    if (targetLog) {
+      setEditLog({
+        id: targetLog.id,
+        employee_name: empName,
+        log_date:
+          targetLog.log_date ||
+          (targetLog.log_date_time
+            ? targetLog.log_date_time.substring(0, 10)
+            : row.original.date || null),
+        log_time:
+          targetLog.log_time ||
+          (targetLog.log_date_time
+            ? targetLog.log_date_time.substring(11, 19)
+            : null),
+      });
+      setIsEditOpen(true);
+    } else if (singleLogId) {
+      setEditLog({
+        id: singleLogId,
+        employee_name: empName,
+        log_date: row.original.date || null,
+        log_time: row.original.first_punch
+          ? row.original.first_punch.substring(11, 19)
+          : null,
+      });
+      setIsEditOpen(true);
+    } else {
+      toast.error("No log record available for editing.");
+    }
+  };
+
+  const handleDeleteClick = (logToDelete?: RawBiometricLog) => {
+    const targetLog = logToDelete || (rawLogs.length > 0 ? rawLogs[0] : null);
+    if (targetLog) {
+      setDeleteLogId(targetLog.id);
+      setDeleteEmpName(empName);
+      setIsDeleteOpen(true);
+    } else if (singleLogId) {
+      setDeleteLogId(singleLogId);
+      setDeleteEmpName(empName);
+      setIsDeleteOpen(true);
+    } else {
+      toast.error("No log record available for deletion.");
+    }
+  };
+
+  const hasMultipleLogs = rawLogs.length > 1;
+
+  return (
+    <>
+      <div className="flex items-center gap-1">
+        {hasMultipleLogs ? (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 text-slate-500 hover:text-blue-600 hover:bg-blue-500/10 dark:hover:text-blue-400 rounded-md transition-colors"
+                title="Edit Log"
+              >
+                <IconPencil className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Select Punch to Edit</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              {rawLogs.map((l, index) => {
+                const timeLabel = l.log_time
+                  ? formatRawTime(`1970-01-01T${l.log_time}`)
+                  : `Punch #${index + 1}`;
+                return (
+                  <DropdownMenuItem
+                    key={l.id}
+                    onClick={() => handleEditClick(l)}
+                  >
+                    Edit Punch ({timeLabel})
+                  </DropdownMenuItem>
+                );
+              })}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        ) : (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 text-slate-500 hover:text-blue-600 hover:bg-blue-500/10 dark:hover:text-blue-400 rounded-md transition-colors"
+            title="Edit Log"
+            onClick={() => handleEditClick()}
+          >
+            <IconPencil className="h-4 w-4" />
+          </Button>
+        )}
+
+        {hasMultipleLogs ? (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 text-slate-500 hover:text-rose-600 hover:bg-rose-500/10 dark:hover:text-rose-400 rounded-md transition-colors"
+                title="Delete Log"
+              >
+                <IconTrash className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Select Punch to Delete</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              {rawLogs.map((l, index) => {
+                const timeLabel = l.log_time
+                  ? formatRawTime(`1970-01-01T${l.log_time}`)
+                  : `Punch #${index + 1}`;
+                return (
+                  <DropdownMenuItem
+                    key={l.id}
+                    className="text-destructive focus:bg-destructive/10"
+                    onClick={() => handleDeleteClick(l)}
+                  >
+                    Delete Punch ({timeLabel})
+                  </DropdownMenuItem>
+                );
+              })}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        ) : (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 text-slate-500 hover:text-rose-600 hover:bg-rose-500/10 dark:hover:text-rose-400 rounded-md transition-colors"
+            title="Delete Log"
+            onClick={() => handleDeleteClick()}
+          >
+            <IconTrash className="h-4 w-4" />
+          </Button>
+        )}
+      </div>
+
+      <EditAttendanceDialog
+        log={editLog}
+        open={isEditOpen}
+        onOpenChange={setIsEditOpen}
+      />
+      <DeleteAttendanceDialog
+        logId={deleteLogId}
+        employeeName={deleteEmpName}
+        open={isDeleteOpen}
+        onOpenChange={setIsDeleteOpen}
+      />
+    </>
+  );
+}
 
 export const columns: ColumnDef<PersonnelAnalytics>[] = [
   {
@@ -61,9 +248,7 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
     cell: ({ row }) => {
       const dateVal = row.getValue("date") as string | undefined;
       if (!dateVal)
-        return (
-          <span className="text-slate-400 text-xs mx-auto">—</span>
-        );
+        return <span className="text-slate-400 text-xs mx-auto">—</span>;
 
       return (
         <div className="flex items-center ml-3 gap-1.5 text-slate-700 dark:text-slate-300 font-mono text-xs font-medium animate-fade-in">
@@ -175,10 +360,7 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
     ),
     cell: ({ row }) => {
       const rawTime = row.getValue("first_punch") as string;
-      if (!rawTime)
-        return (
-          <span className="text-slate-400 text-xs">—</span>
-        );
+      if (!rawTime) return <span className="text-slate-400 text-xs">—</span>;
 
       return (
         <div className="flex items-center gap-1.5 text-slate-700 dark:text-slate-300 font-medium font-mono text-xs animate-fade-in">
@@ -201,10 +383,7 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
     ),
     cell: ({ row }) => {
       const rawTime = row.getValue("last_punch") as string;
-      if (!rawTime)
-        return (
-          <span className="text-slate-400 text-xs">—</span>
-        );
+      if (!rawTime) return <span className="text-slate-400 text-xs">—</span>;
 
       return (
         <div className="flex items-center gap-1.5 text-slate-700 dark:text-slate-300 font-medium font-mono text-xs animate-fade-in">
@@ -256,27 +435,6 @@ export const columns: ColumnDef<PersonnelAnalytics>[] = [
         Actions
       </div>
     ),
-    cell: ({ row }) => {
-      return (
-        <div className="flex items-center gap-1">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 text-slate-500 hover:text-blue-600 hover:bg-blue-500/10 dark:hover:text-blue-400 rounded-md transition-colors"
-            title="Edit Log"
-          >
-            <IconPencil className="h-4 w-4" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 text-slate-500 hover:text-rose-600 hover:bg-rose-500/10 dark:hover:text-rose-400 rounded-md transition-colors"
-            title="Delete Log"
-          >
-            <IconTrash className="h-4 w-4" />
-          </Button>
-        </div>
-      );
-    },
+    cell: ({ row }) => <RowActions row={row} />,
   },
 ];

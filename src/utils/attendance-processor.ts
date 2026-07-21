@@ -100,6 +100,8 @@ export function processDailyLogs(
         last_punch: null,
         total_hours_worked: 0,
         status: "absent" as AttendanceStatus,
+        log_id: undefined,
+        raw_logs: [],
       };
     }
 
@@ -133,6 +135,9 @@ export function processDailyLogs(
       last_punch: lastPunch,
       total_hours_worked: totalHoursWorked,
       status,
+      log_id: cleanedLogs[0]?.id,
+      raw_log_id: cleanedLogs[0]?.id,
+      raw_logs: cleanedLogs,
     };
   });
 }
@@ -228,6 +233,8 @@ export function processUserHistoryLogs(
         total_hours_worked: 0,
         status: "absent" as AttendanceStatus,
         date: dateStr,
+        log_id: undefined,
+        raw_logs: [],
       };
     }
 
