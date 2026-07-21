@@ -14,6 +14,7 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Settings2 } from "lucide-react";
 import { IconDashboard, IconListDetails, IconReport, IconPlus } from "@tabler/icons-react"
+import { AddAttendanceDialog } from "@/components/attendance/add-attendance-dialog";
 
 const data = {
   navMain: [
@@ -64,6 +65,8 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
 }
 
 export function AppSidebar({ user, ...props }: AppSidebarProps) {
+  const [isAddAttendanceOpen, setIsAddAttendanceOpen] = React.useState(false);
+
   return (
     <Sidebar variant="sidebar" {...props}>
       <SidebarHeader>
@@ -91,6 +94,7 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
             <Button
               className="w-full h-10 gap-2 rounded-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-xs justify-start px-4 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:w-full group-data-[collapsible=icon]:h-9 group-data-[collapsible=icon]:items-center items-center align-center flex"
               title="Add Attendance"
+              onClick={() => setIsAddAttendanceOpen(true)}
             >
               <IconPlus className="size-4 shrink-0" />
               <span className="group-data-[collapsible=icon]:hidden">Add Attendance</span>
@@ -102,6 +106,10 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
       <SidebarFooter className="p-3 group-data-[collapsible=icon]:p-2">
         {user && <NavUser user={user} />}
       </SidebarFooter>
+      <AddAttendanceDialog
+        open={isAddAttendanceOpen}
+        onOpenChange={setIsAddAttendanceOpen}
+      />
     </Sidebar>
   );
 }
