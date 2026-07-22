@@ -55,7 +55,7 @@ describe("SiteHeader", () => {
     (useSearchParams as any).mockReturnValue(new URLSearchParams({ date: "2026-07-15" }));
     
     render(<SiteHeader isAdmin={true} />);
-    expect(screen.getByText("July 2026")).toBeDefined();
+    expect(screen.getAllByText("July 2026")[0]).toBeDefined();
     expect(screen.getByText("Monthly attendance calendar view")).toBeDefined();
   });
 });

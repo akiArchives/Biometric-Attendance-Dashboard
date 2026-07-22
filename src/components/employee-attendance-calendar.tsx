@@ -323,39 +323,36 @@ export function EmployeeAttendanceCalendar({
 
       {/* Interactive Day Click Dialog */}
       <Dialog open={!!selectedDay} onOpenChange={(open) => !open && setSelectedDay(null)}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md shadow-sm px-6 py-6">
           {selectedDay && (
             <>
               <DialogHeader>
-                <DialogTitle className="flex items-center gap-2 text-base font-bold">
-                  <CalendarIcon className="h-4 w-4 text-primary" />
+                <DialogTitle className="text-xl font-bold">
                   {formatDateTitle(selectedDay.date)}
                 </DialogTitle>
-                <DialogDescription className="text-xs text-muted-foreground">
-                  Detailed biometric punch summary and raw scan logs.
-                </DialogDescription>
+                <DialogDescription></DialogDescription>
               </DialogHeader>
 
-              <div className="space-y-4 pt-2">
+              <div className="space-y-6">
                 {/* Summary Banner */}
-                <div className="grid grid-cols-2 gap-3 rounded-lg border bg-muted/20 p-3">
+                <div className="grid grid-cols-2 gap-3 rounded-lg bg-muted/20 ">
                   <div>
                     <span className="text-xs text-muted-foreground">Status</span>
-                    <div className="mt-1">
+                    <div className="mt-1.5">
                       {selectedDay.status === "on_time" && (
-                        <Badge className="bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-500/30 gap-1 font-semibold">
+                        <Badge className="bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-700 gap-1 font-semibold">
                           <CheckCircle2 className="h-3.5 w-3.5" />
                           On-Time
                         </Badge>
                       )}
                       {selectedDay.status === "late" && (
-                        <Badge className="bg-amber-500/15 text-amber-700 dark:text-amber-400 border-amber-500/30 gap-1 font-semibold">
+                        <Badge className="bg-amber-500/15 text-amber-700 dark:text-amber-400 border-amber-700 gap-1 font-semibold">
                           <AlertTriangle className="h-3.5 w-3.5" />
                           Late ({selectedDay.lateMins} mins)
                         </Badge>
                       )}
                       {selectedDay.status === "absent" && (
-                        <Badge className="bg-rose-500/15 text-rose-700 dark:text-rose-400 border-rose-500/30 gap-1 font-semibold">
+                        <Badge className="bg-rose-500/15 text-rose-700 dark:text-rose-400 border-rose-700 gap-1 font-semibold">
                           <XCircle className="h-3.5 w-3.5" />
                           Absent / Missing
                         </Badge>
@@ -367,7 +364,7 @@ export function EmployeeAttendanceCalendar({
                         </Badge>
                       )}
                       {selectedDay.status === "future" && (
-                        <Badge variant="outline" className="text-muted-foreground gap-1">
+                        <Badge variant="outline" className="text-muted-foreground border-muted-foreground gap-1">
                           Upcoming Day
                         </Badge>
                       )}
@@ -376,8 +373,7 @@ export function EmployeeAttendanceCalendar({
 
                   <div>
                     <span className="text-xs text-muted-foreground">Total Hours Worked</span>
-                    <div className="mt-1 flex items-center gap-1.5 font-bold text-sm text-foreground">
-                      <Clock className="h-4 w-4 text-primary" />
+                    <div className="mt-1.5 flex items-center gap-1.5 font-semibold text-sm text-foreground">
                       {selectedDay.totalHours > 0
                         ? `${selectedDay.totalHours} hrs logged`
                         : "0 hrs"}
@@ -385,42 +381,10 @@ export function EmployeeAttendanceCalendar({
                   </div>
                 </div>
 
-                {/* Clock In / Clock Out Cards */}
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="flex items-center gap-2.5 rounded-lg border p-2.5 bg-card">
-                    <div className="rounded-md bg-emerald-500/10 p-2 text-emerald-600 dark:text-emerald-400">
-                      <LogIn className="h-4 w-4" />
-                    </div>
-                    <div>
-                      <div className="text-[11px] text-muted-foreground">Clock In</div>
-                      <div className="text-xs font-mono font-bold text-foreground">
-                        {selectedDay.firstPunch
-                          ? formatTimeDisplay(selectedDay.firstPunch)
-                          : "--:--"}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2.5 rounded-lg border p-2.5 bg-card">
-                    <div className="rounded-md bg-indigo-500/10 p-2 text-indigo-600 dark:text-indigo-400">
-                      <LogOut className="h-4 w-4" />
-                    </div>
-                    <div>
-                      <div className="text-[11px] text-muted-foreground">Clock Out</div>
-                      <div className="text-xs font-mono font-bold text-foreground">
-                        {selectedDay.lastPunch
-                          ? formatTimeDisplay(selectedDay.lastPunch)
-                          : "--:--"}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
                 {/* Raw Biometric Scan Logs Breakdown */}
                 <div className="space-y-2">
-                  <div className="flex items-center justify-between text-xs font-semibold text-foreground">
+                  <div className="flex items-center justify-between mb-2.5 text-xs text-muted-foreground">
                     <span className="flex items-center gap-1.5">
-                      <List className="h-3.5 w-3.5 text-primary" />
                       Raw Scan Events Breakdown
                     </span>
                     <span className="text-muted-foreground font-normal">
@@ -429,7 +393,7 @@ export function EmployeeAttendanceCalendar({
                   </div>
 
                   {selectedDay.logs.length > 0 ? (
-                    <div className="max-h-40 overflow-y-auto rounded-lg border bg-muted/10 divide-y">
+                    <div className="max-h-40 overflow-y-auto rounded-lg border border-muted-foreground/50 bg-card divide-y">
                       {selectedDay.logs.map((log, idx) => (
                         <div
                           key={log.id || idx}
@@ -450,10 +414,41 @@ export function EmployeeAttendanceCalendar({
                       ))}
                     </div>
                   ) : (
-                    <div className="rounded-lg border border-dashed p-4 text-center text-xs text-muted-foreground">
+                    <div className="rounded-lg border-2 border-dashed p-4 text-center text-xs text-muted-foreground">
                       No raw scan events recorded for this date.
                     </div>
                   )}
+                </div>
+
+                {/* Clock In / Clock Out Cards */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="flex items-center gap-2.5 rounded-lg border p-2.5 bg-card border-muted-foreground/50 shadow-sm">
+                    <div className="rounded-md bg-emerald-500/10 p-2 text-emerald-600 dark:text-emerald-400">
+                      <LogIn className="h-4 w-4" />
+                    </div>
+                    <div>
+                      <div className="text-[11px] text-muted-foreground">Clock In</div>
+                      <div className="text-xs font-mono font-bold text-foreground">
+                        {selectedDay.firstPunch
+                          ? formatTimeDisplay(selectedDay.firstPunch)
+                          : "--:--"}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2.5 rounded-lg border p-2.5 bg-card border-muted-foreground/50 shadow-sm">
+                    <div className="rounded-md bg-indigo-500/10 p-2 text-indigo-600 dark:text-indigo-400">
+                      <LogOut className="h-4 w-4" />
+                    </div>
+                    <div>
+                      <div className="text-[11px] text-muted-foreground">Clock Out</div>
+                      <div className="text-xs font-mono font-bold text-foreground">
+                        {selectedDay.lastPunch
+                          ? formatTimeDisplay(selectedDay.lastPunch)
+                          : "--:--"}
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </>

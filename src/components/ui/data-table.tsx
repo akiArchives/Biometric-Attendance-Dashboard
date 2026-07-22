@@ -8,7 +8,6 @@ import {
   VisibilityState,
   flexRender,
   getCoreRowModel,
-  getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
@@ -21,7 +20,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Card } from "@/components/ui/card";
-import { DataTablePagination } from "@/components/ui/data-table-pagination";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -49,15 +47,9 @@ export function DataTable<TData, TValue>({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
     onColumnVisibilityChange: setColumnVisibilityState,
     getSortedRowModel: getSortedRowModel(),
-    initialState: {
-      pagination: {
-        pageSize: 10,
-      },
-    },
     state: {
       sorting,
       columnVisibility: columnVisibilityState,
@@ -67,7 +59,7 @@ export function DataTable<TData, TValue>({
   return (
     <div className="flex flex-col gap-4">
       {/* Desktop Table View */}
-      <div className="hidden md:block relative w-full h-fit max-h-[calc(100vh-180px)] overflow-auto rounded-md border bg-card text-foreground shadow-md">
+      <div className="hidden md:block relative w-full h-fit max-h-[calc(100vh-125px)] overflow-auto rounded-md border bg-card text-foreground shadow-md">
         <Table noWrapper className="table-fixed">
           <TableHeader className="sticky top-0 z-10 bg-muted shadow-sm">
             {table.getHeaderGroups().map((headerGroup) => (
@@ -156,9 +148,6 @@ export function DataTable<TData, TValue>({
           </Card>
         )}
       </div>
-
-      <DataTablePagination table={table} />
     </div>
   );
 }
-

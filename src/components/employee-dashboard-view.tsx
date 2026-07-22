@@ -16,6 +16,8 @@ import {
   LogIn,
   LogOut,
   Fingerprint,
+  Sun,
+  Moon,
 } from "lucide-react";
 import { EmployeeMonthlyStats, RawBiometricLog } from "@/utils/attendance-processor";
 
@@ -44,6 +46,36 @@ function formatDateDisplay(dateStr: string | null, dateTimeStr: string | null): 
   if (dateStr) return dateStr;
   if (dateTimeStr && dateTimeStr.includes("T")) return dateTimeStr.substring(0, 10);
   return "—";
+}
+
+function getScanLabel(timeStr: string | null, dateTimeStr: string | null): string {
+  const target = timeStr || dateTimeStr;
+  if (!target) return "Device Punch";
+  let h = 12;
+  if (target.includes("T")) {
+    const timePart = target.substring(11, 19);
+    h = parseInt(timePart.split(":")[0], 10);
+  } else if (target.includes(":")) {
+    h = parseInt(target.split(":")[0], 10);
+  }
+  if (isNaN(h)) return "Device Punch";
+  if (h < 12) return "Morning Punch";
+  if (h < 17) return "Afternoon Punch";
+  return "Evening Punch";
+}
+
+function isDaytimePunch(timeStr: string | null, dateTimeStr: string | null): boolean {
+  const target = timeStr || dateTimeStr;
+  if (!target) return true;
+  let h = 12;
+  if (target.includes("T")) {
+    const timePart = target.substring(11, 19);
+    h = parseInt(timePart.split(":")[0], 10);
+  } else if (target.includes(":")) {
+    h = parseInt(target.split(":")[0], 10);
+  }
+  if (isNaN(h)) return true;
+  return h >= 6 && h < 17;
 }
 
 export function EmployeeDashboardView({
@@ -234,34 +266,47 @@ export function EmployeeDashboardView({
           <CardContent className="-mb-2">
             {recentLogs && recentLogs.length > 0 ? (
               <div className="divide-y">
-                {recentLogs.map((log) => (
-                  <div
-                    key={log.id}
-                    className="py-3 flex items-center justify-between hover:bg-muted/40 px-2 rounded-md transition-colors"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary">
-                        <Fingerprint className="size-4" />
+                {recentLogs.map((log) => {
+                  const isDay = isDaytimePunch(log.log_time, log.log_date_time);
+                  return (
+                    <div
+                      key={log.id}
+                      className="py-3 flex items-center justify-between hover:bg-muted/40 px-2 rounded-md transition-colors"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div
+                          className={`flex h-8 w-8 items-center justify-center rounded-full ${
+                            isDay
+                              ? "bg-amber-100 text-amber-600 dark:bg-amber-950/60 dark:text-amber-400"
+                              : "bg-indigo-100 text-indigo-600 dark:bg-indigo-950/60 dark:text-indigo-400"
+                          }`}
+                        >
+                          {isDay ? (
+                            <Sun className="size-4" />
+                          ) : (
+                            <Moon className="size-4" />
+                          )}
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium text-foreground">
+                            {getScanLabel(log.log_time, log.log_date_time)}
+                          </p>
+                          <p className="text-xs text-muted-foreground font-mono">
+                            ID #{log.id}
+                          </p>
+                        </div>
                       </div>
-                      <div>
-                        <p className="text-sm font-medium text-foreground">
-                          Scan Recorded
+                      <div className="text-right">
+                        <p className="text-sm font-semibold text-foreground font-mono">
+                          {log.log_time ? formatTime12h(log.log_time) : formatTime12h(log.log_date_time)}
                         </p>
                         <p className="text-xs text-muted-foreground font-mono">
-                          ID #{log.id}
+                          {formatDateDisplay(log.log_date, log.log_date_time)}
                         </p>
                       </div>
                     </div>
-                    <div className="text-right">
-                      <p className="text-sm font-semibold text-foreground font-mono">
-                        {log.log_time ? formatTime12h(log.log_time) : formatTime12h(log.log_date_time)}
-                      </p>
-                      <p className="text-xs text-muted-foreground font-mono">
-                        {formatDateDisplay(log.log_date, log.log_date_time)}
-                      </p>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center py-10 text-muted-foreground">

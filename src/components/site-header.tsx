@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { IconBrandGithub } from "@tabler/icons-react";
-import { DatePicker } from "@/components/ui/date-picker";
 import { StatusFilter } from "@/components/status-filter";
 import * as React from "react";
 import { ChevronLeft, ChevronRight, User } from "lucide-react";
@@ -48,12 +47,122 @@ export function SiteHeader({ isAdmin = true }: SiteHeaderProps) {
   let rightControls: React.ReactNode;
 
   if (pathname === "/dashboard/analytics") {
-    title = "Daily Attendance";
+    const dateParam = searchParams.get("date");
+    let currentDate = new Date();
+    if (dateParam) {
+      const [year, month, day] = dateParam.split("-").map(Number);
+      if (year && month) {
+        currentDate = new Date(year, month - 1, day || 1);
+      }
+    }
+
+    const monthLabel = new Intl.DateTimeFormat("en-US", {
+      month: "long",
+      year: "numeric",
+    }).format(currentDate);
+
+    if (!isAdmin) {
+      title = monthLabel;
+      subtitle = "Monthly personal biometric logs";
+    } else {
+      title = "Daily Attendance";
+      subtitle = "Daily attendance records";
+    }
+
+    const handlePrev = () => {
+      const params = new URLSearchParams(searchParams.toString());
+      if (!isAdmin) {
+        const prevDate = new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth() - 1,
+          1
+        );
+        const formatted = `${prevDate.getFullYear()}-${String(
+          prevDate.getMonth() + 1
+        ).padStart(2, "0")}-01`;
+        params.set("date", formatted);
+      } else {
+        const prevDate = new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth(),
+          currentDate.getDate() - 1
+        );
+        const formatted = `${prevDate.getFullYear()}-${String(
+          prevDate.getMonth() + 1
+        ).padStart(2, "0")}-${String(prevDate.getDate()).padStart(2, "0")}`;
+        params.set("date", formatted);
+      }
+      router.push("/dashboard/analytics?" + params.toString());
+    };
+
+    const handleNext = () => {
+      const params = new URLSearchParams(searchParams.toString());
+      if (!isAdmin) {
+        const nextDate = new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth() + 1,
+          1
+        );
+        const formatted = `${nextDate.getFullYear()}-${String(
+          nextDate.getMonth() + 1
+        ).padStart(2, "0")}-01`;
+        params.set("date", formatted);
+      } else {
+        const nextDate = new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth(),
+          currentDate.getDate() + 1
+        );
+        const formatted = `${nextDate.getFullYear()}-${String(
+          nextDate.getMonth() + 1
+        ).padStart(2, "0")}-${String(nextDate.getDate()).padStart(2, "0")}`;
+        params.set("date", formatted);
+      }
+      router.push("/dashboard/analytics?" + params.toString());
+    };
+
+    const handleToday = () => {
+      const today = new Date();
+      const params = new URLSearchParams(searchParams.toString());
+      const formatted = `${today.getFullYear()}-${String(
+        today.getMonth() + 1
+      ).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+      params.set("date", formatted);
+      router.push("/dashboard/analytics?" + params.toString());
+    };
+
     const selectedDate = searchParams.get("date") || "";
+
     rightControls = (
       <div className="flex items-center gap-2">
         <StatusFilter />
-        {isAdmin && <DatePicker selected={selectedDate} />}
+        <div className="flex items-center gap-1 border rounded-md">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={handlePrev}
+            className="h-8 w-8 rounded-none"
+            title={!isAdmin ? "Previous Month" : "Previous Day"}
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            onClick={handleToday}
+            className="h-8 rounded-none text-xs px-2 border-x"
+          >
+            Today
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={handleNext}
+            className="h-8 w-8 rounded-none"
+            title={!isAdmin ? "Next Month" : "Next Day"}
+          >
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
     );
   } else if (pathname === "/dashboard/calendar") {
