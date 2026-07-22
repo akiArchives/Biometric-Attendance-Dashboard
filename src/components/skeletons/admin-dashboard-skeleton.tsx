@@ -21,17 +21,19 @@ export function AdminDashboardSkeleton() {
       {/* 4 Admin Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-6 *:data-[slot=card]:shadow-xs lg:grid-cols-4">
         {/* Present Card */}
-        <Card className="@container/card">
+        <Card className="@container/card px-2">
           <CardHeader>
-            <CardDescription className="flex items-center text-gray-500 dark:text-gray-400 gap-2">
-              Present
-            </CardDescription>
-            <CardTitle className="text-2xl font-semibold text-gray-700 dark:text-gray-100 tabular-nums @[250px]/card:text-3xl">
-              <Skeleton className="h-8 w-12 mt-1" />
-            </CardTitle>
-            <CardAction>
-              <div className="flex h-13 w-13 items-center justify-center rounded-md bg-emerald-100/80 text-emerald-600 border-3 border-emerald-600/20 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-400/30">
-                <CalendarCheck2 className="size-9" />
+            <div className="flex flex-col items-baseline gap-2 pt-2">
+              <CardTitle className="text-2xl font-bold text-gray-700 dark:text-gray-100 tabular-nums @[250px]/card:text-3xl">
+                <Skeleton className="h-8 w-12" />
+              </CardTitle>
+              <CardDescription className="flex items-center text-gray-500 dark:text-gray-400 gap-2 pb-2">
+                Present
+              </CardDescription>
+            </div>
+            <CardAction className="pt-2">
+              <div className="flex h-16 w-16 items-center justify-center rounded-md bg-emerald-100/80 text-emerald-600 border-3 border-emerald-600/20 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-400/30">
+                <CalendarCheck2 className="size-11" />
               </div>
             </CardAction>
           </CardHeader>
@@ -41,17 +43,19 @@ export function AdminDashboardSkeleton() {
         </Card>
 
         {/* Late Card */}
-        <Card className="@container/card">
+        <Card className="@container/card px-2">
           <CardHeader>
-            <CardDescription className="flex items-center text-gray-500 dark:text-gray-400 gap-2">
-              Late
-            </CardDescription>
-            <CardTitle className="text-2xl font-semibold text-gray-700 dark:text-gray-100 tabular-nums @[250px]/card:text-3xl">
-              <Skeleton className="h-8 w-12 mt-1" />
-            </CardTitle>
-            <CardAction>
-              <div className="flex h-13 w-13 items-center justify-center rounded-md bg-yellow-100/80 text-yellow-600 border-3 border-yellow-600/20 dark:bg-yellow-950/40 dark:text-yellow-400 dark:border-yellow-400/30">
-                <ClockAlert className="size-9" />
+            <div className="flex flex-col items-baseline gap-2 pt-2">
+              <CardTitle className="text-2xl font-bold text-gray-700 dark:text-gray-100 tabular-nums @[250px]/card:text-3xl">
+                <Skeleton className="h-8 w-12" />
+              </CardTitle>
+              <CardDescription className="flex items-center text-gray-500 dark:text-gray-400 gap-2 pb-2">
+                Late
+              </CardDescription>
+            </div>
+            <CardAction className="pt-2">
+              <div className="flex h-16 w-16 items-center justify-center rounded-md bg-yellow-100/80 text-yellow-600 border-3 border-yellow-600/20 dark:bg-yellow-950/40 dark:text-yellow-400 dark:border-yellow-400/30">
+                <ClockAlert className="size-11" />
               </div>
             </CardAction>
           </CardHeader>
@@ -61,17 +65,19 @@ export function AdminDashboardSkeleton() {
         </Card>
 
         {/* Absent Card */}
-        <Card className="@container/card">
+        <Card className="@container/card px-2">
           <CardHeader>
-            <CardDescription className="flex items-center text-gray-500 dark:text-gray-400 gap-2">
-              Absent
-            </CardDescription>
-            <CardTitle className="text-2xl font-semibold text-gray-700 dark:text-gray-100 tabular-nums @[250px]/card:text-3xl">
-              <Skeleton className="h-8 w-12 mt-1" />
-            </CardTitle>
-            <CardAction>
-              <div className="flex h-13 w-13 items-center justify-center rounded-md bg-red-100/80 text-red-600 border-3 border-red-600/20 dark:bg-red-950/40 dark:text-red-400 dark:border-red-400/30">
-                <UserRoundX className="size-9" />
+            <div className="flex flex-col items-baseline gap-2 pt-2">
+              <CardTitle className="text-2xl font-bold text-gray-700 dark:text-gray-100 tabular-nums @[250px]/card:text-3xl">
+                <Skeleton className="h-8 w-12" />
+              </CardTitle>
+              <CardDescription className="flex items-center text-gray-500 dark:text-gray-400 gap-2 pb-2">
+                Absent
+              </CardDescription>
+            </div>
+            <CardAction className="pt-2">
+              <div className="flex h-16 w-16 items-center justify-center rounded-md bg-red-100/80 text-red-600 border-3 border-red-600/20 dark:bg-red-950/40 dark:text-red-400 dark:border-red-400/30">
+                <UserRoundX className="size-11" />
               </div>
             </CardAction>
           </CardHeader>
@@ -81,17 +87,19 @@ export function AdminDashboardSkeleton() {
         </Card>
 
         {/* Total Employees Card */}
-        <Card className="@container/card">
+        <Card className="@container/card px-2">
           <CardHeader>
-            <CardDescription className="flex items-center text-gray-500 dark:text-gray-400 gap-2">
-              Total Employees
-            </CardDescription>
-            <CardTitle className="text-2xl font-semibold text-gray-700 dark:text-gray-100 tabular-nums @[250px]/card:text-3xl">
-              <Skeleton className="h-8 w-12 mt-1" />
-            </CardTitle>
-            <CardAction>
-              <div className="flex h-13 w-13 items-center justify-center rounded-md bg-indigo-100/80 text-indigo-600 border-3 border-indigo-600/20 dark:bg-indigo-950/40 dark:text-indigo-400 dark:border-indigo-400/30">
-                <Users className="size-9" />
+            <div className="flex flex-col items-baseline gap-2 pt-2">
+              <CardTitle className="text-2xl font-bold text-gray-700 dark:text-gray-100 tabular-nums @[250px]/card:text-3xl">
+                <Skeleton className="h-8 w-12" />
+              </CardTitle>
+              <CardDescription className="flex items-center text-gray-500 dark:text-gray-400 gap-2 pb-2">
+                Total Employees
+              </CardDescription>
+            </div>
+            <CardAction className="pt-2">
+              <div className="flex h-16 w-16 items-center justify-center rounded-md bg-indigo-100/80 text-indigo-600 border-3 border-indigo-600/20 dark:bg-indigo-950/40 dark:text-indigo-400 dark:border-indigo-400/30">
+                <Users className="size-11" />
               </div>
             </CardAction>
           </CardHeader>

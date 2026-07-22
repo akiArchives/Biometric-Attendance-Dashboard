@@ -129,7 +129,7 @@ export default async function CalendarPage({ searchParams }: PageProps) {
     requestedEmpId && !isNaN(requestedEmpId) ? requestedEmpId : undefined;
 
   return (
-    <div className="w-full h-auto mt-6 px-6">
+    <div className="w-full h-auto my-6 px-6">
       <Suspense fallback={<EmployeeAnalyticsSkeleton />}>
         <CalendarContainer
           selectedDate={selectedDate}

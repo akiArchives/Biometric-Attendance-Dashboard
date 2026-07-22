@@ -15,16 +15,18 @@ export default function DashboardLoading() {
       {/* 4 Summary Stat Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
         {Array.from({ length: 4 }).map((_, i) => (
-          <Card key={i} className="@container/card shadow-xs">
+          <Card key={i} className="@container/card shadow-xs px-2">
             <CardHeader>
-              <CardDescription className="flex items-center gap-2">
-                <Skeleton className="h-4 w-28" />
-              </CardDescription>
-              <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-                <Skeleton className="h-8 w-20 mt-1" />
-              </CardTitle>
-              <CardAction>
-                <Skeleton className="h-13 w-13 rounded-md" />
+              <div className="flex flex-col items-baseline gap-2 pt-2">
+                <CardTitle className="text-2xl font-bold tabular-nums @[250px]/card:text-3xl">
+                  <Skeleton className="h-8 w-20" />
+                </CardTitle>
+                <CardDescription className="flex items-center gap-2 pb-2">
+                  <Skeleton className="h-4 w-28" />
+                </CardDescription>
+              </div>
+              <CardAction className="pt-2">
+                <Skeleton className="h-16 w-16 rounded-md" />
               </CardAction>
             </CardHeader>
             <CardFooter className="py-1.5 justify-center">

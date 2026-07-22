@@ -33,7 +33,7 @@ export function SiteHeader({ isAdmin = true }: SiteHeaderProps) {
           .eq("is_active", true)
           .neq("employee_id", 1111)
           .order("employee_name");
-        
+
         if (data) {
           setEmployees(data);
         }
@@ -67,7 +67,7 @@ export function SiteHeader({ isAdmin = true }: SiteHeaderProps) {
         currentDate = new Date(year, month - 1, day || 1);
       }
     }
-    
+
     const monthLabel = new Intl.DateTimeFormat("en-US", {
       month: "long",
       year: "numeric"
@@ -149,7 +149,7 @@ export function SiteHeader({ isAdmin = true }: SiteHeaderProps) {
   }
 
   return (
-    <header className="flex h-17.25 shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-14.25">
+    <header className="flex h-17.25 shrink-0 bg-sidebar items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-14.25">
       <div className="flex w-full items-center justify-between gap-1 px-4 lg:gap-2 lg:px-6">
         <div className="flex items-center gap-1">
           <SidebarTrigger className="-ml-1" />
@@ -161,7 +161,7 @@ export function SiteHeader({ isAdmin = true }: SiteHeaderProps) {
             {title}
           </h1>
 
-          <p className="hidden md:block text-sm text-gray-400 dark:text-gray-300">
+          <p className="hidden md:block text-sm text-gray-400 dark:text-gray-300 ml-5">
             {subtitle}
           </p>
         </div>
