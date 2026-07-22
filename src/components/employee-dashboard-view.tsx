@@ -121,7 +121,7 @@ export function EmployeeDashboardView({
           <CardHeader>
             <div className="flex flex-col items-baseline gap-2 pt-2">
               <CardTitle className="text-2xl font-bold text-gray-700 dark:text-gray-100 tabular-nums @[250px]/card:text-3xl">
-                {stats.loggedHoursThisWeek.toFixed(1)} / 40.0 hrs
+                {stats.loggedHoursThisWeek.toFixed(1)}
               </CardTitle>
               <CardDescription className="flex items-center text-gray-500 dark:text-gray-400 gap-2 pb-2">
                 Logged Hours This Week
@@ -159,14 +159,14 @@ export function EmployeeDashboardView({
           <CardHeader>
             <div className="flex flex-col items-baseline gap-2 pt-2">
               <CardTitle className="text-2xl font-bold text-gray-700 dark:text-gray-100 tabular-nums @[250px]/card:text-3xl">
-                {stats.presentDaysCount} / {stats.elapsedWorkdaysCount} days
+                {stats.presentDaysCount}/{stats.elapsedWorkdaysCount}
               </CardTitle>
               <CardDescription className="flex items-center text-gray-500 dark:text-gray-400 gap-2 pb-2">
                 Days Present
               </CardDescription>
             </div>
             <CardAction className="pt-2">
-              <div className="flex h-16 w-16 items-center justify-center rounded-md bg-indigo-100/80 text-indigo-600 border-3 border-indigo-600/20 dark:bg-indigo-950/40 dark:text-indigo-400 dark:border-indigo-400/30">
+              <div className="flex h-16 w-16 items-center justify-center rounded-md bg-indigo-100/80 text-indigo-800 border-3 border-indigo-800/30 dark:bg-indigo-950/40 dark:text-indigo-400 dark:border-indigo-400/30">
                 <UserCheck className="size-11" />
               </div>
             </CardAction>

@@ -201,10 +201,8 @@ export function EmployeeAttendanceCalendar({
 
   return (
     <div className="w-full space-y-4">
-      {/* Month Navigation & Legend Header */}
-
       {/* Legend Bar */}
-      <div className="flex flex-wrap items-center gap-2 rounded-lg border bg-muted/30 px-3 py-2 text-xs">
+      <div className="flex flex-wrap items-center gap-2 rounded-lg border bg-card px-3 py-2 text-xs">
         <span className="font-semibold text-muted-foreground mr-1">Legend:</span>
         <Badge className="bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-500/30 gap-1 font-medium">
           <CheckCircle2 className="h-3 w-3 text-emerald-600 dark:text-emerald-400" />
@@ -247,13 +245,13 @@ export function EmployeeAttendanceCalendar({
                 onClick={() => setSelectedDay(cell)}
                 aria-label={`${cell.date}: ${cell.status}`}
                 className={cn(
-                  "group relative flex min-h-[90px] md:min-h-[105px] flex-col justify-between rounded-lg border p-1.5 md:p-2 text-left transition-all hover:border-primary/50 hover:shadow-xs focus:outline-none focus:ring-2 focus:ring-primary/20",
+                  "group relative flex min-h-20 md:min-h-23 flex-col justify-between rounded-lg border-2 p-1.5 md:p-2 text-left transition-all hover:border-primary/50 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary/20",
                   !cell.isCurrentMonth
-                    ? "bg-muted/10 opacity-40 border-border/40"
+                    ? "opacity-0"
                     : cell.isWeekend
                       ? "bg-muted/20 border-border/60"
                       : "bg-card border-border/80",
-                  isToday && "ring-2 ring-primary border-primary/80"
+                  isToday && "ring-1 ring-primary border-primary/80"
                 )}
               >
                 {/* Cell Top Header: Day Number & Status Badge */}

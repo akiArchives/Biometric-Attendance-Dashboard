@@ -141,9 +141,9 @@ export function AdminDashboardView({
           </CardFooter>
         </Card>
 
-        <Card className="@container/card px-2">
+        <Card className="@container/card">
           <CardHeader>
-            <div className="flex flex-col items-baseline gap-2 pt-2">
+            <div className="flex flex-col items-baseline gap-2 pt-2 px-2">
               <CardTitle className="text-2xl font-bold text-gray-700 dark:text-gray-100 tabular-nums @[250px]/card:text-3xl animate-fade-in">
                 {totalCount}
               </CardTitle>
@@ -151,7 +151,7 @@ export function AdminDashboardView({
                 Total Employees
               </CardDescription>
             </div>
-            <CardAction className="pt-2">
+            <CardAction className="pt-2 px-2">
               <div className="flex h-16 w-16 items-center justify-center rounded-md bg-indigo-100/80 text-indigo-600 border-3 border-indigo-600/20 dark:bg-indigo-950/40 dark:text-indigo-400 dark:border-indigo-400/30">
                 <Users className="size-11" />
               </div>
@@ -181,13 +181,13 @@ export function AdminDashboardView({
         />
 
         {/* RECENT LOGS */}
-        <Card className="flex flex-col w-full lg:w-95 h-fit shadow-md overflow-visible mb-4">
-          <CardHeader className="text-gray-600 dark:text-gray-300">
+        <Card className="flex flex-col w-full lg:w-95 h-fit shadow-md p-4">
+          <CardHeader className="text-gray-600 dark:text-gray-300 mt-2">
             <CardTitle className="text-sm font-medium flex items-center gap-2 whitespace-nowrap">
               Recent Logs
             </CardTitle>
           </CardHeader>
-          <CardContent className="rounded-none flex-1 px-3 whitespace-nowrap animate-fade-in">
+          <CardContent className="rounded-none flex-1 px-3 whitespace-nowrap animate-fade-in mb-2">
             {recentLogs.length > 0 ? (
               <div className="rounded-none">
                 {recentLogs.map((log) => (

@@ -50,8 +50,8 @@ export function ChartBarStacked({
   selectedDate,
 }: ChartBarStackedProps) {
   return (
-    <Card className="shadow-md w-full lg:flex-1">
-      <CardHeader className="text-gray-600 dark:text-gray-300">
+    <Card className="shadow-md w-full lg:flex-1 px-4">
+      <CardHeader className="text-gray-600 dark:text-gray-300 pt-2">
         <CardTitle className="text-sm font-medium flex items-center gap-2">
           Weekly Attendance Metrics
         </CardTitle>
@@ -59,10 +59,10 @@ export function ChartBarStacked({
           <DatePicker selected={selectedDate} label={weekRange} />
         </CardAction>
       </CardHeader>
-      <CardContent className="animate-fade-in">
+      <CardContent className="animate-fade-in pb-2">
         <ChartContainer
           config={chartConfig}
-          className="w-full aspect-4/3 md:aspect-2/1 max-h-100"
+          className="w-full aspect-4/3 md:aspect-2/1 max-h-85"
         >
           <BarChart accessibilityLayer data={data}>
             <CartesianGrid vertical={false} />
