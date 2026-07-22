@@ -13,7 +13,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Settings2 } from "lucide-react";
-import { IconDashboard, IconListDetails, IconPlus } from "@tabler/icons-react"
+import { IconDashboard, IconCalendar, IconListDetails, IconPlus } from "@tabler/icons-react"
 import { AddAttendanceDialog } from "@/components/attendance/add-attendance-dialog";
 
 const data = {
@@ -23,6 +23,16 @@ const data = {
       url: "/dashboard",
       icon: (
         <IconDashboard
+          style={{ width: "1rem", height: "1rem" }}
+          strokeWidth={2.5}
+        />
+      ),
+    },
+    {
+      title: "Calendar",
+      url: "/dashboard/calendar",
+      icon: (
+        <IconCalendar
           style={{ width: "1rem", height: "1rem" }}
           strokeWidth={2.5}
         />
