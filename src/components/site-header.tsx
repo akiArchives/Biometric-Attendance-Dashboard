@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
@@ -8,6 +8,9 @@ import { IconBrandGithub } from "@tabler/icons-react";
 import { DatePicker } from "@/components/ui/date-picker";
 import { StatusFilter } from "@/components/status-filter";
 import * as React from "react";
+import { ChevronLeft, ChevronRight, User } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { createClient } from "@/lib/supabase/client";
 
 interface SiteHeaderProps {
   isAdmin?: boolean;
@@ -16,10 +19,32 @@ interface SiteHeaderProps {
 export function SiteHeader({ isAdmin = true }: SiteHeaderProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const [employees, setEmployees] = React.useState<{employee_id: number, employee_name: string}[]>([]);
+
+  React.useEffect(() => {
+    if (isAdmin && pathname === "/dashboard/calendar") {
+      const fetchEmployees = async () => {
+        const supabase = createClient();
+        const { data } = await supabase
+          .from("employees")
+          .select("employee_id, employee_name")
+          .eq("is_active", true)
+          .neq("employee_id", 1111)
+          .order("employee_name");
+        
+        if (data) {
+          setEmployees(data);
+        }
+      };
+      fetchEmployees();
+    }
+  }, [isAdmin, pathname]);
 
   // Determine title, subtitle, and right-side controls based on path
   let title = "Dashboard";
-  const subtitle = "";
+  let subtitle = "";
   let rightControls: React.ReactNode;
 
   if (pathname === "/dashboard/analytics") {
@@ -29,6 +54,92 @@ export function SiteHeader({ isAdmin = true }: SiteHeaderProps) {
       <div className="flex items-center gap-2">
         <StatusFilter />
         {isAdmin && <DatePicker selected={selectedDate} />}
+      </div>
+    );
+  } else if (pathname === "/dashboard/calendar") {
+    const dateParam = searchParams.get("date");
+    // Ensure we handle date parsing properly; dateParam could be YYYY-MM-DD
+    let currentDate = new Date();
+    if (dateParam) {
+      // Create date at midnight local time to avoid timezone shift on rendering
+      const [year, month, day] = dateParam.split("-").map(Number);
+      if (year && month) {
+        currentDate = new Date(year, month - 1, day || 1);
+      }
+    }
+    
+    const monthLabel = new Intl.DateTimeFormat("en-US", {
+      month: "long",
+      year: "numeric"
+    }).format(currentDate);
+
+    title = monthLabel;
+    subtitle = "Monthly attendance calendar view";
+
+    const handlePrevMonth = () => {
+      const prevDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
+      const params = new URLSearchParams(searchParams.toString());
+      const formatted = `${prevDate.getFullYear()}-${String(prevDate.getMonth() + 1).padStart(2, '0')}-01`;
+      params.set("date", formatted);
+      router.push("/dashboard/calendar?" + params.toString());
+    };
+
+    const handleNextMonth = () => {
+      const nextDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
+      const params = new URLSearchParams(searchParams.toString());
+      const formatted = `${nextDate.getFullYear()}-${String(nextDate.getMonth() + 1).padStart(2, '0')}-01`;
+      params.set("date", formatted);
+      router.push("/dashboard/calendar?" + params.toString());
+    };
+
+    const handleToday = () => {
+      const today = new Date();
+      const params = new URLSearchParams(searchParams.toString());
+      const formatted = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+      params.set("date", formatted);
+      router.push("/dashboard/calendar?" + params.toString());
+    };
+
+    rightControls = (
+      <div className="flex items-center gap-2">
+        {isAdmin && (
+          <Select
+            value={searchParams.get("employee_id") || "all"}
+            onValueChange={(value) => {
+              const params = new URLSearchParams(searchParams.toString());
+              if (value === "all") {
+                params.delete("employee_id");
+              } else {
+                params.set("employee_id", value);
+              }
+              router.push("/dashboard/calendar?" + params.toString());
+            }}
+          >
+            <SelectTrigger className="w-[180px]">
+              <User className="w-4 h-4 mr-2" />
+              <SelectValue placeholder="Select Employee" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Employees</SelectItem>
+              {employees.map((emp) => (
+                <SelectItem key={emp.employee_id} value={emp.employee_id.toString()}>
+                  {emp.employee_name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
+        <div className="flex items-center gap-1 border rounded-md">
+          <Button variant="ghost" size="icon" onClick={handlePrevMonth} className="h-8 w-8 rounded-none">
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+          <Button variant="ghost" onClick={handleToday} className="h-8 rounded-none text-xs px-2 border-x">
+            Today
+          </Button>
+          <Button variant="ghost" size="icon" onClick={handleNextMonth} className="h-8 w-8 rounded-none">
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
     );
   } else if (pathname === "/dashboard/reports") {
